@@ -5,8 +5,13 @@ import (
 )
 
 type SetCommand struct {
-	name string
-	Args CommandArguments
+	name       string
+	Args       CommandArguments
+	isWritable bool
+}
+
+func (command *SetCommand) IsWritable() bool {
+	return command.isWritable
 }
 
 func (command *SetCommand) CheckArgs(args CommandArguments) bool {
@@ -19,7 +24,7 @@ func (command *SetCommand) CheckArgs(args CommandArguments) bool {
 
 func (command *SetCommand) Execute() (string, error) {
 
-	storage.SetValue(command.Args.Key, command.Args.Value, 0)
+	storage.Storage.SetValue(command.Args.Key, command.Args.Value, command.Args.TTL)
 
 	return "", nil
 }

@@ -1,32 +1,21 @@
 package app
 
 import (
-	"bytes"
 	"fmt"
-	"kwdb/app/commands"
-	"kwdb/app/wal"
 	"log"
 	"net"
 	"os"
-	"sync"
+	"strconv"
 )
 
-const (
-	HOST = "localhost"
-	PORT = "8080"
-	TYPE = "tcp"
-)
+func ServeTCP() {
 
-var someMapMutex = sync.RWMutex{}
-
-func Serve() {
-	listen, err := net.Listen(TYPE, HOST+":"+PORT)
+	listen, err := net.Listen("tcp", Config.HOST+":"+Config.PORT)
 
 	if err != nil {
-		//log.Fatal(err)
 		os.Exit(1)
 	}
-	// close listener
+
 	defer listen.Close()
 
 	for {
@@ -36,43 +25,34 @@ func Serve() {
 			os.Exit(1)
 		}
 
-		go handleRequest(conn)
+		go tpcHandle(conn)
 	}
 
 }
 
-func handleRequest(conn net.Conn) {
+func tpcHandle(conn net.Conn) {
+	buffer := make([]byte, 1024)
 
-	buffer := make([]byte, 0, 1024)
-	_, err := conn.Read(buffer)
+	bufferLength, err := conn.Read(buffer)
+
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
-	message := string(bytes.TrimRight(buffer, "\x00, \n"))
 
-	cmd, err := commands.SetupCommand(message)
-	if err != nil || cmd == nil {
-		fmt.Printf("command error: %v", err)
+	message := string(buffer[:bufferLength])
 
-	} else {
-		go execute(conn, cmd)
-		go wal.Write(message)
+	result, err := HandleMessage(message)
+
+	reply := "sign:" + strconv.Itoa(len(result)) + ":"
+	reply += result + ":"
+	if err != nil {
+		reply += err.Error()
 	}
-}
 
-func execute(conn net.Conn, cmd commands.CommandInterface) {
-	someMapMutex.Lock()
-	result, _ := cmd.Execute()
-	someMapMutex.Unlock()
-	_, err := conn.Write([]byte(result))
+	_, err = conn.Write([]byte(reply))
 	if err != nil {
 		return
 	}
 
-	defer func(conn net.Conn) {
-		err := conn.Close()
-		if err != nil {
-
-		}
-	}(conn)
+	err = conn.Close()
 }

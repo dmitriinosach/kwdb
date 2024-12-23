@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func Parce(message string) CommandArguments {
+func Parse(message string) (CommandArguments, error) {
 
 	parsedLine, _ := shlex.Split(message)
 
@@ -15,7 +15,8 @@ func Parce(message string) CommandArguments {
 
 	for number, tag := range parsedLine {
 		if number == 0 {
-			args.Name = tag
+			cmdMaxLen := min(len(tag), 10)
+			args.Name = tag[:cmdMaxLen]
 		} else {
 			parameter := strings.Split(tag, "=")
 
@@ -25,12 +26,16 @@ func Parce(message string) CommandArguments {
 			case "value":
 				args.Value = parameter[1]
 			case "ttl":
-				args.TTL, _ = strconv.Atoi(parameter[1])
+				ttl, ok := strconv.Atoi(parameter[1])
+				if ok != nil {
+					return args, fmt.Errorf("ошибка чтения ttl: %v", parameter[1])
+				}
+				args.TTL = ttl
 			default:
-				fmt.Println("Unknown parameter:", parameter[0])
+				return args, fmt.Errorf("неизвестный параметр: %v", parameter[0])
 			}
 		}
 	}
 
-	return args
+	return args, nil
 }

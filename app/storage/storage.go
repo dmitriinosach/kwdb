@@ -1,26 +1,28 @@
 package storage
 
 import (
-	"fmt"
+	"kwdb/app/storage/driver"
+	"time"
 )
 
-var Storage = make(map[string]*Cell, 10000)
-
-// struct
-/*func init() {
-
-	Storage = make(map[string]Cell)
-
-}*/
-
-func Lookup() {
-
-	for k, v := range Storage {
-		fmt.Println(k, v)
-	}
+var List = []driver.Interface{
+	&driver.HashMapStandard{},
 }
 
-func Info() {
+var Storage driver.Interface
+var Started = time.Now()
 
-	fmt.Printf("Capacity: %v\n", len(Storage))
+func Init(dbDriver string) {
+
+	for _, db := range List {
+		if db.GetDriver() == dbDriver {
+			Storage = db
+			Storage.Init()
+			break
+		}
+	}
+
+	if Storage == nil {
+		panic("Драйвер базы данных не найден")
+	}
 }

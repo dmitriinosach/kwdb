@@ -1,13 +1,18 @@
 package commands
 
 import (
-	"errors"
+	"fmt"
 	"kwdb/app/storage"
 )
 
 type GetCommand struct {
-	name string
-	Args CommandArguments
+	name       string
+	Args       CommandArguments
+	isWritable bool
+}
+
+func (command *GetCommand) IsWritable() bool {
+	return command.isWritable
 }
 
 func (command *GetCommand) SetArgs(args CommandArguments) {
@@ -29,11 +34,11 @@ func (command *GetCommand) Name() string {
 
 func (command *GetCommand) Execute() (string, error) {
 
-	if !storage.HasKey(command.Args.Key) {
-		return "", errors.New("key not found")
+	if !storage.Storage.HasKey(command.Args.Key) {
+		return "", fmt.Errorf("key %s does not exist", command.Args.Key)
 	}
 
-	value := storage.GetValue(command.Args.Key)
+	value, _ := storage.Storage.GetValue(command.Args.Key)
 
 	return value.Value, nil
 }

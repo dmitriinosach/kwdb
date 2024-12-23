@@ -3,7 +3,7 @@ package api
 import (
 	"bufio"
 	"fmt"
-	"kwdb/app/commands"
+	"kwdb/app"
 	"os"
 )
 
@@ -14,18 +14,10 @@ func HandleCLI() {
 		fmt.Print("kwdb-cli: ")
 		message, _ := reader.ReadString('\n')
 
-		cmd, err := commands.SetupCommand(message)
+		result, err := app.HandleMessage(message)
 
 		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-
-		result, err := cmd.Execute()
-
-		if err != nil {
-			fmt.Println(err)
-			continue
+			fmt.Println("Ошибка выполнения запроса", err)
 		}
 
 		fmt.Println(result)

@@ -1,9 +1,8 @@
-package wal
+package workers
 
 import (
 	"bufio"
 	"fmt"
-	"kwdb/app/commands"
 	"log"
 	"os"
 )
@@ -25,7 +24,7 @@ func Write(text string) {
 
 }
 
-func Backup(backup_chan chan) {
+func Backup(commandChan chan string) *bufio.Scanner {
 	file, err := os.OpenFile("./data/wal1.txt", os.O_APPEND, 066)
 
 	if err != nil {
@@ -35,15 +34,16 @@ func Backup(backup_chan chan) {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	// optionally, resize scanner's capacity for lines over 64K, see next example
-	for scanner.Scan() {
-		backup_chan <- scanner.Text()
-		if err != nil {
-			continue
-		}
-	}
 
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+	for scanner.Scan() {
+		cmdString := scanner.Text()
+
+		if cmdString != "" {
+			commandChan <- cmdString
+		}
+
 	}
+	close(commandChan)
+
+	return scanner
 }
