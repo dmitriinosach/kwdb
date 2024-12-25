@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"kwdb/app"
 	"kwdb/app/api"
 	"kwdb/app/storage"
@@ -17,7 +18,11 @@ func main() {
 		panic("не установленны базовые настройки: " + err.Error())
 	}
 
-	storage.Init(app.Config.DRIVER)
+	err = storage.Init(app.Config.DRIVER)
+	if err != nil {
+		fmt.Println("Ошибка инициализации хранилища: ", err)
+		return
+	}
 
 	//Отельная рутина для работы CLI
 	go api.HandleCLI()

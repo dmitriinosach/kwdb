@@ -14,7 +14,6 @@ func CleanerRun() {
 		cleaner(vault)
 		time.Sleep(10 * time.Second)
 	}
-
 }
 
 func cleaner(vault map[string]*driver.Cell) {

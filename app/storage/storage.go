@@ -1,28 +1,35 @@
 package storage
 
 import (
-	"kwdb/app/storage/driver"
+	"sync"
 	"time"
+
+	"kwdb/app/storage/driver"
 )
 
-var List = []driver.Interface{
-	&driver.HashMapStandard{},
+var dict = map[string]driver.Interface{
+	"hash": &driver.HashMapStandard{},
 }
 
-var Storage driver.Interface
+var (
+	Storage driver.Interface
+	once    sync.Once
+)
+
 var Started = time.Now()
 
-func Init(dbDriver string) {
-
-	for _, db := range List {
-		if db.GetDriver() == dbDriver {
-			Storage = db
+func Init(dbDriver string) (err error) {
+	once.Do(func() {
+		hash, ok := dict[dbDriver]
+		if ok {
+			Storage = hash
 			Storage.Init()
-			break
 		}
-	}
 
-	if Storage == nil {
-		panic("Драйвер базы данных не найден")
-	}
+		if Storage == nil {
+			err = driver.ErrUnknownDriver
+		}
+	})
+
+	return
 }

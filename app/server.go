@@ -1,16 +1,20 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
 	"os"
+	"os/signal"
 	"strconv"
 )
 
 func ServeTCP() {
 
 	listen, err := net.Listen("tcp", Config.HOST+":"+Config.PORT)
+	ctx := context.Background()
+	signal.NotifyContext(ctx, os.Interrupt)
 
 	if err != nil {
 		os.Exit(1)
@@ -19,18 +23,23 @@ func ServeTCP() {
 	defer listen.Close()
 
 	for {
+		select {
+		case <-ctx.Done():
+			return
+		default:
+		}
+
 		conn, err := listen.Accept()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 
-		go tpcHandle(conn)
+		go tpcHandle(ctx, conn)
 	}
-
 }
 
-func tpcHandle(conn net.Conn) {
+func tpcHandle(ctx context.Context, conn net.Conn) {
 	buffer := make([]byte, 1024)
 
 	bufferLength, err := conn.Read(buffer)
@@ -41,7 +50,7 @@ func tpcHandle(conn net.Conn) {
 
 	message := string(buffer[:bufferLength])
 
-	result, err := HandleMessage(message)
+	result, err := HandleMessage(ctx, message)
 
 	reply := "sign:" + strconv.Itoa(len(result)) + ":"
 	reply += result + ":"

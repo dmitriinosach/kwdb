@@ -1,26 +1,36 @@
 package commands
 
 import (
+	"context"
 	"fmt"
+
 	"kwdb/app/workers"
 )
 
+const CommandRestore = "RESTORE"
+
 type RestoreCommand struct {
 	name       string
-	Args       CommandArguments
+	Args       *CommandArguments
 	isWritable bool
 }
 
-func (command *RestoreCommand) CheckArgs(args CommandArguments) bool {
+func NewRestoreCommand() *RestoreCommand {
+	return &RestoreCommand{
+		name:       CommandRestore,
+		Args:       new(CommandArguments),
+		isWritable: false,
+	}
+}
+func (command *RestoreCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
 	return true
 }
 
-func (command *RestoreCommand) Execute() (string, error) {
+func (command *RestoreCommand) Execute(ctx context.Context) (string, error) {
 
 	c := make(chan string)
 
 	go workers.Backup(c)
-
 	for {
 		commandString, ok := <-c
 		if ok == false {
@@ -32,8 +42,8 @@ func (command *RestoreCommand) Execute() (string, error) {
 			break // exit break loop
 
 		} else {
-			cmd, _ := SetupCommand(commandString)
-			_, err := cmd.Execute()
+			cmd, _ := SetupCommand(ctx, commandString)
+			_, err := cmd.Execute(ctx)
 			if err != nil {
 				return "", err
 			}
@@ -47,10 +57,10 @@ func (command *RestoreCommand) Name() string {
 	return command.name
 }
 
-func (command *RestoreCommand) SetArgs(args CommandArguments) {
+func (command *RestoreCommand) SetArgs(ctx context.Context, args *CommandArguments) {
 	command.Args = args
 }
 
-func (command *RestoreCommand) IsWritable() bool {
+func (command *RestoreCommand) IsWritable(ctx context.Context) bool {
 	return command.isWritable
 }

@@ -7,11 +7,13 @@ import (
 	"strings"
 )
 
-func Parse(message string) (CommandArguments, error) {
+func Parse(message string) (*CommandArguments, error) {
+	parsedLine, err := shlex.Split(message)
+	if err != nil {
+		return nil, fmt.Errorf("ошибка парсинга строки: %s, ошибка: %w", message, err)
+	}
 
-	parsedLine, _ := shlex.Split(message)
-
-	args := CommandArguments{}
+	args := new(CommandArguments)
 
 	for number, tag := range parsedLine {
 		if number == 0 {

@@ -7,16 +7,26 @@ import (
 
 type HashMapStandard struct {
 	Vault  map[string]*Cell
-	Locker sync.RWMutex
+	locker sync.RWMutex
 	Driver string
+	setOps map[string]chan struct{}
+}
+
+func NewHashMapStandard() *HashMapStandard {
+	return &HashMapStandard{
+		Vault:  make(map[string]*Cell, 1000),
+		locker: sync.RWMutex{},
+		Driver: "hash",
+		setOps: make(map[string]chan struct{}),
+	}
 }
 
 func (hashMap *HashMapStandard) Lock() {
-	hashMap.Locker.Lock()
+	hashMap.locker.Lock()
 }
 
 func (hashMap *HashMapStandard) Unlock() {
-	hashMap.Locker.Unlock()
+	hashMap.locker.Unlock()
 }
 
 func (hashMap *HashMapStandard) Info() string {
@@ -83,5 +93,5 @@ func (hashMap *HashMapStandard) Truncate() {
 
 func (hashMap *HashMapStandard) Init() {
 	hashMap.Vault = make(map[string]*Cell, 1000)
-	hashMap.Locker = sync.RWMutex{}
+	hashMap.locker = sync.RWMutex{}
 }

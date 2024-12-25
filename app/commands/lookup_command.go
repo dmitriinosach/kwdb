@@ -1,25 +1,37 @@
 package commands
 
 import (
+	"context"
 	"fmt"
+
 	"kwdb/app/storage"
 )
 
+const CommandLookUp = "LOOKUP"
+
 type LookUpCommand struct {
 	name       string
-	Args       CommandArguments
+	Args       *CommandArguments
 	isWritable bool
 }
 
-func (command *LookUpCommand) IsWritable() bool {
+func NewLookUpCommand() *LookUpCommand {
+	return &LookUpCommand{
+		name:       CommandLookUp,
+		Args:       new(CommandArguments),
+		isWritable: false,
+	}
+}
+
+func (command *LookUpCommand) IsWritable(ctx context.Context) bool {
 	return command.isWritable
 }
 
-func (command *LookUpCommand) CheckArgs(args CommandArguments) bool {
+func (command *LookUpCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
 	return true
 }
 
-func (command *LookUpCommand) Execute() (string, error) {
+func (command *LookUpCommand) Execute(ctx context.Context) (string, error) {
 
 	for k, v := range storage.Storage.GetVaultMap() {
 		if len(v.Value) > 10 {
@@ -36,6 +48,6 @@ func (command *LookUpCommand) Name() string {
 	return command.name
 }
 
-func (command *LookUpCommand) SetArgs(args CommandArguments) {
+func (command *LookUpCommand) SetArgs(ctx context.Context, args *CommandArguments) {
 	command.Args = args
 }

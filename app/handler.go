@@ -1,25 +1,26 @@
 package app
 
 import (
-	"fmt"
+	"context"
+	"github.com/pkg/errors"
 	"kwdb/app/commands"
 	"kwdb/app/storage"
 	"kwdb/app/workers"
 )
 
-func HandleMessage(message string) (string, error) {
-	cmd, err := commands.SetupCommand(message)
+func HandleMessage(ctx context.Context, message string) (string, error) {
+	cmd, err := commands.SetupCommand(ctx, message)
 
-	if err != nil || cmd == nil {
-		return "", fmt.Errorf("ошибка установки команды: %v", err)
+	if err != nil {
+		return "", errors.Wrap(err, "ошибка установки команды")
 	}
 
-	if cmd.IsWritable() {
+	if cmd.IsWritable(ctx) {
 		go workers.Write(message)
 	}
 
 	storage.Storage.Lock()
-	result, err := cmd.Execute()
+	result, err := cmd.Execute(ctx)
 	storage.Storage.Unlock()
 
 	return result, err
