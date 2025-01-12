@@ -1,0 +1,386 @@
+ошибка установки команды: команда не найдена
+ошибка установки команды: отсутствуют необходимые аргуметы
+read tcp 127.0.0.1:8080->127.0.0.1:62986: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:62986: wsasend: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:63294: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:63294: wsasend: An existing connection was forcibly closed by the remote host.
+read tcp 127.0.0.1:8080->127.0.0.1:63580: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:63580: wsasend: An existing connection was forcibly closed by the remote host.
+read tcp 127.0.0.1:8080->127.0.0.1:63627: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:63627: wsasend: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: отсутствуют необходимые аргуметы
+ошибка установки команды: команда не найдена
+ключ не установлен
+read tcp 127.0.0.1:8080->127.0.0.1:63689: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:63689: wsasend: An existing connection was forcibly closed by the remote host.
+read tcp 127.0.0.1:8080->127.0.0.1:63928: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:63928: wsasend: An existing connection was forcibly closed by the remote host.
+read tcp 127.0.0.1:8080->127.0.0.1:63979: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:63979: wsasend: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:64045: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64045: wsasend: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:64068: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64068: wsasend: An existing connection was forcibly closed by the remote host.
+read tcp 127.0.0.1:8080->127.0.0.1:64075: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64075: wsasend: An existing connection was forcibly closed by the remote host.
+read tcp 127.0.0.1:8080->127.0.0.1:64079: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64079: wsasend: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:64156: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64156: wsasend: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:64166: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64166: wsasend: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:64204: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64204: wsasend: An existing connection was forcibly closed by the remote host.
+read tcp 127.0.0.1:8080->127.0.0.1:64208: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64208: wsasend: An existing connection was forcibly closed by the remote host.
+read tcp 127.0.0.1:8080->127.0.0.1:64211: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64211: wsasend: An existing connection was forcibly closed by the remote host.
+read tcp 127.0.0.1:8080->127.0.0.1:64214: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64214: wsasend: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:64221: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64221: wsasend: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:64227: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64227: wsasend: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+EOF
+ошибка установки команды: команда не найдена
+EOF
+EOF
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:64546: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64546: wsasend: An existing connection was forcibly closed by the remote host.
+EOF
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:64600: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64600: wsasend: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:64709: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64709: wsasend: An existing connection was forcibly closed by the remote host.
+read tcp 127.0.0.1:8080->127.0.0.1:64722: wsarecv: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64722: wsasend: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+SET key=1 value=1ff
+INFO
+read tcp 127.0.0.1:8080->127.0.0.1:64843: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:64843: wsasend: An existing connection was forcibly closed by the remote host.
+SET
+ошибка установки команды: отсутствуют необходимые аргуметы
+read tcp 127.0.0.1:8080->127.0.0.1:65015: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:65015: wsasend: An existing connection was forcibly closed by the remote host.
+gget
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:65096: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:65096: wsasend: An existing connection was forcibly closed by the remote host.
+gget
+ошибка установки команды: команда не найдена
+gget
+ошибка установки команды: команда не найдена
+\g
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:65108: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:65108: wsasend: An existing connection was forcibly closed by the remote host.
+\get
+ошибка установки команды: команда не найдена
+q
+ошибка установки команды: команда не найдена
+qq
+ошибка установки команды: команда не найдена
+!
+ошибка установки команды: команда не найдена
+!g
+ошибка установки команды: команда не найдена
+gwerwerewrwerwerweeeeeeeeeeeeeee
+ошибка установки команды: команда не найдена
+gwerwerewrwerwerweeeeee
+ошибка установки команды: команда не найдена
+gwerwerewrwerwerwe
+ошибка установки команды: команда не найдена
+gwerwerewrwerw
+ошибка установки команды: команда не найдена
+gwerw
+ошибка установки команды: команда не найдена
+gwer
+ошибка установки команды: команда не найдена
+gwe
+ошибка установки команды: команда не найдена
+gw
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:65454: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:65454: wsasend: An existing connection was forcibly closed by the remote host.
+ы
+ошибка установки команды: команда не найдена
+й
+ошибка установки команды: команда не найдена
+п
+ошибка установки команды: команда не найдена
+п
+ошибка установки команды: команда не найдена
+ф
+ошибка установки команды: команда не найдена
+н
+ошибка установки команды: команда не найдена
+ш
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:65505: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:65505: wsasend: An existing connection was forcibly closed by the remote host.
+read tcp 127.0.0.1:8080->127.0.0.1:65527: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:65527: wsasend: An existing connection was forcibly closed by the remote host.
+read tcp 127.0.0.1:8080->127.0.0.1:49159: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:49159: wsasend: An existing connection was forcibly closed by the remote host.
+read tcp 127.0.0.1:8080->127.0.0.1:49161: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:49161: wsasend: An existing connection was forcibly closed by the remote host.
+read tcp 127.0.0.1:8080->127.0.0.1:49190: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:49190: wsasend: An existing connection was forcibly closed by the remote host.
+GGET
+ошибка установки команды: команда не найдена
+EOF
+
+ошибка установки команды: команда не найдена
+EOF
+EOF
+
+
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+g
+
+ошибка установки команды: команда не найдена
+g
+
+ошибка установки команды: команда не найдена
+gg
+
+ошибка установки команды: команда не найдена
+g
+
+ошибка установки команды: команда не найдена
+q
+
+ошибка установки команды: команда не найдена
+gget
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:49727: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:49727: wsasend: An existing connection was forcibly closed by the remote host.
+q
+ошибка установки команды: команда не найдена
+qq
+ошибка установки команды: команда не найдена
+q
+ошибка установки команды: команда не найдена
+q
+ошибка установки команды: команда не найдена
+q
+ошибка установки команды: команда не найдена
+q
+ошибка установки команды: команда не найдена
+q
+ошибка установки команды: команда не найдена
+w
+ошибка установки команды: команда не найдена
+z
+ошибка установки команды: команда не найдена
+z
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:49771: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:49771: wsasend: An existing connection was forcibly closed by the remote host.
+ошибка установки команды: отсутствуют необходимые аргуметы
+PET
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:49797: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:49797: wsasend: An existing connection was forcibly closed by the remote host.
+CET
+ошибка установки команды: команда не найдена
+HEY
+ошибка установки команды: команда не найдена
+TEY
+ошибка установки команды: команда не найдена
+AQW
+ошибка установки команды: команда не найдена
+VET
+ошибка установки команды: команда не найдена
+BEY
+ошибка установки команды: команда не найдена
+GT
+ошибка установки команды: команда не найдена
+GY
+ошибка установки команды: команда не найдена
+gt
+ошибка установки команды: команда не найдена
+gg
+ошибка установки команды: команда не найдена
+GG
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:49851: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:49851: wsasend: An existing connection was forcibly closed by the remote host.
+read tcp 127.0.0.1:8080->127.0.0.1:49854: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:49854: wsasend: An existing connection was forcibly closed by the remote host.
+GETYS
+ошибка установки команды: команда не найдена
+read tcp 127.0.0.1:8080->127.0.0.1:49856: wsarecv: An existing connection was forcibly closed by the remote host.
+
+ошибка установки команды: команда не найдена
+write tcp 127.0.0.1:8080->127.0.0.1:49856: wsasend: An existing connection was forcibly closed by the remote host.
+GYE
+ошибка установки команды: команда не найдена
+GEY
+ошибка установки команды: команда не найдена
+GUT
+ошибка установки команды: команда не найдена
+KYT
+ошибка установки команды: команда не найдена
+ошибка установки команды: команда не найдена
+\g
+ошибка установки команды: команда не найдена
+:g
+ошибка установки команды: команда не найдена
+g
+ошибка установки команды: команда не найдена
+GET key=1
+ключ не установлен
+GET
+ошибка установки команды: отсутствуют необходимые аргуметы
+GET key=1
+ключ не установлен
+GET key=1
+ключ не установлен
+SET key=1 value=dsfqq
+GET key=1
+GET key=1
+INFO
+GET key=1
+GET key=1
+sdf
+ошибка установки команды: команда не найдена
+f
+ошибка установки команды: команда не найдена
+f
+ошибка установки команды: команда не найдена
+fsdfq
+ошибка установки команды: команда не найдена
+G
+ошибка установки команды: команда не найдена
+G
+ошибка установки команды: команда не найдена
+GEY
+ошибка установки команды: команда не найдена
+GET
+ошибка установки команды: отсутствуют необходимые аргуметы
+GET key=1
+GET
+ошибка установки команды: отсутствуют необходимые аргуметы
+GET
+ошибка установки команды: отсутствуют необходимые аргуметы
+GET key=1
+SET key=21 value=qlqwlwl
+SET key=21 value=qlqwlwl
+GET key=1
+GEt
+ошибка установки команды: команда не найдена
+GET
+ошибка установки команды: отсутствуют необходимые аргуметы
+GET
+ошибка установки команды: отсутствуют необходимые аргуметы
+GET key=1
+INFO
+SET key=1 value=alslkd
+GET key=1

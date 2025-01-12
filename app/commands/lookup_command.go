@@ -2,8 +2,6 @@ package commands
 
 import (
 	"context"
-	"fmt"
-
 	"kwdb/app/storage"
 )
 
@@ -33,15 +31,17 @@ func (command *LookUpCommand) CheckArgs(ctx context.Context, args *CommandArgume
 
 func (command *LookUpCommand) Execute(ctx context.Context) (string, error) {
 
+	reply := ""
+
 	for k, v := range storage.Storage.GetVaultMap() {
 		if len(v.Value) > 10 {
-			fmt.Println(k, ":", v.Value[:7], "...")
+			reply += k + ":" + v.Value[:7] + "..."
 		} else {
-			fmt.Println(k, ":", v.Value)
+			reply += k + ":" + v.Value
 		}
 	}
 
-	return "", nil
+	return reply, nil
 }
 
 func (command *LookUpCommand) Name() string {

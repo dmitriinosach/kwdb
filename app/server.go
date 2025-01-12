@@ -2,8 +2,7 @@ package app
 
 import (
 	"context"
-	"fmt"
-	"log"
+	"kwdb/app/logger"
 	"net"
 	"os"
 	"os/signal"
@@ -31,7 +30,7 @@ func ServeTCP() {
 
 		conn, err := listen.Accept()
 		if err != nil {
-			fmt.Println(err)
+			logger.Write(err.Error())
 			os.Exit(1)
 		}
 
@@ -45,23 +44,33 @@ func tpcHandle(ctx context.Context, conn net.Conn) {
 	bufferLength, err := conn.Read(buffer)
 
 	if err != nil {
-		log.Println(err)
+		logger.Write(err.Error())
 	}
 
-	message := string(buffer[:bufferLength])
-
+	message := string(buffer[1:bufferLength])
+	logger.Write(message)
 	result, err := HandleMessage(ctx, message)
-
-	reply := "sign:" + strconv.Itoa(len(result)) + ":"
-	reply += result + ":"
 	if err != nil {
-		reply += err.Error()
+		logger.Write(err.Error())
 	}
 
-	_, err = conn.Write([]byte(reply))
+	_, err = conn.Write(makeReply(result, err))
 	if err != nil {
+		logger.Write(err.Error())
 		return
 	}
 
 	err = conn.Close()
+}
+
+func makeReply(r string, e error) []byte {
+	reply := "sign:" + strconv.Itoa(len(r)) + ":"
+	reply += r + ":"
+
+	if e != nil {
+		logger.Write(e.Error())
+		reply += e.Error()
+	}
+
+	return []byte(reply)
 }

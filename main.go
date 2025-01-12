@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
-
 	"kwdb/app"
 	"kwdb/app/api"
+	"kwdb/app/commands"
 	"kwdb/app/storage"
 	"kwdb/app/workers"
+	"net/http"
 )
 
 func main() {
@@ -24,13 +26,22 @@ func main() {
 		return
 	}
 
-	//Отельная рутина для работы CLI
 	go api.HandleCLI()
 
 	//задача чистильщика
 	go workers.CleanerRun()
 
-	fmt.Printf("Приложение запущено\n")
+	go func() {
+		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+
+			ifc := commands.List[commands.CommandInfo]
+			ctx := context.Background()
+			res, _ := ifc.Execute(ctx)
+			fmt.Fprintf(w, res)
+		})
+		
+		http.ListenAndServe("192.168.1.5:83", nil)
+	}()
 
 	app.ServeTCP()
 }

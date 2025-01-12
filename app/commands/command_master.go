@@ -2,21 +2,22 @@ package commands
 
 import (
 	"context"
-	"fmt"
 	"github.com/pkg/errors"
 )
 
 var (
-	ErrCommandNotFound = errors.New("команда не найдена")
+	ErrCommandNotFound   = errors.New("команда не найдена")
+	ErrCommandLineParser = errors.New("ошибка разбора аргументов")
+	ErrCommandArguments  = errors.New("отсутствуют необходимые аргуметы")
 )
 
-var list = []CommandInterface{
-	NewGetCommand(),
-	NewSetCommand(),
-	NewDeleteCommand(),
-	NewInfoCommand(),
-	NewRestoreCommand(),
-	NewLookUpCommand(),
+var List = map[string]CommandInterface{
+	CommandGet:     NewGetCommand(),
+	CommandSet:     NewSetCommand(),
+	CommandDelete:  NewDeleteCommand(),
+	CommandInfo:    NewInfoCommand(),
+	CommandRestore: NewRestoreCommand(),
+	CommandLookUp:  NewLookUpCommand(),
 }
 
 type CommandInterface interface {
@@ -35,15 +36,21 @@ type CommandArguments struct {
 }
 
 func SetupCommand(ctx context.Context, message string) (CommandInterface, error) {
+
 	args, err := Parse(message)
+
 	if err != nil {
-		return nil, errors.Wrap(err, "ошибка парсинга аргументов")
+		return nil, ErrCommandLineParser
 	}
 
 	cmd := selectCommand(args)
 
+	if cmd == nil {
+		return nil, ErrCommandNotFound
+	}
+
 	if !cmd.CheckArgs(ctx, args) {
-		return nil, fmt.Errorf("отсутствуют необходимые аргуметы")
+		return nil, ErrCommandArguments
 	}
 
 	cmd.SetArgs(ctx, args)
@@ -52,18 +59,9 @@ func SetupCommand(ctx context.Context, message string) (CommandInterface, error)
 }
 
 func selectCommand(args *CommandArguments) CommandInterface {
-
-	var command CommandInterface
-	for _, cmd := range list {
-		if cmd.Name() == args.Name {
-			command = cmd
-			break
-		}
-	}
-
-	if command == nil {
+	if List[args.Name] == nil {
 		return nil
 	}
 
-	return command
+	return List[args.Name]
 }
