@@ -1,14 +1,11 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"kwdb/app"
-	"kwdb/app/api"
-	"kwdb/app/commands"
+	"kwdb/app/api/http"
+	"kwdb/app/api/tcp"
 	"kwdb/app/storage"
-	"kwdb/app/workers"
-	"net/http"
 )
 
 func main() {
@@ -26,22 +23,10 @@ func main() {
 		return
 	}
 
-	go api.HandleCLI()
-
 	//задача чистильщика
-	go workers.CleanerRun()
+	//go workers.CleanerRun()
 
-	go func() {
-		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	go http.Serve()
 
-			ifc := commands.List[commands.CommandInfo]
-			ctx := context.Background()
-			res, _ := ifc.Execute(ctx)
-			fmt.Fprintf(w, res)
-		})
-		
-		http.ListenAndServe("192.168.1.5:83", nil)
-	}()
-
-	app.ServeTCP()
+	tcp.Serve()
 }

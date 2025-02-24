@@ -21,11 +21,7 @@ func NewDeleteCommand() *GetCommand {
 	}
 }
 
-func (command *DeleteCommand) IsWritable(ctx context.Context) bool {
-	return command.isWritable
-}
-
-func (command *DeleteCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
+func (c *DeleteCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
 	if args.Key == "" {
 		return false
 	}
@@ -33,17 +29,23 @@ func (command *DeleteCommand) CheckArgs(ctx context.Context, args *CommandArgume
 	return true
 }
 
-func (command *DeleteCommand) Execute(ctx context.Context) (string, error) {
+func (c *DeleteCommand) Execute(ctx context.Context) (string, error) {
 
-	storage.Storage.DeleteValue(command.Args.Key)
+	err := storage.Storage.Delete(ctx, c.Args.Key)
+	if err != nil {
+		return "", err
+	}
 
 	return "", nil
 }
 
-func (command *DeleteCommand) Name() string {
-	return command.name
+func (c *DeleteCommand) Name() string {
+	return c.name
 }
 
-func (command *DeleteCommand) SetArgs(ctx context.Context, args *CommandArguments) {
-	command.Args = args
+func (c *DeleteCommand) SetArgs(ctx context.Context, args *CommandArguments) {
+	c.Args = args
+}
+func (c *DeleteCommand) IsWritable(ctx context.Context) bool {
+	return c.isWritable
 }

@@ -384,3 +384,7 @@ GET key=1
 INFO
 SET key=1 value=alslkd
 GET key=1
+INFO
+INFO
+INFO
+INFO

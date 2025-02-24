@@ -22,17 +22,17 @@ func NewRestoreCommand() *RestoreCommand {
 		isWritable: false,
 	}
 }
-func (command *RestoreCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
+func (c *RestoreCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
 	return true
 }
 
-func (command *RestoreCommand) Execute(ctx context.Context) (string, error) {
+func (c *RestoreCommand) Execute(ctx context.Context) (string, error) {
 
-	c := make(chan string)
+	ch := make(chan string)
 
-	go workers.Backup(c)
+	go workers.Backup(ch)
 	for {
-		commandString, ok := <-c
+		commandString, ok := <-ch
 		if ok == false {
 			if commandString == "" {
 				fmt.Println("Done")
@@ -53,14 +53,14 @@ func (command *RestoreCommand) Execute(ctx context.Context) (string, error) {
 	return "", nil
 }
 
-func (command *RestoreCommand) Name() string {
-	return command.name
+func (c *RestoreCommand) Name() string {
+	return c.name
 }
 
-func (command *RestoreCommand) SetArgs(ctx context.Context, args *CommandArguments) {
-	command.Args = args
+func (c *RestoreCommand) SetArgs(ctx context.Context, args *CommandArguments) {
+	c.Args = args
 }
 
-func (command *RestoreCommand) IsWritable(ctx context.Context) bool {
-	return command.isWritable
+func (c *RestoreCommand) IsWritable(ctx context.Context) bool {
+	return c.isWritable
 }

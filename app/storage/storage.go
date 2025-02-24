@@ -1,33 +1,32 @@
 package storage
 
 import (
+	"kwdb/app/errorpkg"
+	"kwdb/app/storage/driver"
+	"kwdb/app/storage/driver/mapstd"
+	"kwdb/app/storage/driver/syncmap"
 	"sync"
 	"time"
-
-	"kwdb/app/storage/driver"
 )
 
-var dict = map[string]driver.Interface{
-	"hash": &driver.HashMapStandard{},
-}
-
 var (
-	Storage driver.Interface
+	Started = time.Now()
+	Storage driver.Driver
 	once    sync.Once
 )
 
-var Started = time.Now()
-
-func Init(dbDriver string) (err error) {
+func Init(driverName string) (err error) {
+	// TODO: флагами получить интерфес драйверов
 	once.Do(func() {
-		hash, ok := dict[dbDriver]
-		if ok {
-			Storage = hash
-			Storage.Init()
+		switch driverName {
+		case mapstd.DriverName:
+			Storage = mapstd.NewHashMapStandard()
+		case syncmap.DriverName:
+			Storage = syncmap.NewHashMapStandard()
 		}
 
 		if Storage == nil {
-			err = driver.ErrUnknownDriver
+			err = errorpkg.ErrUnknownDriver
 		}
 	})
 

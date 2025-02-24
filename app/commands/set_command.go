@@ -21,11 +21,11 @@ func NewSetCommand() *SetCommand {
 	}
 }
 
-func (command *SetCommand) IsWritable(ctx context.Context) bool {
-	return command.isWritable
+func (c *SetCommand) IsWritable(ctx context.Context) bool {
+	return c.isWritable
 }
 
-func (command *SetCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
+func (c *SetCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
 	if args.Key == "" || args.Value == "" {
 		return false
 	}
@@ -33,17 +33,20 @@ func (command *SetCommand) CheckArgs(ctx context.Context, args *CommandArguments
 	return true
 }
 
-func (command *SetCommand) Execute(ctx context.Context) (string, error) {
+func (c *SetCommand) Execute(ctx context.Context) (string, error) {
 
-	storage.Storage.SetValue(command.Args.Key, command.Args.Value, command.Args.TTL)
+	err := storage.Storage.Set(ctx, c.Args.Key, c.Args.Value, c.Args.TTL)
+	if err != nil {
+		return "", err
+	}
 
 	return "", nil
 }
 
-func (command *SetCommand) Name() string {
-	return command.name
+func (c *SetCommand) Name() string {
+	return c.name
 }
 
-func (command *SetCommand) SetArgs(ctx context.Context, args *CommandArguments) {
-	command.Args = args
+func (c *SetCommand) SetArgs(ctx context.Context, args *CommandArguments) {
+	c.Args = args
 }

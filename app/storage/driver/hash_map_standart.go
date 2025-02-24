@@ -46,7 +46,6 @@ func (hashMap *HashMapStandard) SetValue(key string, value string, ttl int) bool
 
 	cell := Cell{
 		Value:   value,
-		Key:     key,
 		TTL:     ttl,
 		AddDate: time.Now(),
 	}

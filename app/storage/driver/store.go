@@ -2,6 +2,7 @@ package driver
 
 import (
 	"context"
+	"kwdb/app/errorpkg"
 	"sync"
 	"time"
 )
@@ -32,7 +33,7 @@ func (s *Store) Get(ctx context.Context, key string) (*Cell, error) {
 
 	cell, ok := s.vault[key]
 	if !ok {
-		return nil, ErrKeyNotFound
+		return nil, errorpkg.ErrCmdKeyNotFound
 	}
 
 	return cell, nil
@@ -48,7 +49,6 @@ func (s *Store) Set(ctx context.Context, key string, value string, ttl int) erro
 
 	cell := Cell{
 		Value:   value,
-		Key:     key,
 		TTL:     ttl,
 		AddDate: time.Now(),
 	}

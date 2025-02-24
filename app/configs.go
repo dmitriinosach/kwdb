@@ -25,24 +25,22 @@ func InitConfigs() (ConfigEnv, error) {
 		return ConfigEnv{}, errors.Wrap(err, EnvLoad)
 	}
 
-	host, exists := os.LookupEnv("SERVER_HOST")
-	if !exists {
+	exist := false
+
+	Config.HOST, exist = os.LookupEnv("SERVER_HOST")
+	if !exist {
 		return Config, errors.New(EnvParameterMissed + "SERVER_HOST")
 	}
-	Config.HOST = host
 
-	port, exists := os.LookupEnv("SERVER_PORT")
-	if !exists {
+	Config.PORT, exist = os.LookupEnv("SERVER_PORT")
+	if !exist {
 		return Config, errors.New(EnvParameterMissed + "SERVER_PORT")
 	}
-	Config.PORT = port
 
-	driver, exists := os.LookupEnv("DATABASE_DRIVER")
-	if !exists {
+	Config.DRIVER, exist = os.LookupEnv("DATABASE_DRIVER")
+	if !exist {
 		return Config, errors.New(EnvParameterMissed + "DATABASE_DRIVER")
 	}
-
-	Config.DRIVER = driver
 
 	return Config, nil
 }

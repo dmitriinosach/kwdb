@@ -9,7 +9,7 @@ import (
 const CommandGet = "GET"
 
 var (
-	GetCommandNotFound = errors.New("ключ не установлен")
+	GetCommandKeyNotFound = errors.New("ключ не установлен")
 )
 
 type GetCommand struct {
@@ -26,15 +26,15 @@ func NewGetCommand() *GetCommand {
 	}
 }
 
-func (command *GetCommand) IsWritable(ctx context.Context) bool {
-	return command.isWritable
+func (c *GetCommand) IsWritable(ctx context.Context) bool {
+	return c.isWritable
 }
 
-func (command *GetCommand) SetArgs(ctx context.Context, args *CommandArguments) {
-	command.Args = args
+func (c *GetCommand) SetArgs(ctx context.Context, args *CommandArguments) {
+	c.Args = args
 }
 
-func (command *GetCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
+func (c *GetCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
 	if args.Key == "" {
 		return false
 	}
@@ -42,18 +42,23 @@ func (command *GetCommand) CheckArgs(ctx context.Context, args *CommandArguments
 	return true
 }
 
-func (command *GetCommand) Name() string {
+func (c *GetCommand) Name() string {
 
-	return command.name
+	return c.name
 }
 
-func (command *GetCommand) Execute(ctx context.Context) (string, error) {
+func (c *GetCommand) Execute(ctx context.Context) (string, error) {
 
-	if !storage.Storage.HasKey(command.Args.Key) {
-		return "", GetCommandNotFound
+	ok, err := storage.Storage.Has(ctx, c.Args.Key)
+	if err != nil {
+		return "", err
 	}
 
-	value, _ := storage.Storage.GetValue(command.Args.Key)
+	if !ok {
+		return "", GetCommandKeyNotFound
+	}
+
+	value, _ := storage.Storage.Get(ctx, c.Args.Key)
 
 	return value.Value, nil
 }

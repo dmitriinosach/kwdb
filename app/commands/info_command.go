@@ -2,9 +2,6 @@ package commands
 
 import (
 	"context"
-	"strconv"
-	"time"
-
 	"kwdb/app/storage"
 )
 
@@ -24,28 +21,23 @@ func NewInfoCommand() *InfoCommand {
 	}
 }
 
-func (command *InfoCommand) IsWritable(ctx context.Context) bool {
-	return command.isWritable
+func (c *InfoCommand) IsWritable(ctx context.Context) bool {
+	return c.isWritable
 }
 
-func (command *InfoCommand) SetArgs(ctx context.Context, args *CommandArguments) {
-	command.Args = args
+func (c *InfoCommand) SetArgs(ctx context.Context, args *CommandArguments) {
+	c.Args = args
 }
 
-func (command *InfoCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
+func (c *InfoCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
 	return true
 }
 
-func (command *InfoCommand) Name() string {
+func (c *InfoCommand) Name() string {
 
-	return command.name
+	return c.name
 }
 
-func (command *InfoCommand) Execute(ctx context.Context) (string, error) {
-
-	info := "driver:" + storage.Storage.GetDriver() + "\n"
-	info += "Length:" + strconv.Itoa(len(storage.Storage.GetVaultMap())) + "\n"
-	info += "Uptime:" + time.Unix(time.Now().Unix()-storage.Started.Unix(), 0).Format("05 04 15") + "\n"
-
-	return info, nil
+func (c *InfoCommand) Execute(ctx context.Context) (string, error) {
+	return storage.Storage.Info(), nil
 }

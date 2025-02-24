@@ -28,13 +28,6 @@ type CommandInterface interface {
 	IsWritable(ctx context.Context) bool
 }
 
-type CommandArguments struct {
-	Name  string
-	Key   string
-	Value string
-	TTL   int
-}
-
 func SetupCommand(ctx context.Context, message string) (CommandInterface, error) {
 
 	args, err := Parse(message)
@@ -59,9 +52,9 @@ func SetupCommand(ctx context.Context, message string) (CommandInterface, error)
 }
 
 func selectCommand(args *CommandArguments) CommandInterface {
-	if List[args.Name] == nil {
+	if List[args.CmdName] == nil {
 		return nil
 	}
 
-	return List[args.Name]
+	return List[args.CmdName]
 }

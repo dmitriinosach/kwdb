@@ -11,6 +11,7 @@ func Write(message string) {
 	if err != nil {
 		fmt.Println("ошибка открытия файла:", err)
 	}
+
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
