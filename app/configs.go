@@ -4,12 +4,14 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/pkg/errors"
 	"os"
+	"strconv"
 )
 
 type ConfigEnv struct {
-	HOST   string
-	PORT   string
-	DRIVER string
+	HOST       string
+	PORT       string
+	DRIVER     string
+	PARTITIONS int
 }
 
 var (
@@ -38,6 +40,14 @@ func InitConfigs() (ConfigEnv, error) {
 	}
 
 	Config.DRIVER, exist = os.LookupEnv("DATABASE_DRIVER")
+	if !exist {
+		return Config, errors.New(EnvParameterMissed + "DATABASE_DRIVER")
+	}
+
+	partitions := ""
+	partitions, exist = os.LookupEnv("DATABASE_DRIVER_PARTITIONS")
+	Config.PARTITIONS, _ = strconv.Atoi(partitions)
+
 	if !exist {
 		return Config, errors.New(EnvParameterMissed + "DATABASE_DRIVER")
 	}

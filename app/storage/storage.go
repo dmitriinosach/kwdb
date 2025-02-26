@@ -15,19 +15,18 @@ var (
 	once    sync.Once
 )
 
-func Init(driverName string) (err error) {
+func Init(driverName string, partitionsCount int) (err error) {
 	// TODO: флагами получить интерфес драйверов
 	once.Do(func() {
 		switch driverName {
 		case mapstd.DriverName:
-			Storage = mapstd.NewHashMapStandard()
+			Storage = mapstd.NewHashMapStandard(partitionsCount)
 		case syncmap.DriverName:
-			Storage = syncmap.NewHashMapStandard()
-		}
-
-		if Storage == nil {
+			Storage = syncmap.NewSyncMap(partitionsCount)
+		default:
 			err = errorpkg.ErrUnknownDriver
 		}
+
 	})
 
 	return

@@ -6,6 +6,7 @@ import (
 	"kwdb/app/api/http"
 	"kwdb/app/api/tcp"
 	"kwdb/app/storage"
+	"kwdb/app/workers/cleaner"
 )
 
 func main() {
@@ -17,14 +18,14 @@ func main() {
 		panic("не установленны базовые настройки: " + err.Error())
 	}
 
-	err = storage.Init(app.Config.DRIVER)
+	err = storage.Init(app.Config.DRIVER, app.Config.PARTITIONS)
 	if err != nil {
 		fmt.Println("Ошибка инициализации хранилища: ", err)
 		return
 	}
 
 	//задача чистильщика
-	//go workers.CleanerRun()
+	go cleaner.Run(app.Config.PARTITIONS)
 
 	go http.Serve()
 

@@ -2,7 +2,6 @@ package syncmap
 
 import (
 	"context"
-	"kwdb/app/errorpkg"
 	"kwdb/app/storage/driver"
 	"sync"
 	"time"
@@ -16,17 +15,15 @@ type SyncMap struct {
 	driver     string
 }
 
-func NewHashMapStandard() *SyncMap {
+func NewSyncMap(partitionsCount int) *SyncMap {
 	return &SyncMap{
-		partitions: make([]partition, 10),
-		locker:     sync.RWMutex{},
-		driver:     "hash",
+		partitions: make([]partition, partitionsCount),
+		driver:     DriverName,
 	}
 }
 
 type partition struct {
-	vault  sync.Map
-	locker sync.RWMutex
+	vault sync.Map
 }
 
 func (p *partition) Get(key string) (*driver.Cell, bool) {
@@ -48,13 +45,10 @@ func (p *partition) Set(key string, cell *driver.Cell) error {
 
 func (s *SyncMap) Get(ctx context.Context, key string) (*driver.Cell, error) {
 
-	partitionIndex, ok := driver.HashFunction(key)
+	partitionIndex, pErr := driver.HashFunction(key, len(s.partitions))
 
-	if (partitionIndex - 1) > 10 {
-		return nil, errorpkg.ErrHashFunctionIndexOutRange
-	}
-	if !ok {
-		return nil, errorpkg.ErrHashFunctionCompute
+	if pErr != nil {
+		return nil, pErr
 	}
 
 	cell, ok := s.partitions[partitionIndex].Get(key)
@@ -73,13 +67,10 @@ func (s *SyncMap) Set(ctx context.Context, key string, value string, ttl int) er
 		AddDate: time.Now(),
 	}
 
-	partitionIndex, ok := driver.HashFunction(key)
+	partitionIndex, pErr := driver.HashFunction(key, len(s.partitions))
 
-	if !ok {
-		return errorpkg.ErrHashFunctionCompute
-	}
-	if (partitionIndex - 1) > 10 {
-		return errorpkg.ErrHashFunctionIndexOutRange
+	if pErr != nil {
+		return pErr
 	}
 
 	err := s.partitions[partitionIndex].Set(key, cell)
@@ -104,12 +95,10 @@ func (s *SyncMap) Delete(ctx context.Context, key string) error {
 
 func (s *SyncMap) Has(ctx context.Context, key string) (bool, error) {
 
-	partitionIndex, ok := driver.HashFunction(key)
-	if !ok {
-		return false, errorpkg.ErrHashFunctionCompute
-	}
-	if (partitionIndex - 1) > 10 {
-		return false, errorpkg.ErrHashFunctionIndexOutRange
+	partitionIndex, pErr := driver.HashFunction(key, len(s.partitions))
+
+	if pErr != nil {
+		return false, pErr
 	}
 
 	_, ex := s.partitions[partitionIndex].Get(key)
