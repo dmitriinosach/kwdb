@@ -1,0 +1,3 @@
+SET k=1 v=2
+SET k=1 v=1
+SET k=1 v=2

@@ -17,7 +17,7 @@ func NewSetCommand() *SetCommand {
 	return &SetCommand{
 		name:       CommandSet,
 		Args:       new(CommandArguments),
-		isWritable: false,
+		isWritable: true,
 	}
 }
 

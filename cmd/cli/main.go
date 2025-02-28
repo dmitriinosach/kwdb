@@ -33,8 +33,9 @@ func handle(message string) string {
 		history = [30]string(history[1:30])
 	} else {
 		history[historyCount] = message
-		historyCount++
 	}
+
+	historyCount++
 
 	if errors != nil {
 		return errors.Error()
@@ -82,7 +83,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			os.Exit(0)
 			return m, tea.Quit
 		case tea.KeyUp:
-			if historyPointer <= 0 {
+			if historyPointer < 0 {
 				historyPointer = historyCount
 			}
 			his := history[historyPointer]

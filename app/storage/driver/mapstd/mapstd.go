@@ -2,6 +2,7 @@ package mapstd
 
 import (
 	"context"
+	"kwdb/app/helpers"
 	"kwdb/app/storage/driver"
 	"strconv"
 	"sync"
@@ -59,7 +60,7 @@ func (p *partition) Set(key string, cell *driver.Cell) error {
 
 func (s *HashMapStandard) Get(ctx context.Context, key string) (*driver.Cell, error) {
 
-	partitionIndex, err := driver.HashFunction(key, len(s.partitions))
+	partitionIndex, err := helpers.HashFunction(key, len(s.partitions))
 
 	if err != nil {
 		return nil, err
@@ -81,7 +82,7 @@ func (s *HashMapStandard) Set(ctx context.Context, key string, value string, ttl
 		AddDate: time.Now(),
 	}
 
-	partitionIndex, pErr := driver.HashFunction(key, len(s.partitions))
+	partitionIndex, pErr := helpers.HashFunction(key, len(s.partitions))
 
 	if pErr != nil {
 		return pErr
@@ -113,7 +114,7 @@ func (s *HashMapStandard) Delete(ctx context.Context, key string) error {
 
 func (s *HashMapStandard) Has(ctx context.Context, key string) (bool, error) {
 
-	partitionIndex, pErr := driver.HashFunction(key, len(s.partitions))
+	partitionIndex, pErr := helpers.HashFunction(key, len(s.partitions))
 
 	if pErr != nil {
 		return false, pErr

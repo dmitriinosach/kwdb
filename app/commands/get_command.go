@@ -47,6 +47,11 @@ func (c *GetCommand) Name() string {
 	return c.name
 }
 
+func (c *GetCommand) echo() string {
+
+	return c.name
+}
+
 func (c *GetCommand) Execute(ctx context.Context) (string, error) {
 
 	ok, err := storage.Storage.Has(ctx, c.Args.Key)

@@ -17,7 +17,7 @@ func NewDeleteCommand() *GetCommand {
 	return &GetCommand{
 		name:       CommandDelete,
 		Args:       new(CommandArguments),
-		isWritable: false,
+		isWritable: true,
 	}
 }
 

@@ -3,22 +3,24 @@ package cleaner
 import (
 	"fmt"
 	"kwdb/app"
+	"kwdb/app/helpers"
 	"kwdb/app/storage"
 	"kwdb/app/storage/driver"
 	"kwdb/app/storage/driver/mapstd"
 	"kwdb/app/storage/driver/syncmap"
+	"reflect"
 )
 
 func Run(partitions int) {
 
 	switch storage.Storage.(type) {
 	case *mapstd.HashMapStandard:
-		//	workSem := make(chan struct{})
-	/*	var t = reflect.ValueOf(&storage.Storage).Type().Elem()
-		fmt.Println(t)*/
-	/*for i := 0; i < app.Config.PARTITIONS; i++ {
-		go (storage.Storage).MakeTBCleaner(workSem)
-	}*/
+		workSem := make(chan struct{})
+		var t = reflect.ValueOf(&storage.Storage).Type().Elem()
+		fmt.Println(t)
+		for i := 0; i < app.Config.PARTITIONS; i++ {
+			go (storage.Storage).MakeTBCleaner(workSem)
+		}
 	case *syncmap.SyncMap:
 		fmt.Println("f")
 
@@ -26,7 +28,7 @@ func Run(partitions int) {
 		fmt.Println("default")
 	}
 
-	app.InfChan <- "Cleaner запущен"
+	helpers.InfChan <- "Cleaner запущен"
 }
 
 func cleaner(vault map[string]*driver.Cell) {

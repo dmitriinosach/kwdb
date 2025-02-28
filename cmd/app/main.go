@@ -4,6 +4,7 @@ import (
 	"kwdb/app"
 	"kwdb/app/api/http"
 	"kwdb/app/api/tcp"
+	"kwdb/app/helpers"
 	"kwdb/app/storage"
 	"kwdb/app/workers/cleaner"
 	"os"
@@ -12,27 +13,27 @@ import (
 func main() {
 
 	//Консольный информатор
-	go app.ConsoleInformer()
+	go helpers.ConsoleInformer()
 
 	//загрузка настроек
 	_, err := app.InitConfigs()
 
 	if err != nil {
-		app.InfChan <- "Ошибка чтения настроек:" + err.Error()
+		helpers.InfChan <- "Ошибка чтения настроек:" + err.Error()
 		os.Exit(-1)
 	}
 
-	app.InfChan <- "Настройки приложения загружены"
+	helpers.InfChan <- "Настройки приложения загружены"
 
 	err = storage.Init(app.Config.DRIVER, app.Config.PARTITIONS)
 
 	if err != nil {
-		app.InfChan <- "Ошибка инициализации хранилища:" + err.Error()
+		helpers.InfChan <- "Ошибка инициализации хранилища:" + err.Error()
 		os.Exit(-1)
 	}
 
-	app.InfChan <- "Хранилище инициализировано:"
-	app.InfChan <- "Состояние хранилища: \n" + storage.Storage.Info()
+	helpers.InfChan <- "Хранилище инициализировано:"
+	helpers.InfChan <- "Состояние хранилища: \n" + storage.Storage.Info()
 
 	//задача чистильщика
 	go cleaner.Run(app.Config.PARTITIONS)
