@@ -20,12 +20,6 @@ type (
 func main() {
 	p := tea.NewProgram(initialModel())
 
-	_, e := send("GET key=1")
-
-	if e != nil {
-		fmt.Printf("Соединение работает")
-	}
-
 	if _, err := p.Run(); err != nil {
 		log.Fatal(err)
 	}
@@ -82,7 +76,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			msg := m.textInput.Value()
 			m.textInput.SetValue("")
 			historyPointer = historyCount
-			return m, tea.Println(handle(msg))
+			ans := handle(msg)
+			return m, tea.Printf(ans)
 		case tea.KeyEscape, tea.KeyCtrlC:
 			os.Exit(0)
 			return m, tea.Quit

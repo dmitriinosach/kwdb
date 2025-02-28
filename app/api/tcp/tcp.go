@@ -2,7 +2,6 @@ package tcp
 
 import (
 	"context"
-	"fmt"
 	"kwdb/app"
 	"kwdb/app/handlers"
 	"kwdb/app/logger"
@@ -16,9 +15,8 @@ func Serve() {
 
 	listen, err := net.Listen("tcp", app.Config.HOST+":"+app.Config.PORT)
 
-	fmt.Printf("Listening on %s\n", app.Config.HOST+":"+app.Config.PORT)
-
 	ctx := context.Background()
+
 	signal.NotifyContext(ctx, os.Interrupt)
 
 	if err != nil {
@@ -26,6 +24,8 @@ func Serve() {
 	}
 
 	defer listen.Close()
+
+	app.InfChan <- "tcp://" + app.Config.HOST + ":" + app.Config.PORT + " ожидает подключений"
 
 	for {
 		select {
@@ -37,14 +37,16 @@ func Serve() {
 		conn, err := listen.Accept()
 		if err != nil {
 			logger.Write(err.Error())
-			os.Exit(1)
+			continue
 		}
 
 		go tpcHandle(ctx, conn)
+		app.InfChan <- "Соединение принято:" + conn.RemoteAddr().String()
 	}
 }
 
 func tpcHandle(ctx context.Context, conn net.Conn) {
+
 	buffer := make([]byte, 1024)
 
 	bufferLength, err := conn.Read(buffer)
@@ -55,7 +57,7 @@ func tpcHandle(ctx context.Context, conn net.Conn) {
 
 	message := string(buffer[1:bufferLength])
 
-	result, err := api.HandleMessage(ctx, message)
+	result, err := handlers.HandleMessage(ctx, message)
 
 	if err != nil {
 		logger.Write(err.Error())
@@ -68,6 +70,8 @@ func tpcHandle(ctx context.Context, conn net.Conn) {
 	}
 
 	err = conn.Close()
+
+	app.InfChan <- "Соединение обработано и закрыто:" + conn.RemoteAddr().String()
 }
 
 func makeReply(r string, e error) []byte {

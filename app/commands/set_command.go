@@ -40,7 +40,7 @@ func (c *SetCommand) Execute(ctx context.Context) (string, error) {
 		return "", err
 	}
 
-	return "", nil
+	return "OK", nil
 }
 
 func (c *SetCommand) Name() string {

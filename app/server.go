@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"kwdb/app/handlers"
 	"kwdb/app/logger"
 	"net"
 	"os"
@@ -49,7 +50,7 @@ func tpcHandle(ctx context.Context, conn net.Conn) {
 
 	message := string(buffer[1:bufferLength])
 	logger.Write(message)
-	result, err := HandleMessage(ctx, message)
+	result, err := handlers.HandleMessage(ctx, message)
 	if err != nil {
 		logger.Write(err.Error())
 	}

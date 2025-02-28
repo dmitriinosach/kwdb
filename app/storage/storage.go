@@ -5,6 +5,7 @@ import (
 	"kwdb/app/storage/driver"
 	"kwdb/app/storage/driver/mapstd"
 	"kwdb/app/storage/driver/syncmap"
+	"runtime"
 	"sync"
 	"time"
 )
@@ -28,6 +29,9 @@ func Init(driverName string, partitionsCount int) (err error) {
 		}
 
 	})
+	
+	//сохраняем от сборщика мусора
+	runtime.KeepAlive(Storage)
 
 	return
 }

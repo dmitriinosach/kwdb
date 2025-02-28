@@ -17,11 +17,17 @@ type HashMapStandard struct {
 }
 
 func NewHashMapStandard(partitionsCount int) *HashMapStandard {
-	return &HashMapStandard{
+	stg := &HashMapStandard{
 		partitions: make([]partition, partitionsCount),
 		locker:     sync.RWMutex{},
 		driver:     DriverName,
 	}
+
+	for i := range stg.partitions {
+		stg.partitions[i].vault = make(map[string]*driver.Cell, 100)
+	}
+
+	return stg
 }
 
 type partition struct {
@@ -81,7 +87,9 @@ func (s *HashMapStandard) Set(ctx context.Context, key string, value string, ttl
 		return pErr
 	}
 
-	err := s.partitions[partitionIndex].Set(key, cell)
+	p := &s.partitions[partitionIndex]
+
+	err := (*p).Set(key, cell)
 
 	if err != nil {
 		return err
@@ -119,12 +127,13 @@ func (s *HashMapStandard) Has(ctx context.Context, key string) (bool, error) {
 }
 
 func (s *HashMapStandard) Info() string {
-	info := "driver:" + s.driver + "\n"
-	info += "Length: \n"
+	info := "Драйвер:" + s.driver + "\n"
+	info += "Инициировано секций: " + strconv.Itoa(len(s.partitions)) + " \n"
 
-	rmin, rmax := 0, 9
-	for i := rmin; i < rmax; i++ {
-		info += "partition-" + strconv.Itoa(i) + ": " + strconv.Itoa(len(s.partitions[i].vault)) + "\n"
+	i := 0
+	for _, p := range s.partitions {
+		info += "Секция-" + strconv.Itoa(i) + ": элементов- " + strconv.Itoa(len(p.vault)) + "\n"
+		i++
 	}
 
 	return info

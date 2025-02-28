@@ -11,7 +11,7 @@ import (
 func goe(pac int) {
 
 	for i := pac * 1000; i < (pac*1000)+1000; i++ {
-		send("SET value=cacheafgljgfjkgfjklgfdsjkgdfkjlgdfsljkgfdsljkgfdljkfgdsljkgfdsljkgfdsljk" + strconv.Itoa(i) + " key=" + strconv.Itoa(i))
+		//send("SET value=cacheafgljgfjkgfjklgfdsjkgdfkjlgdfsljkgfdsljkgfdljkfgdsljkgfdsljkgfdsljk" + strconv.Itoa(i) + " key=" + strconv.Itoa(i))
 	}
 }
 
@@ -49,5 +49,9 @@ func send(message string) (string, error) {
 
 	conn.Close()
 
-	return string(responseBody), fmt.Errorf(string(errorBody))
+	if len(errorBody) > 0 {
+		return "", fmt.Errorf(string(errorBody))
+	}
+
+	return string(responseBody), nil
 }
