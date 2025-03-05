@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func Parse(message string) (*CommandArguments, error) {
+func parse(message string) (*CommandArguments, error) {
 	args := new(CommandArguments)
 
 	parsedLine, err := shlex.Split(message)

@@ -30,7 +30,7 @@ type CommandInterface interface {
 
 func SetupCommand(ctx context.Context, message string) (CommandInterface, error) {
 
-	args, err := Parse(message)
+	args, err := parse(message)
 
 	if err != nil {
 		return nil, ErrCommandLineParser

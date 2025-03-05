@@ -13,8 +13,8 @@ type DeleteCommand struct {
 	isWritable bool
 }
 
-func NewDeleteCommand() *GetCommand {
-	return &GetCommand{
+func NewDeleteCommand() *DeleteCommand {
+	return &DeleteCommand{
 		name:       CommandDelete,
 		Args:       new(CommandArguments),
 		isWritable: true,
