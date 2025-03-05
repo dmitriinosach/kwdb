@@ -4,7 +4,7 @@ import (
 	"context"
 	"kwdb/app"
 	"kwdb/app/handlers"
-	"kwdb/app/helpers"
+	"kwdb/pkg/helper"
 	"net"
 	"os"
 	"os/signal"
@@ -25,7 +25,7 @@ func Serve() {
 
 	defer listen.Close()
 
-	helpers.InfChan <- "tcp://" + app.Config.HOST + ":" + app.Config.PORT + " ожидает подключений"
+	helper.InfChan <- "tcp://" + app.Config.HOST + ":" + app.Config.PORT + " ожидает подключений"
 
 	for {
 		select {
@@ -36,12 +36,12 @@ func Serve() {
 
 		conn, err := listen.Accept()
 		if err != nil {
-			helpers.Write(err.Error())
+			helper.Write(err.Error())
 			continue
 		}
 
 		go tpcHandle(ctx, conn)
-		helpers.InfChan <- "Соединение принято:" + conn.RemoteAddr().String()
+		helper.InfChan <- "Соединение принято:" + conn.RemoteAddr().String()
 	}
 }
 
@@ -52,7 +52,7 @@ func tpcHandle(ctx context.Context, conn net.Conn) {
 	bufferLength, err := conn.Read(buffer)
 
 	if err != nil {
-		helpers.Write(err.Error())
+		helper.Write(err.Error())
 	}
 
 	message := string(buffer[1:bufferLength])
@@ -60,18 +60,18 @@ func tpcHandle(ctx context.Context, conn net.Conn) {
 	result, err := handlers.HandleMessage(ctx, message)
 
 	if err != nil {
-		helpers.Write(err.Error())
+		helper.Write(err.Error())
 	}
 
 	_, err = conn.Write(makeReply(result, err))
 	if err != nil {
-		helpers.Write(err.Error())
+		helper.Write(err.Error())
 		return
 	}
 
 	err = conn.Close()
 
-	helpers.InfChan <- "Соединение обработано и закрыто:" + conn.RemoteAddr().String()
+	helper.InfChan <- "Соединение обработано и закрыто:" + conn.RemoteAddr().String()
 }
 
 func makeReply(r string, e error) []byte {
@@ -79,7 +79,7 @@ func makeReply(r string, e error) []byte {
 	reply += r + ":"
 
 	if e != nil {
-		helpers.Write(e.Error())
+		helper.Write(e.Error())
 		reply += e.Error()
 	}
 

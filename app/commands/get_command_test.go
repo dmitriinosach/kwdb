@@ -18,7 +18,7 @@ func TestGetCommand(t *testing.T) {
 	ctx := context.Background()
 	// TODO: как выбирать инкапсулированные методы / selectCommand
 	cmd := commands.NewGetCommand()
-
+	
 	result := cmd.CheckArgs(ctx, args)
 
 	if !result {

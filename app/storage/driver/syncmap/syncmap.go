@@ -2,8 +2,8 @@ package syncmap
 
 import (
 	"context"
-	"kwdb/app/helpers"
 	"kwdb/app/storage/driver"
+	"kwdb/pkg/helper"
 	"sync"
 	"time"
 )
@@ -46,7 +46,7 @@ func (p *partition) Set(key string, cell *driver.Cell) error {
 
 func (s *SyncMap) Get(ctx context.Context, key string) (*driver.Cell, error) {
 
-	partitionIndex, pErr := helpers.HashFunction(key, len(s.partitions))
+	partitionIndex, pErr := helper.HashFunction(key, len(s.partitions))
 
 	if pErr != nil {
 		return nil, pErr
@@ -68,7 +68,7 @@ func (s *SyncMap) Set(ctx context.Context, key string, value string, ttl int) er
 		AddDate: time.Now(),
 	}
 
-	partitionIndex, pErr := helpers.HashFunction(key, len(s.partitions))
+	partitionIndex, pErr := helper.HashFunction(key, len(s.partitions))
 
 	if pErr != nil {
 		return pErr
@@ -96,7 +96,7 @@ func (s *SyncMap) Delete(ctx context.Context, key string) error {
 
 func (s *SyncMap) Has(ctx context.Context, key string) (bool, error) {
 
-	partitionIndex, pErr := helpers.HashFunction(key, len(s.partitions))
+	partitionIndex, pErr := helper.HashFunction(key, len(s.partitions))
 
 	if pErr != nil {
 		return false, pErr

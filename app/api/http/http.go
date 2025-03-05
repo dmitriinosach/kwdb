@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"kwdb/app"
 	"kwdb/app/commands"
-	"kwdb/app/helpers"
+	"kwdb/pkg/helper"
 	"net/http"
 )
 
@@ -21,12 +21,12 @@ func Serve() {
 		fmt.Fprintf(w, res)
 	})
 
-	helpers.InfChan <- "http://" + app.Config.HOST + ":" + app.Config.PORT + " ожидает подключений"
+	helper.InfChan <- "http://" + app.Config.HOST + ":" + app.Config.PORT + " ожидает подключений"
 
 	err := http.ListenAndServe("localhost:713", nil)
 
 	if err != nil {
-		helpers.InfChan <- "http://" + app.Config.HOST + ":" + app.Config.PORT + " прекратил работу: " + err.Error()
+		helper.InfChan <- "http://" + app.Config.HOST + ":" + app.Config.PORT + " прекратил работу: " + err.Error()
 		return
 	}
 

@@ -1,5 +1,5 @@
 .idea
-cli.exe
-app.exe
-cmd/app/app.exe
-cmd/cli/cli.exe
+./cli.exe
+./app.exe
+./cmd/app/app.exe
+./cmd/cli/cli.exe
