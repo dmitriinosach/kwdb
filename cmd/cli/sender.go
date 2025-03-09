@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"kwdb/app/errorpkg"
 	"net"
-	"regexp"
-	"strconv"
 )
 
 func goe(pac int) {
@@ -32,26 +30,19 @@ func send(message string) (string, error) {
 	buff := make([]byte, 1024)
 	n, err := conn.Read(buff)
 
-	response := buff[:n]
+	defer conn.Close()
+
 	if err != nil {
 		return "", errorpkg.ErrorTcpReadAnswer
 	}
 
-	respLen := regexp.MustCompile(`^sign:(\d+):`)
-	matches := respLen.FindAllString(string(response), -1)
-	bodyStart := len(matches[0])
+	response := buff[:n]
 
-	bodyLen, _ := strconv.Atoi(matches[0][5 : bodyStart-1])
+	res := parseReply(response)
 
-	bodyEnd := bodyStart + bodyLen
-	responseBody := response[bodyStart:bodyEnd]
-	errorBody := response[bodyEnd+1:]
-
-	conn.Close()
-
-	if len(errorBody) > 0 {
-		return "", fmt.Errorf(string(errorBody))
+	if len(res.ResultErrors) > 0 {
+		return "", fmt.Errorf(res.ResultErrors)
 	}
 
-	return string(responseBody), nil
+	return res.Result, nil
 }

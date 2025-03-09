@@ -7,14 +7,12 @@ import (
 	"time"
 )
 
-var logFileName_base = "log"
-
-func Write(message string) {
+func write(stream string, message string) {
 
 	y, m, d := time.Now().Date()
 	logFileDate := fmt.Sprintf("-%d-%d-%d", d, m, y)
 
-	filePath := app.Config.LogPath + "/" + logFileName_base + logFileDate + ".txt"
+	filePath := app.Config.LogPath + "/" + stream + logFileDate + ".txt"
 
 	var file *os.File
 	var err error
@@ -47,4 +45,17 @@ func Write(message string) {
 		return
 	}
 
+}
+
+func Write(mes string, stream string) {
+
+	if stream == "" {
+		stream = "log"
+	}
+
+	write(stream, mes)
+}
+
+func Info(mes string) {
+	write(mes, "info")
 }

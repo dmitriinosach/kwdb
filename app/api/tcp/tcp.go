@@ -37,7 +37,7 @@ func Serve() {
 
 		conn, err := listen.Accept()
 		if err != nil {
-			logger.Write(err.Error())
+			logger.Write(err.Error(), "")
 			continue
 		}
 
@@ -47,39 +47,44 @@ func Serve() {
 
 func tpcHandle(ctx context.Context, conn net.Conn) {
 
+	var result string
 	buffer := make([]byte, 1024)
 
 	bufferLength, err := conn.Read(buffer)
 
 	if err != nil {
-		logger.Write(err.Error())
+		r := ""
+		answer(makeReply(&r, err), conn)
+		logger.Write(err.Error(), "")
+
+		return
 	}
 
 	message := string(buffer[1:bufferLength])
 
-	result, err := handlers.HandleMessage(ctx, message)
+	result, err = handlers.HandleMessage(ctx, message)
 
-	if err != nil {
-		logger.Write(err.Error())
-	}
+	answer(makeReply(&result, err), conn)
 
-	_, err = conn.Write(makeReply(result, err))
-	if err != nil {
-		logger.Write(err.Error())
-		return
-	}
-
-	err = conn.Close()
+	defer conn.Close()
 }
 
-func makeReply(r string, e error) []byte {
-	reply := "sign:" + strconv.Itoa(len(r)) + ":"
-	reply += r + ":"
+// TODO: нужа или нет передача по ссылке
+func makeReply(r *string, e error) []byte {
+
+	reply := strconv.Itoa(len(*r)) + ":" + *r
 
 	if e != nil {
-		logger.Write(e.Error())
-		reply += e.Error()
+		reply += (e).Error()
 	}
 
 	return []byte(reply)
+}
+
+func answer(r []byte, conn net.Conn) {
+	_, err := conn.Write(r)
+	if err != nil {
+		logger.Write("Не удалось ответить серверу:"+err.Error(), "")
+		return
+	}
 }
