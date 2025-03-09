@@ -2,12 +2,16 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"log"
 	"os"
+	"os/exec"
 )
+
+var ENV_FILE string = "../../.env"
 
 var history [30]string
 var historyPointer int = 0
@@ -17,7 +21,28 @@ type (
 	errMsg error
 )
 
+var cliConfig struct {
+	connectionHost string
+	connectionPort string
+}
+
+var kwdb exec.Cmd
+
 func main() {
+
+	// Регистрируем флаги и связываем их с полями структуры config
+	flag.StringVar(&cliConfig.connectionHost, "host", "localhost", "хост для подключения")
+	flag.StringVar(&cliConfig.connectionPort, "port", "8080", "порт для подключения")
+
+	// Парсим аргументы командной строки
+	flag.Parse()
+
+	// Выводим полученные значения
+	fmt.Printf("Host: %s", cliConfig.connectionHost)
+	fmt.Printf("Port: %d", cliConfig.connectionPort)
+	
+	// Здесь можно использовать значения config.Host и config.Port в программе
+
 	p := tea.NewProgram(initialModel())
 
 	if _, err := p.Run(); err != nil {
@@ -80,6 +105,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			ans := handle(msg)
 			return m, tea.Printf(ans)
 		case tea.KeyEscape, tea.KeyCtrlC:
+
 			os.Exit(0)
 			return m, tea.Quit
 		case tea.KeyUp:

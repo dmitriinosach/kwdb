@@ -12,6 +12,7 @@ type ConfigEnv struct {
 	PORT       string
 	DRIVER     string
 	PARTITIONS int
+	LogPath    string
 }
 
 var (
@@ -50,6 +51,11 @@ func InitConfigs() (ConfigEnv, error) {
 
 	if !exist {
 		return Config, errors.New(EnvParameterMissed + "DATABASE_DRIVER")
+	}
+
+	Config.LogPath, exist = os.LookupEnv("LOG_PATH")
+	if !exist {
+		return Config, errors.New(EnvParameterMissed + "LOG_PATH")
 	}
 
 	return Config, nil

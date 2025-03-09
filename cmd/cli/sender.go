@@ -16,7 +16,7 @@ func goe(pac int) {
 }
 
 func send(message string) (string, error) {
-	conn, err := net.Dial("tcp", "localhost:712")
+	conn, err := net.Dial("tcp", cliConfig.connectionHost+":"+cliConfig.connectionPort)
 	if err != nil {
 		return "", errorpkg.ErrorTcpSetUpConnections
 	}
