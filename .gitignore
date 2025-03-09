@@ -1,6 +1,6 @@
 .idea
-./cli.exe
-./app.exe
-./cmd/app/app.exe
-./cmd/cli/cli.exe
-./logs/*
+/cli.exe
+/app.exe
+/cmd/app/app.exe
+/cmd/cli/cli.exe
+/logs/*
