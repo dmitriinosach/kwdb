@@ -5,19 +5,17 @@ import (
 	"kwdb/app/storage/driver"
 	"kwdb/app/storage/driver/mapstd"
 	"kwdb/app/storage/driver/syncmap"
-	"runtime"
 	"sync"
-	"time"
 )
 
 var (
-	Started = time.Now()
 	Storage driver.Driver
 	once    sync.Once
 )
 
 func Init(driverName string, partitionsCount int) (err error) {
 	// TODO: флагами получить интерфес драйверов
+	//TODO лишнее
 	once.Do(func() {
 		switch driverName {
 		case mapstd.DriverName:
@@ -29,9 +27,6 @@ func Init(driverName string, partitionsCount int) (err error) {
 		}
 
 	})
-	
-	//сохраняем от сборщика мусора
-	runtime.KeepAlive(Storage)
 
 	return
 }

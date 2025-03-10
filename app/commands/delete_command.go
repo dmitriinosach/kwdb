@@ -9,19 +9,19 @@ const CommandDelete = "DELETE"
 
 type DeleteCommand struct {
 	name       string
-	Args       *CommandArguments
+	Args       *Arguments
 	isWritable bool
 }
 
 func NewDeleteCommand() *DeleteCommand {
 	return &DeleteCommand{
 		name:       CommandDelete,
-		Args:       new(CommandArguments),
+		Args:       new(Arguments),
 		isWritable: true,
 	}
 }
 
-func (c *DeleteCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
+func (c *DeleteCommand) CheckArgs(ctx context.Context, args *Arguments) bool {
 	if args.Key == "" {
 		return false
 	}
@@ -43,7 +43,7 @@ func (c *DeleteCommand) Name() string {
 	return c.name
 }
 
-func (c *DeleteCommand) SetArgs(ctx context.Context, args *CommandArguments) {
+func (c *DeleteCommand) SetArgs(ctx context.Context, args *Arguments) {
 	c.Args = args
 }
 func (c *DeleteCommand) IsWritable(ctx context.Context) bool {

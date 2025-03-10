@@ -9,14 +9,14 @@ const CommandSet = "SET"
 
 type SetCommand struct {
 	name       string
-	Args       *CommandArguments
+	Args       *Arguments
 	isWritable bool
 }
 
 func NewSetCommand() *SetCommand {
 	return &SetCommand{
 		name:       CommandSet,
-		Args:       new(CommandArguments),
+		Args:       new(Arguments),
 		isWritable: true,
 	}
 }
@@ -25,7 +25,7 @@ func (c *SetCommand) IsWritable(ctx context.Context) bool {
 	return c.isWritable
 }
 
-func (c *SetCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
+func (c *SetCommand) CheckArgs(ctx context.Context, args *Arguments) bool {
 	if args.Key == "" || args.Value == "" {
 		return false
 	}
@@ -47,6 +47,6 @@ func (c *SetCommand) Name() string {
 	return c.name
 }
 
-func (c *SetCommand) SetArgs(ctx context.Context, args *CommandArguments) {
+func (c *SetCommand) SetArgs(ctx context.Context, args *Arguments) {
 	c.Args = args
 }

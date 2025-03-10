@@ -3,11 +3,15 @@ package errorpkg
 import "fmt"
 
 var (
+	ErrEnvParameterMissed = "в настройках окружения не установленно: "
+	ErrEnvLoad            = "Ошибка инициализации env файла"
+
 	ErrHashFunctionCompute       = fmt.Errorf("error hashing function")
 	ErrHashFunctionIndexOutRange = fmt.Errorf("partition index out of range")
 	ErrUnknownDriver             = fmt.Errorf("unknown driver")
 
 	ErrorParse                  = fmt.Errorf("ошибка разбора строки")
+	ErrorParseCmdNotFound       = fmt.Errorf("неизветсная команда")
 	ErrorParseTTL               = fmt.Errorf("ошибка чтения ttl")
 	ErrorParseParameterNotFound = fmt.Errorf("передан неизвестный параметр")
 

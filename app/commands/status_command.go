@@ -11,14 +11,14 @@ const CommandStatus = "status"
 
 type StatusCommand struct {
 	name       string
-	Args       *CommandArguments
+	Args       *Arguments
 	isWritable bool
 }
 
 func NewStatusCommand() *StatusCommand {
 	return &StatusCommand{
 		name:       CommandStatus,
-		Args:       new(CommandArguments),
+		Args:       new(Arguments),
 		isWritable: false,
 	}
 }
@@ -27,11 +27,11 @@ func (c *StatusCommand) IsWritable(ctx context.Context) bool {
 	return c.isWritable
 }
 
-func (c *StatusCommand) SetArgs(ctx context.Context, args *CommandArguments) {
+func (c *StatusCommand) SetArgs(ctx context.Context, args *Arguments) {
 	c.Args = args
 }
 
-func (c *StatusCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
+func (c *StatusCommand) CheckArgs(ctx context.Context, args *Arguments) bool {
 	return true
 }
 

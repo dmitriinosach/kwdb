@@ -17,7 +17,7 @@ func Serve() {
 
 		ifc := commands.List[commands.CommandSet]
 
-		args := new(commands.CommandArguments)
+		args := new(commands.Arguments)
 
 		args.CmdName = "SET"
 		args.Key = r.URL.Query().Get("key")

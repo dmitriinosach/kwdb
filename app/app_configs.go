@@ -3,8 +3,10 @@ package app
 import (
 	"github.com/joho/godotenv"
 	"github.com/pkg/errors"
+	"kwdb/app/errorpkg"
 	"os"
 	"strconv"
+	"time"
 )
 
 type ConfigEnv struct {
@@ -15,34 +17,35 @@ type ConfigEnv struct {
 	LogPath    string
 }
 
-var (
-	EnvParameterMissed = "в настройках окружения не установленно: "
-	EnvLoad            = "Ошибка инициализации env файла"
-)
-
 var Config ConfigEnv
+
+type SysInfo struct {
+	Started time.Time
+}
+
+var SysInfoData SysInfo
 
 func InitConfigs() (ConfigEnv, error) {
 
 	if err := godotenv.Load(); err != nil {
-		return ConfigEnv{}, errors.Wrap(err, EnvLoad)
+		return ConfigEnv{}, errors.Wrap(err, errorpkg.ErrEnvLoad)
 	}
 
 	exist := false
 
 	Config.HOST, exist = os.LookupEnv("SERVER_HOST")
 	if !exist {
-		return Config, errors.New(EnvParameterMissed + "SERVER_HOST")
+		return Config, errors.New(errorpkg.ErrEnvParameterMissed + "SERVER_HOST")
 	}
 
 	Config.PORT, exist = os.LookupEnv("SERVER_PORT")
 	if !exist {
-		return Config, errors.New(EnvParameterMissed + "SERVER_PORT")
+		return Config, errors.New(errorpkg.ErrEnvParameterMissed + "SERVER_PORT")
 	}
 
 	Config.DRIVER, exist = os.LookupEnv("DATABASE_DRIVER")
 	if !exist {
-		return Config, errors.New(EnvParameterMissed + "DATABASE_DRIVER")
+		return Config, errors.New(errorpkg.ErrEnvParameterMissed + "DATABASE_DRIVER")
 	}
 
 	partitions := ""
@@ -50,12 +53,12 @@ func InitConfigs() (ConfigEnv, error) {
 	Config.PARTITIONS, _ = strconv.Atoi(partitions)
 
 	if !exist {
-		return Config, errors.New(EnvParameterMissed + "DATABASE_DRIVER")
+		return Config, errors.New(errorpkg.ErrEnvParameterMissed + "DATABASE_DRIVER")
 	}
 
 	Config.LogPath, exist = os.LookupEnv("LOG_PATH")
 	if !exist {
-		return Config, errors.New(EnvParameterMissed + "LOG_PATH")
+		return Config, errors.New(errorpkg.ErrEnvParameterMissed + "LOG_PATH")
 	}
 
 	return Config, nil

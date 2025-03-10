@@ -1,3 +1,7 @@
+
+
+
+default: build-all
 # билд консоли
 build-cli:
 	go build ./cmd/cli

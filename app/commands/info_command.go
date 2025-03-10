@@ -9,14 +9,14 @@ const CommandInfo = "INFO"
 
 type InfoCommand struct {
 	name       string
-	Args       *CommandArguments
+	Args       *Arguments
 	isWritable bool
 }
 
 func NewInfoCommand() *InfoCommand {
 	return &InfoCommand{
 		name:       CommandInfo,
-		Args:       new(CommandArguments),
+		Args:       new(Arguments),
 		isWritable: false,
 	}
 }
@@ -25,11 +25,11 @@ func (c *InfoCommand) IsWritable(ctx context.Context) bool {
 	return c.isWritable
 }
 
-func (c *InfoCommand) SetArgs(ctx context.Context, args *CommandArguments) {
+func (c *InfoCommand) SetArgs(ctx context.Context, args *Arguments) {
 	c.Args = args
 }
 
-func (c *InfoCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
+func (c *InfoCommand) CheckArgs(ctx context.Context, args *Arguments) bool {
 	return true
 }
 

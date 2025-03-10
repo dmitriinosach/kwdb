@@ -8,7 +8,7 @@ import (
 
 func TestGetCommand(t *testing.T) {
 
-	args := new(CommandArguments)
+	args := new(commands.Arguments)
 
 	args.CmdName = "SET"
 	args.Key = "1"
@@ -28,7 +28,7 @@ func TestGetCommand(t *testing.T) {
 
 func TestSetCommand(t *testing.T) {
 
-	args := new(CommandArguments)
+	args := new(commands.Arguments)
 
 	args.CmdName = "SET"
 	args.Key = "1"
@@ -46,7 +46,7 @@ func TestSetCommand(t *testing.T) {
 
 func TestDeleteCommand(t *testing.T) {
 
-	args := new(CommandArguments)
+	args := new(commands.Arguments)
 
 	args.CmdName = "DELETE"
 	args.Key = "1"
@@ -62,7 +62,7 @@ func TestDeleteCommand(t *testing.T) {
 
 func TestInfoCommand(t *testing.T) {
 
-	args := new(CommandArguments)
+	args := new(commands.Arguments)
 
 	args.CmdName = "INFO"
 

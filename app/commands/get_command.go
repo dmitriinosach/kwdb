@@ -14,14 +14,14 @@ var (
 
 type GetCommand struct {
 	name       string
-	Args       *CommandArguments
+	Args       *Arguments
 	isWritable bool
 }
 
 func NewGetCommand() *GetCommand {
 	return &GetCommand{
 		name:       CommandGet,
-		Args:       new(CommandArguments),
+		Args:       new(Arguments),
 		isWritable: false,
 	}
 }
@@ -30,11 +30,11 @@ func (c *GetCommand) IsWritable(ctx context.Context) bool {
 	return c.isWritable
 }
 
-func (c *GetCommand) SetArgs(ctx context.Context, args *CommandArguments) {
+func (c *GetCommand) SetArgs(ctx context.Context, args *Arguments) {
 	c.Args = args
 }
 
-func (c *GetCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
+func (c *GetCommand) CheckArgs(ctx context.Context, args *Arguments) bool {
 	if args.Key == "" {
 		return false
 	}

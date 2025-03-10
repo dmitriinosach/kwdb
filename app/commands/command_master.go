@@ -27,14 +27,14 @@ var List = map[string]CommandInterface{
 type CommandInterface interface {
 	Name() string
 	Execute(ctx context.Context) (string, error)
-	CheckArgs(ctx context.Context, args *CommandArguments) bool
-	SetArgs(ctx context.Context, args *CommandArguments)
+	CheckArgs(ctx context.Context, args *Arguments) bool
+	SetArgs(ctx context.Context, args *Arguments)
 	IsWritable(ctx context.Context) bool
 }
 
 func SetupCommand(ctx context.Context, message string) (CommandInterface, error) {
 
-	args, err := parse(message)
+	args, err := NewArgsFromString(message)
 
 	if err != nil {
 		return nil, ErrCommandLineParser
@@ -55,7 +55,7 @@ func SetupCommand(ctx context.Context, message string) (CommandInterface, error)
 	return cmd, nil
 }
 
-func selectCommand(args *CommandArguments) CommandInterface {
+func selectCommand(args *Arguments) CommandInterface {
 	if List[args.CmdName] == nil {
 		return nil
 	}

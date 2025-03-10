@@ -10,18 +10,18 @@ const CommandRestore = "RESTORE"
 
 type RestoreCommand struct {
 	name       string
-	Args       *CommandArguments
+	Args       *Arguments
 	isWritable bool
 }
 
 func NewRestoreCommand() *RestoreCommand {
 	return &RestoreCommand{
 		name:       CommandRestore,
-		Args:       new(CommandArguments),
+		Args:       new(Arguments),
 		isWritable: false,
 	}
 }
-func (c *RestoreCommand) CheckArgs(ctx context.Context, args *CommandArguments) bool {
+func (c *RestoreCommand) CheckArgs(ctx context.Context, args *Arguments) bool {
 	return true
 }
 
@@ -56,7 +56,7 @@ func (c *RestoreCommand) Name() string {
 	return c.name
 }
 
-func (c *RestoreCommand) SetArgs(ctx context.Context, args *CommandArguments) {
+func (c *RestoreCommand) SetArgs(ctx context.Context, args *Arguments) {
 	c.Args = args
 }
 
