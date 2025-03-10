@@ -12,12 +12,16 @@ var (
 )
 
 var List = map[string]CommandInterface{
+	// Команды работы с базой данных
 	CommandGet:     NewGetCommand(),
 	CommandSet:     NewSetCommand(),
 	CommandDelete:  NewDeleteCommand(),
 	CommandInfo:    NewInfoCommand(),
 	CommandRestore: NewRestoreCommand(),
 	CommandLookUp:  NewLookUpCommand(),
+
+	//Команды управления и дебага
+	CommandStatus: NewStatusCommand(),
 }
 
 type CommandInterface interface {

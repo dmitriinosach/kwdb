@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"kwdb/pkg/helper"
 	"log"
 	"os"
 	"os/exec"
@@ -30,9 +31,11 @@ var kwdb exec.Cmd
 
 func main() {
 
+	locIp := helper.MyLocalIp()
+	fmt.Println(locIp)
 	// Регистрируем флаги и связываем их с полями структуры config
-	flag.StringVar(&cliConfig.connectionHost, "host", "localhost", "хост для подключения")
-	flag.StringVar(&cliConfig.connectionPort, "port", "8080", "порт для подключения")
+	flag.StringVar(&cliConfig.connectionHost, "host", locIp, "хост для подключения")
+	flag.StringVar(&cliConfig.connectionPort, "port", "712", "порт для подключения")
 
 	// Парсим аргументы командной строки
 	flag.Parse()
@@ -40,7 +43,7 @@ func main() {
 	// Выводим полученные значения
 	fmt.Printf("Host: %s", cliConfig.connectionHost)
 	fmt.Printf("Port: %d", cliConfig.connectionPort)
-	
+
 	// Здесь можно использовать значения config.Host и config.Port в программе
 
 	p := tea.NewProgram(initialModel())

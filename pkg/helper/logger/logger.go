@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func write(stream string, message string) {
+func write(message string, stream string) {
 
 	y, m, d := time.Now().Date()
 	logFileDate := fmt.Sprintf("-%d-%d-%d", d, m, y)
