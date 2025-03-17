@@ -2,7 +2,6 @@ package storage
 
 import (
 	"kwdb/app/errorpkg"
-	"kwdb/app/storage/displacement"
 	"kwdb/app/storage/driver"
 	"kwdb/app/storage/driver/mapstd"
 	"kwdb/app/storage/driver/syncmap"
@@ -35,9 +34,5 @@ func Init(driverName string, partitionsCount int) (err error) {
 }
 
 func setMemPolicy() {
-	var policy displacement.Policy
 
-	policy = displacement.NewLRU()
-
-	Storage.SetMemPolicy(policy)
 }

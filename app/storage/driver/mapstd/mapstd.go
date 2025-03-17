@@ -2,7 +2,6 @@ package mapstd
 
 import (
 	"context"
-	"kwdb/app/storage/displacement"
 	"kwdb/app/storage/driver"
 	"kwdb/pkg/helper"
 	"strconv"
@@ -14,7 +13,6 @@ const DriverName = "hashmap"
 type HashMapStandard struct {
 	partitions []partition
 	driver     string
-	displacer  displacement.Policy
 }
 
 func NewHashMapStandard(partitionsCount int) *HashMapStandard {
@@ -109,13 +107,6 @@ func (s *HashMapStandard) Truncate() bool {
 		clear(s.partitions[i].vault)
 		s.partitions[i].locker.RUnlock()
 	}
-
-	return true
-}
-
-func (s *HashMapStandard) SetMemPolicy(policy displacement.Policy) bool {
-	
-	s.displacer = policy
 
 	return true
 }

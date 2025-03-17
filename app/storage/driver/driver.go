@@ -2,7 +2,6 @@ package driver
 
 import (
 	"context"
-	"kwdb/app/storage/displacement"
 	"time"
 )
 
@@ -13,7 +12,6 @@ type Driver interface {
 	Info() string
 	GetVaultMap() map[string]*Cell
 	Truncate() bool
-	SetMemPolicy(policy displacement.Policy) bool
 }
 
 type Status struct {
