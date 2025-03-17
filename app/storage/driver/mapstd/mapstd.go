@@ -2,10 +2,10 @@ package mapstd
 
 import (
 	"context"
+	"kwdb/app/storage/displacement"
 	"kwdb/app/storage/driver"
 	"kwdb/pkg/helper"
 	"strconv"
-	"sync"
 	"time"
 )
 
@@ -13,14 +13,13 @@ const DriverName = "hashmap"
 
 type HashMapStandard struct {
 	partitions []partition
-	locker     sync.RWMutex
 	driver     string
+	displacer  displacement.Policy
 }
 
 func NewHashMapStandard(partitionsCount int) *HashMapStandard {
 	stg := &HashMapStandard{
 		partitions: make([]partition, partitionsCount),
-		locker:     sync.RWMutex{},
 		driver:     DriverName,
 	}
 
@@ -31,33 +30,6 @@ func NewHashMapStandard(partitionsCount int) *HashMapStandard {
 	return stg
 }
 
-type partition struct {
-	vault  map[string]*driver.Cell
-	locker sync.RWMutex
-
-	onClean bool
-}
-
-func (p *partition) Get(key string) (*driver.Cell, bool) {
-	p.locker.RLock()
-	cell, ok := p.vault[key]
-	p.locker.RUnlock()
-
-	if !ok {
-		return nil, false
-	}
-
-	return cell, true
-}
-
-func (p *partition) Set(key string, cell *driver.Cell) error {
-	p.locker.Lock()
-	p.vault[key] = cell
-	p.locker.Unlock()
-
-	return nil
-}
-
 func (s *HashMapStandard) Get(ctx context.Context, key string) (*driver.Cell, error) {
 
 	partitionIndex, err := helper.HashFunction(key, len(s.partitions))
@@ -66,7 +38,7 @@ func (s *HashMapStandard) Get(ctx context.Context, key string) (*driver.Cell, er
 		return nil, err
 	}
 
-	cell, ok := s.partitions[partitionIndex].Get(key)
+	cell, ok := s.partitions[partitionIndex].get(key)
 
 	if !ok {
 		return nil, nil
@@ -90,7 +62,7 @@ func (s *HashMapStandard) Set(ctx context.Context, key string, value string, ttl
 
 	p := &s.partitions[partitionIndex]
 
-	err := (*p).Set(key, cell)
+	err := (*p).set(key, cell)
 
 	if err != nil {
 		return err
@@ -112,22 +84,8 @@ func (s *HashMapStandard) Delete(ctx context.Context, key string) error {
 	return nil
 }
 
-func (s *HashMapStandard) Has(ctx context.Context, key string) (bool, error) {
-
-	partitionIndex, pErr := helper.HashFunction(key, len(s.partitions))
-
-	if pErr != nil {
-		return false, pErr
-	}
-
-	if s.partitions[partitionIndex].vault[key] == nil {
-		return false, nil
-	}
-
-	return true, nil
-}
-
 func (s *HashMapStandard) Info() string {
+
 	info := "Драйвер:" + s.driver + "\n"
 	info += "Инициировано секций: " + strconv.Itoa(len(s.partitions)) + " \n"
 
@@ -155,6 +113,9 @@ func (s *HashMapStandard) Truncate() bool {
 	return true
 }
 
-func (s *HashMapStandard) GetDriver() string {
-	return s.driver
+func (s *HashMapStandard) SetMemPolicy(policy displacement.Policy) bool {
+	
+	s.displacer = policy
+
+	return true
 }

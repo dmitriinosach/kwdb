@@ -2,6 +2,7 @@ package syncmap
 
 import (
 	"context"
+	"kwdb/app/storage/displacement"
 	"kwdb/app/storage/driver"
 	"kwdb/pkg/helper"
 	"sync"
@@ -12,8 +13,8 @@ const DriverName = "syncmap"
 
 type SyncMap struct {
 	partitions []partition
-	locker     sync.RWMutex
 	driver     string
+	displacer  displacement.Policy
 }
 
 func NewSyncMap(partitionsCount int) *SyncMap {
@@ -94,23 +95,6 @@ func (s *SyncMap) Delete(ctx context.Context, key string) error {
 	return nil
 }
 
-func (s *SyncMap) Has(ctx context.Context, key string) (bool, error) {
-
-	partitionIndex, pErr := helper.HashFunction(key, len(s.partitions))
-
-	if pErr != nil {
-		return false, pErr
-	}
-
-	_, ex := s.partitions[partitionIndex].Get(key)
-
-	if !ex {
-		return false, nil
-	}
-
-	return true, nil
-}
-
 func (s *SyncMap) Info() string {
 	info := "driver:" + s.driver + "\n"
 	info += "Length: \n"
@@ -138,4 +122,11 @@ func (s *SyncMap) Truncate() bool {
 
 func (s *SyncMap) GetDriver() string {
 	return s.driver
+}
+
+func (s *SyncMap) SetMemPolicy(policy displacement.Policy) bool {
+
+	s.displacer = policy
+
+	return true
 }
