@@ -5,7 +5,7 @@ import (
 	"net"
 )
 
-func MyLocalIp() string {
+func LocalIp() string {
 	ip := ""
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {

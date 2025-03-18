@@ -31,7 +31,7 @@ var kwdb exec.Cmd
 
 func main() {
 
-	locIp := helper.MyLocalIp()
+	locIp := helper.LocalIp()
 	fmt.Println(locIp)
 	// Регистрируем флаги и связываем их с полями структуры config
 	flag.StringVar(&cliConfig.connectionHost, "host", locIp, "хост для подключения")

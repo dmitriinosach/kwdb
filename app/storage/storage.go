@@ -19,7 +19,7 @@ func Init(driverName string, partitionsCount int) (err error) {
 	once.Do(func() {
 		switch driverName {
 		case mapstd.DriverName:
-
+			//сделать не экспортируемым
 			Storage = mapstd.NewHashMapStandard(partitionsCount)
 		case syncmap.DriverName:
 			Storage = syncmap.NewSyncMap(partitionsCount)

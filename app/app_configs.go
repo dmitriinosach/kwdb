@@ -27,6 +27,8 @@ var SysInfoData SysInfo
 
 func InitConfigs() (ConfigEnv, error) {
 
+	// рефакторинг
+	
 	if err := godotenv.Load(); err != nil {
 		return ConfigEnv{}, errors.Wrap(err, errorpkg.ErrEnvLoad)
 	}
