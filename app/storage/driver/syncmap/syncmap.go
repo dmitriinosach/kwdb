@@ -17,6 +17,10 @@ type SyncMap struct {
 	displacer  displacement.Policy
 }
 
+func (s *SyncMap) Has(ctx context.Context, key string) (bool, error) {
+	return true, nil
+}
+
 func NewSyncMap(partitionsCount int) *SyncMap {
 	return &SyncMap{
 		partitions: make([]partition, partitionsCount),

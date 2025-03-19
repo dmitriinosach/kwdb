@@ -35,12 +35,12 @@ func Serve() {
 
 	})
 
-	helper.InfChan <- "http://" + app.Config.HOST + ":" + app.Config.PORT + " ожидает подключений"
+	helper.InfChan <- "http://" + app.Config.Host + ":" + app.Config.Port + " ожидает подключений"
 
-	err := http.ListenAndServe(app.Config.HOST+":713", nil)
+	err := http.ListenAndServe(app.Config.Host+":713", nil)
 
 	if err != nil {
-		helper.InfChan <- "http://" + app.Config.HOST + ":" + app.Config.PORT + " прекратил работу: " + err.Error()
+		helper.InfChan <- "http://" + app.Config.Host + ":" + app.Config.Port + " прекратил работу: " + err.Error()
 		return
 	}
 

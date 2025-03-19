@@ -10,11 +10,12 @@ import (
 )
 
 type ConfigEnv struct {
-	HOST       string
-	PORT       string
-	DRIVER     string
-	PARTITIONS int
+	Host       string
+	Port       string
+	Driver     string
+	Partitions int
 	LogPath    string
+	MemLimit   uint64
 }
 
 var Config ConfigEnv
@@ -28,31 +29,31 @@ var SysInfoData SysInfo
 func InitConfigs() (ConfigEnv, error) {
 
 	// рефакторинг
-	
+
 	if err := godotenv.Load(); err != nil {
 		return ConfigEnv{}, errors.Wrap(err, errorpkg.ErrEnvLoad)
 	}
 
 	exist := false
 
-	Config.HOST, exist = os.LookupEnv("SERVER_HOST")
+	Config.Host, exist = os.LookupEnv("SERVER_HOST")
 	if !exist {
 		return Config, errors.New(errorpkg.ErrEnvParameterMissed + "SERVER_HOST")
 	}
 
-	Config.PORT, exist = os.LookupEnv("SERVER_PORT")
+	Config.Port, exist = os.LookupEnv("SERVER_PORT")
 	if !exist {
 		return Config, errors.New(errorpkg.ErrEnvParameterMissed + "SERVER_PORT")
 	}
 
-	Config.DRIVER, exist = os.LookupEnv("DATABASE_DRIVER")
+	Config.Driver, exist = os.LookupEnv("DATABASE_DRIVER")
 	if !exist {
 		return Config, errors.New(errorpkg.ErrEnvParameterMissed + "DATABASE_DRIVER")
 	}
 
-	partitions := ""
-	partitions, exist = os.LookupEnv("DATABASE_DRIVER_PARTITIONS")
-	Config.PARTITIONS, _ = strconv.Atoi(partitions)
+	parts := ""
+	parts, exist = os.LookupEnv("DATABASE_DRIVER_PARTITIONS")
+	Config.Partitions, _ = strconv.Atoi(parts)
 
 	if !exist {
 		return Config, errors.New(errorpkg.ErrEnvParameterMissed + "DATABASE_DRIVER")
@@ -62,6 +63,8 @@ func InitConfigs() (ConfigEnv, error) {
 	if !exist {
 		return Config, errors.New(errorpkg.ErrEnvParameterMissed + "LOG_PATH")
 	}
+
+	Config.MemLimit = 100
 
 	return Config, nil
 }

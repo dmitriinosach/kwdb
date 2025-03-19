@@ -23,7 +23,7 @@ func loadConfigs() {
 func runStorage() {
 	helper.InfChan <- "Создание хранилища..."
 
-	err := storage.Init(app.Config.DRIVER, app.Config.PARTITIONS)
+	err := storage.Init(app.Config.Driver, app.Config.Partitions)
 
 	if err != nil {
 		helper.InfChan <- "Ошибка инициализации хранилища:" + err.Error()

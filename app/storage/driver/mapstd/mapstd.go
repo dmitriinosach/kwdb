@@ -15,6 +15,11 @@ type HashMapStandard struct {
 	driver     string
 }
 
+func (s *HashMapStandard) Has(ctx context.Context, key string) (bool, error) {
+	 
+	return true, nil
+}
+
 func NewHashMapStandard(partitionsCount int) *HashMapStandard {
 	stg := &HashMapStandard{
 		partitions: make([]partition, partitionsCount),

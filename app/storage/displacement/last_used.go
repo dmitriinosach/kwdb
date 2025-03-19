@@ -1,15 +1,18 @@
 package displacement
 
 import (
+	"kwdb/app"
 	"kwdb/app/storage/driver"
+	"runtime"
 	"sync"
 )
 
 type LRU struct {
-	list map[string]item
-	head *item
-	tail *item
-	lock sync.RWMutex
+	list     map[string]item
+	head     *item
+	tail     *item
+	lock     sync.RWMutex
+	memLimit uint64
 }
 
 type item struct {
@@ -20,8 +23,11 @@ type item struct {
 }
 
 func NewLRU() *LRU {
+	memLimit := app.Config.MemLimit
+
 	return &LRU{
-		list: make(map[string]item),
+		list:     make(map[string]item),
+		memLimit: memLimit,
 	}
 }
 
@@ -57,36 +63,46 @@ func (l *LRU) Reuse(key string, cell *driver.Cell) {
 	l.Push(key, cell)
 }
 
-func (l *LRU) last() *item {
-	return l.tail
-}
-
+// Если нет элементов no-op
 func (l *LRU) Cut() {
-	l.lock.Lock()
-	cnfMem := 10
 
-	for cnfMem > 1 {
-		// TODO: найминг говна?
-		li := l.last()
+	var stat runtime.MemStats
 
-		ni := li.next
+	runtime.ReadMemStats(&stat)
 
-		ni.prev = nil
+	memAlloc := int(stat.Alloc / 1024 / 1024)
 
-		l.tail = ni
+	cnfMem := 100
 
-		delete(l.list, li.key)
+	if len(l.list) > 0 {
+		l.lock.Lock()
 
-		cnfMem--
+		for memAlloc > cnfMem {
+			// TODO: найминг говна?
+			t := l.tail
+			l.tail = l.tail.next
+
+			delete(l.list, t.key)
+
+		}
+
+		if l.tail != nil {
+			l.tail.prev = nil
+		}
+
+		l.lock.Unlock()
 	}
-
-	l.lock.Unlock()
 }
 
 func excludeConcat(i *item) {
 	prev := i.prev
 	next := i.next
 
-	prev.next = next
-	next.prev = prev
+	if prev != nil {
+		prev.next = next
+	}
+
+	if next != nil {
+		next.prev = prev
+	}
 }

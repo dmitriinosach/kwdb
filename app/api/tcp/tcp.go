@@ -14,7 +14,7 @@ import (
 
 func Serve() {
 
-	listen, err := net.Listen("tcp", app.Config.HOST+":"+app.Config.PORT)
+	listen, err := net.Listen("tcp", app.Config.Host+":"+app.Config.Port)
 
 	ctx := context.Background()
 
@@ -26,7 +26,7 @@ func Serve() {
 
 	defer listen.Close()
 
-	helper.InfChan <- "tcp://" + app.Config.HOST + ":" + app.Config.PORT + " ожидает подключений"
+	helper.InfChan <- "tcp://" + app.Config.Host + ":" + app.Config.Port + " ожидает подключений"
 
 	for {
 		select {

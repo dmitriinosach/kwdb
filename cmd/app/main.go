@@ -21,7 +21,7 @@ func main() {
 	runStorage()
 
 	//задача чистильщика
-	go cleaner.Run(app.Config.PARTITIONS)
+	go cleaner.Run(app.Config.Partitions)
 
 	//Запуск слушателей
 	runListeners()
