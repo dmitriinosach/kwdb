@@ -2,7 +2,7 @@ package commands
 
 import (
 	"context"
-	"kwdb/pkg/helper"
+	"kwdb/internal/helper"
 	"runtime"
 	"strconv"
 )

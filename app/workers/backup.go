@@ -7,9 +7,10 @@ import (
 	"os"
 )
 
+// TODO: переделать, долен решать другую задачу
 func Write(text string) {
 
-	file, err := os.OpenFile("./data/wal1.txt", os.O_APPEND, 066)
+	file, err := os.OpenFile("./data/backup/wal1.txt", os.O_APPEND, 066)
 
 	if err != nil {
 		fmt.Println("Unable to create file:", err)
@@ -25,7 +26,7 @@ func Write(text string) {
 }
 
 func Backup(commandChan chan string) *bufio.Scanner {
-	file, err := os.OpenFile("./data/wal1.txt", os.O_APPEND, 066)
+	file, err := os.OpenFile("./data/backup/wal1.txt", os.O_APPEND, 066)
 
 	if err != nil {
 		log.Fatal(err)

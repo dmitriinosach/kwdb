@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"kwdb/pkg/helper"
+	"kwdb/internal/helper"
 	"log"
 	"os"
 	"os/exec"

@@ -1,7 +1,7 @@
 package displacement
 
 import (
-	"kwdb/pkg/helper"
+	"kwdb/internal/helper"
 	"time"
 )
 

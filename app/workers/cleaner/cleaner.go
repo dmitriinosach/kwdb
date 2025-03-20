@@ -6,7 +6,7 @@ import (
 	"kwdb/app/storage/driver"
 	"kwdb/app/storage/driver/mapstd"
 	"kwdb/app/storage/driver/syncmap"
-	"kwdb/pkg/helper"
+	"kwdb/internal/helper"
 )
 
 func Run(partitions int) {

@@ -1,4 +1,4 @@
-package handlers
+package api
 
 import (
 	"context"
@@ -7,17 +7,19 @@ import (
 	"kwdb/app/workers"
 )
 
-func HandleMessage(ctx context.Context, message string) (string, error) {
+func ExecMsg(ctx context.Context, message string) (string, error) {
 	cmd, err := commands.SetupCommand(ctx, message)
 
 	if err != nil {
 		return "", errors.Wrap(err, "ошибка установки команды")
 	}
 
+	// TODO: перенести в команды, их ответственность ?
 	if cmd.IsWritable(ctx) {
 		go workers.Write(message)
 	}
 
+	// TODO: перенести в команды, их ответственность ?
 	result, err := cmd.Execute(ctx)
 
 	return result, err

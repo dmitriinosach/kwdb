@@ -3,4 +3,4 @@
 /app.exe
 /cmd/app/app.exe
 /cmd/cli/cli.exe
-/logs/*
+/data/logs/*

@@ -1,7 +1,7 @@
 package driver
 
 import (
-	"kwdb/pkg/helper"
+	"kwdb/internal/helper"
 	"math/rand"
 	"strconv"
 	"testing"

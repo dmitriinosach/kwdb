@@ -3,9 +3,9 @@ package tcp
 import (
 	"context"
 	"kwdb/app"
-	"kwdb/app/handlers"
-	"kwdb/pkg/helper"
-	"kwdb/pkg/helper/logger"
+	"kwdb/app/api"
+	"kwdb/internal/helper"
+	"kwdb/internal/helper/logger"
 	"net"
 	"os"
 	"os/signal"
@@ -54,6 +54,7 @@ func tpcHandle(ctx context.Context, conn net.Conn) {
 
 	if err != nil {
 		r := ""
+		//TODO: всрато выглядит
 		answer(makeReply(&r, err), conn)
 		logger.Write(err.Error(), "")
 
@@ -62,8 +63,9 @@ func tpcHandle(ctx context.Context, conn net.Conn) {
 
 	message := string(buffer[1:bufferLength])
 
-	result, err = handlers.HandleMessage(ctx, message)
-
+	//TODO:избавится от msg и парсера, перейти на структуру и байты
+	result, err = api.ExecMsg(ctx, message)
+	//TODO: всрато выглядит
 	answer(makeReply(&result, err), conn)
 
 	defer conn.Close()

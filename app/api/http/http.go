@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"kwdb/app"
 	"kwdb/app/commands"
-	"kwdb/pkg/helper"
+	"kwdb/internal/helper"
 	"net/http"
 )
 

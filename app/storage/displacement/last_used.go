@@ -8,11 +8,12 @@ import (
 )
 
 type LRU struct {
-	list     map[string]item
-	head     *item
-	tail     *item
-	lock     sync.RWMutex
-	memLimit uint64
+	list        map[string]item
+	head        *item
+	tail        *item
+	lock        sync.RWMutex
+	memLimit    uint64
+	cleanerChan chan string
 }
 
 type item struct {
@@ -22,12 +23,20 @@ type item struct {
 	key  string
 }
 
-func NewLRU() *LRU {
+type remover func(key string)
+
+func NewLRU(cchan chan string) *LRU {
+	// TODO: как нормально передать, к вопросу конфигов на строне клиента
+	// с методом
+	// withlimit() :func()(){
+	//
+	// }
 	memLimit := app.Config.MemLimit
 
 	return &LRU{
-		list:     make(map[string]item),
-		memLimit: memLimit,
+		list:        make(map[string]item),
+		memLimit:    memLimit,
+		cleanerChan: cchan,
 	}
 }
 
@@ -70,27 +79,22 @@ func (l *LRU) Cut() {
 
 	runtime.ReadMemStats(&stat)
 
-	memAlloc := int(stat.Alloc / 1024 / 1024)
-
-	cnfMem := 100
+	memAlloc := stat.Alloc / 1024 / 1024
 
 	if len(l.list) > 0 {
-		l.lock.Lock()
-
-		for memAlloc > cnfMem {
+		for memAlloc > l.memLimit {
 			// TODO: найминг говна?
 			t := l.tail
 			l.tail = l.tail.next
 
 			delete(l.list, t.key)
 
+			l.cleanerChan <- t.key
 		}
 
 		if l.tail != nil {
 			l.tail.prev = nil
 		}
-
-		l.lock.Unlock()
 	}
 }
 

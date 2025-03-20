@@ -3,7 +3,7 @@ package main
 import (
 	"kwdb/app"
 	"kwdb/app/workers/cleaner"
-	"kwdb/pkg/helper"
+	"kwdb/internal/helper"
 )
 
 func main() {

@@ -2,7 +2,7 @@ package helper
 
 import (
 	"fmt"
-	"kwdb/pkg/helper/logger"
+	"kwdb/internal/helper/logger"
 	"time"
 )
 

@@ -10,8 +10,9 @@ import (
 )
 
 var (
-	Storage driver.Driver
-	once    sync.Once
+	Storage     driver.Driver
+	once        sync.Once
+	CleanerChan chan string
 )
 
 func Init(driverName string, partitionsCount int) (err error) {
@@ -28,7 +29,9 @@ func Init(driverName string, partitionsCount int) (err error) {
 			err = errorpkg.ErrUnknownDriver
 		}
 
-		go displacement.RunWatcher(displacement.NewLRU())
+		CleanerChan = make(chan string)
+
+		go displacement.RunWatcher(displacement.NewLRU(CleanerChan))
 	})
 
 	return

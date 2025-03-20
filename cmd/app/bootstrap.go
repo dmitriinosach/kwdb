@@ -5,7 +5,7 @@ import (
 	"kwdb/app/api/http"
 	"kwdb/app/api/tcp"
 	"kwdb/app/storage"
-	"kwdb/pkg/helper"
+	"kwdb/internal/helper"
 	"os"
 )
 
