@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"kwdb/app"
 	"kwdb/internal/helper"
 	"log"
 	"os"
-	"os/exec"
 )
 
 var ENV_FILE string = "../../.env"
@@ -22,20 +22,21 @@ type (
 	errMsg error
 )
 
+//go:generate stringer -type=cliConfig
 var cliConfig struct {
 	connectionHost string
 	connectionPort string
 }
 
-var kwdb exec.Cmd
-
 func main() {
+
+	cnf, _ := app.InitConfigs()
 
 	locIp := helper.LocalIp()
 	fmt.Println(locIp)
 	// Регистрируем флаги и связываем их с полями структуры config
-	flag.StringVar(&cliConfig.connectionHost, "host", locIp, "хост для подключения")
-	flag.StringVar(&cliConfig.connectionPort, "port", "712", "порт для подключения")
+	flag.StringVar(&cliConfig.connectionHost, "host", cnf.Host, "хост для подключения")
+	flag.StringVar(&cliConfig.connectionPort, "port", cnf.Port, "порт для подключения")
 
 	// Парсим аргументы командной строки
 	flag.Parse()
@@ -44,10 +45,8 @@ func main() {
 	fmt.Printf("Host: %s", cliConfig.connectionHost)
 	fmt.Printf("Port: %d", cliConfig.connectionPort)
 
-	// Здесь можно использовать значения config.Host и config.Port в программе
-
 	p := tea.NewProgram(initialModel())
-
+	netpo
 	if _, err := p.Run(); err != nil {
 		log.Fatal(err)
 	}

@@ -14,7 +14,9 @@ import (
 
 func Serve() {
 
-	listen, err := net.Listen("tcp", app.Config.Host+":"+app.Config.Port)
+	addr := net.JoinHostPort(app.Config.Host, app.Config.Port)
+
+	listen, err := net.Listen("tcp", addr)
 
 	ctx := context.Background()
 
@@ -68,7 +70,7 @@ func tpcHandle(ctx context.Context, conn net.Conn) {
 	//TODO: всрато выглядит
 	answer(makeReply(&result, err), conn)
 
-	defer conn.Close()
+	conn.Close()
 }
 
 // TODO: нужа или нет передача по ссылке
