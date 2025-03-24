@@ -93,8 +93,8 @@ func (s *HashMapStandard) Info() string {
 	info += "Инициировано секций: " + strconv.Itoa(len(s.partitions)) + " \n"
 
 	i := 0
-	for _, p := range s.partitions {
-		info += "Секция-" + strconv.Itoa(i) + ": элементов- " + strconv.Itoa(len(p.vault)) + "\n"
+	for range s.partitions {
+		info += "Секция-" + strconv.Itoa(i) + ": элементов- " + strconv.Itoa(len(s.partitions[i].vault)) + "\n"
 		i++
 	}
 

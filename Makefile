@@ -6,8 +6,13 @@ default: build-all
 build-cli:
 	go build ./cmd/cli
 
-format:
+#форматирования и линтеры
+f-f:
 	go fmt ./...
+f-v:
+	go vet ./...
+f-c:
+	golangci-lint run
 # билд основного приложения с консолью
 build-app:
 	go build ./cmd/app# билд основного приложения с консолью
