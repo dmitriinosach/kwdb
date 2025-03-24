@@ -15,24 +15,13 @@ type httpHandler struct {
 func Serve() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
-		ifc := commands.List[commands.CommandSet]
-
-		args := new(commands.Arguments)
-
-		args.CmdName = "SET"
-		args.Key = r.URL.Query().Get("key")
-		args.Value = r.URL.Query().Get("value")
-		args.TTL = 0
-
-		fmt.Printf("%v", args)
-
 		ctx := context.Background()
+		cs := "SET k=" + r.URL.Query().Get("key") + " v=" + r.URL.Query().Get("value")
 
-		ifc.SetArgs(ctx, args)
+		ifc, _ := commands.SetupCommand(ctx, cs)
 
 		res, _ := ifc.Execute(ctx)
 		fmt.Fprintf(w, res)
-
 	})
 
 	helper.InfChan <- "http://" + app.Config.Host + ":" + app.Config.Port + " ожидает подключений"

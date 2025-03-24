@@ -7,16 +7,16 @@ import (
 	"strings"
 )
 
-type Arguments struct {
+type arguments struct {
 	CmdName string
 	Key     string
 	Value   string
 	TTL     int
 }
 
-func NewArgsFromString(s string) (*Arguments, error) {
+func NewArgsFromString(s string) (*arguments, error) {
 
-	args := new(Arguments)
+	args := new(arguments)
 
 	parsedLine, err := shlex.Split(s)
 

@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"context"
 	"reflect"
 	"testing"
 )
@@ -9,7 +10,7 @@ import (
 
 func TestCommandSelector(t *testing.T) {
 
-	args := new(Arguments)
+	args := new(arguments)
 	args.CmdName = "SET"
 	args.Key = "1"
 	args.Value = "1"
@@ -144,5 +145,74 @@ func TestArgsParser_CMD(t *testing.T) {
 
 	if args.CmdName != "SET" {
 		t.Errorf("Ошибка установки аргумента CmdName, передано name %v : получено %v", "SET", args.CmdName)
+	}
+}
+
+func TestGetCommand(t *testing.T) {
+
+	args := new(arguments)
+
+	args.CmdName = "SET"
+	args.Key = "1"
+	args.Value = "1"
+	args.TTL = 100
+
+	ctx := context.Background()
+	// TODO: как выбирать инкапсулированные методы / selectCommand
+	cmd := NewGetCommand()
+
+	result := cmd.CheckArgs(ctx, args)
+
+	if !result {
+		t.Errorf("Команда %s отвергла необходимые аргументы: %v.", args.CmdName, args)
+	}
+}
+
+func TestSetCommand(t *testing.T) {
+
+	args := new(arguments)
+
+	args.CmdName = "SET"
+	args.Key = "1"
+	args.Value = "1"
+	args.TTL = 100
+
+	ctx := context.Background()
+	cmd := NewSetCommand()
+	result := cmd.CheckArgs(ctx, args)
+
+	if !result {
+		t.Errorf("Команда %s отвергла необходимые аргументы: %v.", args.CmdName, args)
+	}
+}
+
+func TestDeleteCommand(t *testing.T) {
+
+	args := new(arguments)
+
+	args.CmdName = "DELETE"
+	args.Key = "1"
+
+	ctx := context.Background()
+	cmd := NewDeleteCommand()
+	result := cmd.CheckArgs(ctx, args)
+
+	if !result {
+		t.Errorf("Команда %s отвергла необходимые аргументы: %v.", args.CmdName, args)
+	}
+}
+
+func TestInfoCommand(t *testing.T) {
+
+	args := new(arguments)
+
+	args.CmdName = "INFO"
+
+	ctx := context.Background()
+	cmd := NewInfoCommand()
+	result := cmd.CheckArgs(ctx, args)
+
+	if !result {
+		t.Errorf("Команда %s отвергла необходимые аргументы: %v.", args.CmdName, args)
 	}
 }

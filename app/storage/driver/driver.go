@@ -2,7 +2,6 @@ package driver
 
 import (
 	"context"
-	"time"
 )
 
 type Driver interface {
@@ -12,9 +11,4 @@ type Driver interface {
 	Info() string
 	GetVaultMap() map[string]*Cell
 	Truncate() bool
-}
-
-type Status struct {
-	Freelines string
-	Started   time.Time
 }

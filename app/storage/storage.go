@@ -7,6 +7,7 @@ import (
 	"kwdb/app/storage/driver/mapstd"
 	"kwdb/app/storage/driver/syncmap"
 	"sync"
+	"time"
 )
 
 var (
@@ -14,6 +15,8 @@ var (
 	once        sync.Once
 	CleanerChan chan string
 )
+
+var Status = new(status)
 
 func Init(driverName string, partitionsCount int) (err error) {
 	// TODO: флагами получить интерфес драйверов
@@ -27,7 +30,11 @@ func Init(driverName string, partitionsCount int) (err error) {
 			Storage = syncmap.NewSyncMap(partitionsCount)
 		default:
 			err = errorpkg.ErrUnknownDriver
+			return
 		}
+
+		Status.Started = time.Now()
+		Status.DriverName = driverName
 
 		CleanerChan = make(chan string)
 
