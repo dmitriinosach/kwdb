@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"kwdb/app"
 	"kwdb/internal/helper"
 	"log"
 	"os"
@@ -30,13 +29,13 @@ var cliConfig struct {
 
 func main() {
 
-	cnf, _ := app.InitConfigs()
+	//cnf, _ := app.InitConfigs()
 
 	locIp := helper.LocalIp()
 	fmt.Println(locIp)
 	// Регистрируем флаги и связываем их с полями структуры config
-	flag.StringVar(&cliConfig.connectionHost, "host", cnf.Host, "хост для подключения")
-	flag.StringVar(&cliConfig.connectionPort, "port", cnf.Port, "порт для подключения")
+	flag.StringVar(&cliConfig.connectionHost, "host", "localhost", "хост для подключения")
+	flag.StringVar(&cliConfig.connectionPort, "port", "712", "порт для подключения")
 
 	// Парсим аргументы командной строки
 	flag.Parse()
@@ -46,7 +45,7 @@ func main() {
 	fmt.Printf("Port: %d", cliConfig.connectionPort)
 
 	p := tea.NewProgram(initialModel())
-	netpo
+
 	if _, err := p.Run(); err != nil {
 		log.Fatal(err)
 	}

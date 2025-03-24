@@ -5,7 +5,7 @@ import (
 	"kwdb/app"
 	"kwdb/app/api"
 	"kwdb/internal/helper"
-	"kwdb/internal/helper/logger"
+	"kwdb/internal/helper/flogger"
 	"net"
 	"os"
 	"os/signal"
@@ -39,7 +39,7 @@ func Serve() {
 
 		conn, err := listen.Accept()
 		if err != nil {
-			logger.Write(err.Error(), "")
+			flogger.Write(err.Error(), "")
 			continue
 		}
 
@@ -58,7 +58,7 @@ func tpcHandle(ctx context.Context, conn net.Conn) {
 		r := ""
 		//TODO: всрато выглядит
 		answer(makeReply(&r, err), conn)
-		logger.Write(err.Error(), "")
+		flogger.Write(err.Error(), "")
 
 		return
 	}
@@ -88,7 +88,7 @@ func makeReply(r *string, e error) []byte {
 func answer(r []byte, conn net.Conn) {
 	_, err := conn.Write(r)
 	if err != nil {
-		logger.Write("Не удалось ответить серверу:"+err.Error(), "")
+		flogger.Write("Не удалось ответить серверу:"+err.Error(), "")
 		return
 	}
 }

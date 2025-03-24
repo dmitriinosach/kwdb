@@ -1,4 +1,4 @@
-package logger
+package flogger
 
 import (
 	"fmt"
@@ -7,15 +7,18 @@ import (
 	"time"
 )
 
-func write(message string, stream string) {
+type FileLogger struct {
+}
 
+func (f FileLogger) Write(mes []byte) (n int, err error) {
 	y, m, d := time.Now().Date()
-	logFileDate := fmt.Sprintf("-%d-%d-%d", d, m, y)
+	logFileDate := fmt.Sprintf("log-%d-%d-%d", d, m, y)
 
-	filePath := app.Config.LogPath + "/" + stream + logFileDate + ".txt"
+	message := string(mes[:])
+
+	filePath := app.Config.LogPath + "/" + logFileDate + ".txt"
 
 	var file *os.File
-	var err error
 
 	// Check if file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
@@ -24,7 +27,7 @@ func write(message string, stream string) {
 		if err != nil {
 			// TODO ошибка логирования
 			panic("ошибка создания файла логирования:" + err.Error())
-			return
+			return 0, nil
 		}
 	} else {
 		// Open the file in append mode
@@ -32,19 +35,20 @@ func write(message string, stream string) {
 		if err != nil {
 			// TODO ошибка логирования
 			fmt.Println("ошибка открытия файла логирования:", err)
-			return
+			return 0, err
 		}
 
 	}
 	defer file.Close()
 
-	_, err = file.WriteString(message + "\n")
+	_, err = file.WriteString(message)
 	if err != nil {
 		// TODO ошибка логирования
 		fmt.Println("ошибка записи в файл логирования:", err)
-		return
+		return 0, err
 	}
 
+	return 0, nil
 }
 
 func Write(mes string, stream string) {
@@ -53,9 +57,5 @@ func Write(mes string, stream string) {
 		stream = "log"
 	}
 
-	write(stream, mes)
-}
-
-func Info(mes string) {
-	write(mes, "info")
+	FileLogger{}.Write([]byte(mes))
 }

@@ -12,3 +12,4 @@ SET k=3 v="ldkjf lsjdf; ldfjlsdjfldkjflafjasld jfsd'fsdafd"
 SET k=1 v=2
 SET k=1 v=asda
 DELETE k=1
+SET k=v v=1
