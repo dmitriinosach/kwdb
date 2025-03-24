@@ -57,8 +57,12 @@ func (c *GetCommand) Execute(ctx context.Context) (string, error) {
 	value, err := storage.Storage.Get(ctx, c.Args.Key)
 
 	if value == nil {
+		storage.Status.Metrics.Miss()
+
 		return "", err
 	}
+
+	storage.Status.Metrics.Hit()
 
 	return value.Value, nil
 }

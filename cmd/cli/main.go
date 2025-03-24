@@ -104,7 +104,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			ans := handle(msg)
 
-			return m, tea.Printf(ans)
+			return m, tea.Println(ans)
 		case tea.KeyEscape, tea.KeyCtrlC:
 			os.Exit(0)
 			return m, tea.Quit

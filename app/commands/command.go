@@ -53,6 +53,10 @@ func setupCommand(ctx context.Context, message string) (CommandInterface, error)
 func SetAndRun(ctx context.Context, message string) (string, error) {
 	cmd, err := setupCommand(ctx, message)
 
+	if err != nil {
+		return "", err
+	}
+	
 	execute, err := cmd.Execute(ctx)
 	if err != nil {
 		return "", err

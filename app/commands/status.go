@@ -47,9 +47,11 @@ func (c *StatusCommand) Execute(ctx context.Context) (string, error) {
 	duration := storage.Status.Uptime()
 
 	status := "coroutines:" + strconv.Itoa(runtime.NumGoroutine()) + "\n"
-	status += "cores:" + strconv.Itoa(runtime.NumCPU()) + "\n"
-	status += "driver:" + storage.Status.DriverName + "\n"
+	status += "cores:" + strconv.Itoa(runtime.NumCPU()) + " \n"
+	status += "driver:" + storage.Status.DriverName + " \n"
+	status += "hitrate:" + storage.Status.HitRate() + " \n"
 	status += "lifetime: " + strconv.Itoa(int(duration.Hours())) + "ч. " + strconv.Itoa(int(duration.Minutes())) + "мин. " + strconv.Itoa(int(duration.Seconds())) + "сек. \n"
 	status += "" + helper.MemStatInfo() + "\n"
+
 	return status, nil
 }
