@@ -8,11 +8,15 @@ import (
 )
 
 type LRU struct {
-	list        map[string]item
-	head        *item
-	tail        *item
-	lock        sync.RWMutex
-	memLimit    uint64
+	list map[string]item
+
+	head *item
+	tail *item
+
+	lock sync.RWMutex
+
+	memLimit uint64
+
 	cleanerChan chan string
 }
 
@@ -72,7 +76,10 @@ func (l *LRU) Reuse(key string, cell *driver.Cell) {
 	l.Push(key, cell)
 }
 
-// Если нет элементов no-op
+// Cut метод очистки базы до конфигурируемого лимита
+// Метод пишет в канал очистки ключи базы данных, которые необходимо удалить
+// подрезает конец списка
+// Если нет элементов , то no-op
 func (l *LRU) Cut() {
 
 	var stat runtime.MemStats

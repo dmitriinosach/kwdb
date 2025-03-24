@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"kwdb/app/errorpkg"
 	"kwdb/app/storage/displacement"
 	"kwdb/app/storage/driver"
@@ -39,6 +40,14 @@ func Init(driverName string, partitionsCount int) (err error) {
 		CleanerChan = make(chan string)
 
 		go displacement.RunWatcher(displacement.NewLRU(CleanerChan))
+
+		// потом отрефачить получателя клинера
+		go func() {
+			ctx := context.Background()
+			for key := range CleanerChan {
+				Storage.Delete(ctx, key)
+			}
+		}()
 	})
 
 	return
