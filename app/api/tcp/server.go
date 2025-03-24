@@ -3,7 +3,7 @@ package tcp
 import (
 	"context"
 	"kwdb/app"
-	"kwdb/app/api"
+	"kwdb/app/commands"
 	"kwdb/internal/helper"
 	"kwdb/internal/helper/flogger"
 	"net"
@@ -67,7 +67,7 @@ func tpcHandle(ctx context.Context, conn net.Conn) {
 	message := string(buffer[1:bufferLength])
 
 	//TODO:избавится от msg и парсера, перейти на структуру и байты
-	result, err = api.ExecMsg(ctx, message)
+	result, err = commands.SetAndRun(ctx, message)
 
 	reply(result, err, conn)
 

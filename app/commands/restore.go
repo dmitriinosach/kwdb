@@ -41,8 +41,8 @@ func (c *RestoreCommand) Execute(ctx context.Context) (string, error) {
 			break // exit break loop
 
 		} else {
-			cmd, _ := SetupCommand(ctx, commandString)
-			_, err := cmd.Execute(ctx)
+			_, err := SetAndRun(ctx, commandString)
+
 			if err != nil {
 				return "", err
 			}

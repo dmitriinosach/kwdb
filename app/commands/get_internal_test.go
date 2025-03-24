@@ -73,7 +73,7 @@ func TestCommandSelector(t *testing.T) {
 func TestArgsParser_Key(t *testing.T) {
 
 	msg := "GET k=1"
-	args, err := NewArgsFromString(msg)
+	args, err := newArgsFromString(msg)
 
 	if err != nil {
 		t.Error(err)
@@ -84,7 +84,7 @@ func TestArgsParser_Key(t *testing.T) {
 	}
 
 	msg = "GET key=1"
-	args, err = NewArgsFromString(msg)
+	args, err = newArgsFromString(msg)
 
 	if err != nil {
 		t.Error(err)
@@ -98,7 +98,7 @@ func TestArgsParser_Key(t *testing.T) {
 func TestArgsParser_Value(t *testing.T) {
 
 	msg := "SET k=1 v=1"
-	args, err := NewArgsFromString(msg)
+	args, err := newArgsFromString(msg)
 
 	if err != nil {
 		t.Error(err)
@@ -109,7 +109,7 @@ func TestArgsParser_Value(t *testing.T) {
 	}
 
 	msg = "SET k=1 value=1"
-	args, err = NewArgsFromString(msg)
+	args, err = newArgsFromString(msg)
 
 	if err != nil {
 		t.Error(err)
@@ -123,7 +123,7 @@ func TestArgsParser_Value(t *testing.T) {
 func TestArgsParser_TTL(t *testing.T) {
 
 	msg := "SET k=1 v=1 ttl=3600"
-	args, err := NewArgsFromString(msg)
+	args, err := newArgsFromString(msg)
 
 	if err != nil {
 		t.Error(err)
@@ -137,7 +137,7 @@ func TestArgsParser_TTL(t *testing.T) {
 func TestArgsParser_CMD(t *testing.T) {
 
 	msg := "SET k=1 v=1 ttl=3600"
-	args, err := NewArgsFromString(msg)
+	args, err := newArgsFromString(msg)
 
 	if err != nil {
 		t.Error(err)

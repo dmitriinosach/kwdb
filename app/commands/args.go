@@ -1,20 +1,29 @@
+// Copyright 2025 @dmitrii_nosach
+
 package commands
 
 import (
+	"fmt"
 	"github.com/google/shlex"
 	"kwdb/app/errorpkg"
 	"strconv"
 	"strings"
 )
 
+// separator символ разделителя аргумента и значения в строке
+const separator string = "="
+
 type arguments struct {
+	//Имя команды для определения
 	CmdName string
-	Key     string
-	Value   string
-	TTL     int
+
+	//аргументы команды
+	Key   string
+	Value string
+	TTL   int
 }
 
-func NewArgsFromString(s string) (*arguments, error) {
+func newArgsFromString(s string) (*arguments, error) {
 
 	args := new(arguments)
 
@@ -26,19 +35,19 @@ func NewArgsFromString(s string) (*arguments, error) {
 
 	for number, tag := range parsedLine {
 		if number == 0 {
-			args.CmdName, err = cmdName(tag)
-			if err != nil {
-				return args, err
+			_, nameError := withCmdName(args, tag)
+			if nameError != nil {
+				return nil, nameError
 			}
 		} else {
-			split := strings.Split(tag, "=")
+			split := strings.Split(tag, separator)
 
 			switch split[0] {
 			case "key", "k":
 				args.Key = split[1]
 			case "value", "v":
 				args.Value = split[1]
-			case "ttl":
+			case "ttl", "t":
 				ttl, ok := strconv.Atoi(split[1])
 				if ok != nil {
 					return args, errorpkg.ErrorParseTTL
@@ -53,12 +62,14 @@ func NewArgsFromString(s string) (*arguments, error) {
 	return args, nil
 }
 
-func cmdName(tag string) (string, error) {
+func withCmdName(args *arguments, tag string) (*arguments, error) {
 	cmdMaxLen := 10
 
 	if len(tag) > cmdMaxLen {
-		return tag, errorpkg.ErrorParseCmdNotFound
+		return nil, fmt.Errorf("name too long")
 	}
 
-	return tag, nil
+	args.CmdName = tag
+
+	return args, nil
 }

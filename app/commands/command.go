@@ -2,13 +2,8 @@ package commands
 
 import (
 	"context"
-	"github.com/pkg/errors"
-)
-
-var (
-	ErrCommandNotFound   = errors.New("команда не найдена")
-	ErrCommandLineParser = errors.New("ошибка разбора аргументов")
-	ErrCommandArguments  = errors.New("отсутствуют необходимые аргуметы")
+	"kwdb/app/errorpkg"
+	"kwdb/app/workers"
 )
 
 var List = map[string]CommandInterface{
@@ -32,27 +27,42 @@ type CommandInterface interface {
 	IsWritable(ctx context.Context) bool
 }
 
-func SetupCommand(ctx context.Context, message string) (CommandInterface, error) {
+func setupCommand(ctx context.Context, message string) (CommandInterface, error) {
 
-	args, err := NewArgsFromString(message)
+	args, err := newArgsFromString(message)
 
 	if err != nil {
-		return nil, ErrCommandLineParser
+		return nil, errorpkg.ErrCmdLineParser
 	}
 
 	cmd := selectCommand(args)
 
 	if cmd == nil {
-		return nil, ErrCommandNotFound
+		return nil, errorpkg.ErrCmdNotFound
 	}
 
 	if !cmd.CheckArgs(ctx, args) {
-		return nil, ErrCommandArguments
+		return nil, errorpkg.ErrCmdArguments
 	}
 
 	cmd.SetArgs(ctx, args)
 
 	return cmd, nil
+}
+
+func SetAndRun(ctx context.Context, message string) (string, error) {
+	cmd, err := setupCommand(ctx, message)
+
+	execute, err := cmd.Execute(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	if cmd.IsWritable(ctx) {
+		go workers.Write(message)
+	}
+
+	return execute, nil
 }
 
 func selectCommand(args *arguments) CommandInterface {

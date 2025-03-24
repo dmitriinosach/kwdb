@@ -18,9 +18,8 @@ func Serve() {
 		ctx := context.Background()
 		cs := "SET k=" + r.URL.Query().Get("key") + " v=" + r.URL.Query().Get("value")
 
-		ifc, _ := commands.SetupCommand(ctx, cs)
+		res, _ := commands.SetAndRun(ctx, cs)
 
-		res, _ := ifc.Execute(ctx)
 		fmt.Fprintf(w, res)
 	})
 

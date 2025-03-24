@@ -15,6 +15,8 @@ type (
 	errMsg error
 )
 
+// TODO: как это работает
+//
 //go:generate stringer -type=cliConfig
 var cliConfig struct {
 	connectionHost string
