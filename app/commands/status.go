@@ -41,8 +41,7 @@ func (c *StatusCommand) Name() string {
 }
 
 func (c *StatusCommand) Execute(ctx context.Context) (string, error) {
-	status := ""
-	status += "coroutines:" + strconv.Itoa(runtime.NumGoroutine()) + "\n"
+	status := "coroutines:" + strconv.Itoa(runtime.NumGoroutine()) + "\n"
 	status += "cores:" + strconv.Itoa(runtime.NumCPU()) + "\n"
 	status += "" + helper.MemStatInfo() + "\n"
 	return status, nil

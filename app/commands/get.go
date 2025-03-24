@@ -2,14 +2,14 @@ package commands
 
 import (
 	"context"
-	"github.com/pkg/errors"
+	"fmt"
 	"kwdb/app/storage"
 )
 
 const CommandGet = "GET"
 
 var (
-	GetCommandKeyNotFound = errors.New("ключ не установлен")
+	GetCommandKeyNotFound = fmt.Errorf("ключ не установлен")
 )
 
 type GetCommand struct {
@@ -54,16 +54,11 @@ func (c *GetCommand) echo() string {
 
 func (c *GetCommand) Execute(ctx context.Context) (string, error) {
 
-	ok, err := storage.Storage.Has(ctx, c.Args.Key)
-	if err != nil {
+	value, err := storage.Storage.Get(ctx, c.Args.Key)
+
+	if value == nil {
 		return "", err
 	}
-
-	if !ok {
-		return "", GetCommandKeyNotFound
-	}
-
-	value, _ := storage.Storage.Get(ctx, c.Args.Key)
 
 	return value.Value, nil
 }

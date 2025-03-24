@@ -6,16 +6,10 @@ import (
 	"fmt"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"kwdb/internal/helper"
 	"log"
+	"net"
 	"os"
 )
-
-var ENV_FILE string = "../../.env"
-
-var history [30]string
-var historyPointer int = 0
-var historyCount int = 0
 
 type (
 	errMsg error
@@ -27,12 +21,12 @@ var cliConfig struct {
 	connectionPort string
 }
 
+var cliHistory = new(history)
+
 func main() {
+	// локальный IP
+	//locIp := helper.LocalIp()
 
-	//cnf, _ := app.InitConfigs()
-
-	locIp := helper.LocalIp()
-	fmt.Println(locIp)
 	// Регистрируем флаги и связываем их с полями структуры config
 	flag.StringVar(&cliConfig.connectionHost, "host", "localhost", "хост для подключения")
 	flag.StringVar(&cliConfig.connectionPort, "port", "712", "порт для подключения")
@@ -40,9 +34,14 @@ func main() {
 	// Парсим аргументы командной строки
 	flag.Parse()
 
-	// Выводим полученные значения
-	fmt.Printf("Host: %s", cliConfig.connectionHost)
-	fmt.Printf("Port: %d", cliConfig.connectionPort)
+	status, err := send("status")
+
+	if err == nil {
+		fmt.Println("подключено к " + net.JoinHostPort(cliConfig.connectionHost, cliConfig.connectionPort))
+		fmt.Println(status.Result)
+	} else {
+		fmt.Println(err)
+	}
 
 	p := tea.NewProgram(initialModel())
 
@@ -55,19 +54,15 @@ func handle(message string) string {
 	message = string(bytes.Trim([]byte(message), "\x00"))
 	result, errors := send(message)
 
-	if historyCount == len(history) {
-		history = [30]string(history[1:30])
-	} else {
-		history[historyCount] = message
-	}
-
-	historyCount++
-
 	if errors != nil {
 		return errors.Error()
 	}
 
-	return result
+	if len(result.Errors) > 1 {
+		return result.Errors
+	}
+
+	return result.Result
 }
 
 func initialModel() model {
@@ -102,22 +97,21 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			tea.ClearScreen()
 			msg := m.textInput.Value()
 			m.textInput.SetValue("")
-			historyPointer = historyCount
+
+			cliHistory.Push(msg)
+
 			ans := handle(msg)
+
 			return m, tea.Printf(ans)
 		case tea.KeyEscape, tea.KeyCtrlC:
-
 			os.Exit(0)
 			return m, tea.Quit
 		case tea.KeyUp:
-			if historyPointer < 0 {
-				historyPointer = historyCount
-			}
-			his := history[historyPointer]
 
-			m.textInput.SetValue(his)
+			hisCmd := cliHistory.Prev()
 
-			historyPointer--
+			m.textInput.SetValue(hisCmd)
+
 			return m, nil
 		}
 
