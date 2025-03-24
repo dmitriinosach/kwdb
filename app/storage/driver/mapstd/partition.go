@@ -8,8 +8,6 @@ import (
 type partition struct {
 	vault  map[string]*driver.Cell
 	locker sync.RWMutex
-
-	onClean bool
 }
 
 func (p *partition) get(key string) (*driver.Cell, bool) {

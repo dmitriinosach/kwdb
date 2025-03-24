@@ -12,7 +12,7 @@ import (
 // загрузка настроек
 func loadConfigs() {
 
-	_, err := app.InitConfigs()
+	err := app.InitConfigs()
 
 	if err != nil {
 		panic("Ошибка загрузки настроек:" + err.Error())

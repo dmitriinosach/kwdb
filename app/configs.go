@@ -1,54 +1,58 @@
 package app
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
-	"github.com/pkg/errors"
 	"kwdb/app/errorpkg"
 	"os"
 	"strconv"
-	"time"
 )
 
+// ConfigEnv структура для хранения конфигурации приложения
 type ConfigEnv struct {
-	Host       string
-	Port       string
-	Driver     string
+	// Host ip\domain базы
+	Host string
+
+	// Port порт базы данных
+	Port string
+
+	// Driver строковое имя драйвера напр. hashmap
+	Driver string
+
+	// Partitions кол-во партиций внутри хранилища
 	Partitions int
-	LogPath    string
-	MemLimit   uint64
+
+	// LogPath путь хранения файлов логирования
+	LogPath string
+
+	// MemLimit лимит памяти хранилища
+	MemLimit uint64
 }
 
 var Config ConfigEnv
 
-type SysInfo struct {
-	Started time.Time
-}
-
-var SysInfoData SysInfo
-
-func InitConfigs() (ConfigEnv, error) {
-
-	// рефакторинг
+// InitConfigs загрузка конфигураций приложения из env файла
+func InitConfigs() error {
 
 	if err := godotenv.Load(); err != nil {
-		return ConfigEnv{}, errors.Wrap(err, errorpkg.ErrEnvLoad)
+		return fmt.Errorf(errorpkg.ErrEnvLoad)
 	}
 
 	exist := false
 
 	Config.Host, exist = os.LookupEnv("SERVER_HOST")
 	if !exist {
-		return Config, errors.New(errorpkg.ErrEnvParameterMissed + "SERVER_HOST")
+		return fmt.Errorf(errorpkg.ErrEnvParameterMissed + "SERVER_HOST")
 	}
 
 	Config.Port, exist = os.LookupEnv("SERVER_PORT")
 	if !exist {
-		return Config, errors.New(errorpkg.ErrEnvParameterMissed + "SERVER_PORT")
+		return fmt.Errorf(errorpkg.ErrEnvParameterMissed + "SERVER_PORT")
 	}
 
 	Config.Driver, exist = os.LookupEnv("DATABASE_DRIVER")
 	if !exist {
-		return Config, errors.New(errorpkg.ErrEnvParameterMissed + "DATABASE_DRIVER")
+		return fmt.Errorf(errorpkg.ErrEnvParameterMissed + "DATABASE_DRIVER")
 	}
 
 	parts := ""
@@ -56,15 +60,15 @@ func InitConfigs() (ConfigEnv, error) {
 	Config.Partitions, _ = strconv.Atoi(parts)
 
 	if !exist {
-		return Config, errors.New(errorpkg.ErrEnvParameterMissed + "DATABASE_DRIVER")
+		return fmt.Errorf(errorpkg.ErrEnvParameterMissed + "DATABASE_DRIVER")
 	}
 
 	Config.LogPath, exist = os.LookupEnv("LOG_PATH")
 	if !exist {
-		return Config, errors.New(errorpkg.ErrEnvParameterMissed + "LOG_PATH")
+		return fmt.Errorf(errorpkg.ErrEnvParameterMissed + "LOG_PATH")
 	}
 
 	Config.MemLimit = 100
 
-	return Config, nil
+	return nil
 }

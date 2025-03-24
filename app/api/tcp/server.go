@@ -3,7 +3,7 @@ package tcp
 import (
 	"context"
 	"kwdb/app"
-	"kwdb/app/api"
+	"kwdb/app/commands"
 	"kwdb/internal/helper"
 	"kwdb/internal/helper/flogger"
 	"net"
@@ -57,7 +57,8 @@ func tpcHandle(ctx context.Context, conn net.Conn) {
 	if err != nil {
 		r := ""
 		//TODO: всрато выглядит
-		answer(makeReply(&r, err), conn)
+		reply(r, err, conn)
+
 		flogger.Write(err.Error(), "")
 
 		return
@@ -66,29 +67,25 @@ func tpcHandle(ctx context.Context, conn net.Conn) {
 	message := string(buffer[1:bufferLength])
 
 	//TODO:избавится от msg и парсера, перейти на структуру и байты
-	result, err = api.ExecMsg(ctx, message)
-	//TODO: всрато выглядит
-	answer(makeReply(&result, err), conn)
+	result, err = commands.SetAndRun(ctx, message)
+
+	reply(result, err, conn)
 
 	conn.Close()
 }
 
-// TODO: нужа или нет передача по ссылке
-func makeReply(r *string, e error) []byte {
+// TODO: нужна или нет передача по ссылке &r
+func reply(r string, e error, conn net.Conn) {
 
-	reply := strconv.Itoa(len(*r)) + ":" + *r
+	r = strconv.Itoa(len(r)) + ":" + r
 
 	if e != nil {
-		reply += (e).Error()
+		r += (e).Error()
 	}
 
-	return []byte(reply)
-}
+	_, err := conn.Write([]byte(r))
 
-func answer(r []byte, conn net.Conn) {
-	_, err := conn.Write(r)
 	if err != nil {
 		flogger.Write("Не удалось ответить серверу:"+err.Error(), "")
-		return
 	}
 }

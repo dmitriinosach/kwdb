@@ -19,5 +19,5 @@ func MemStatInfo() string {
 
 	runtime.ReadMemStats(&stat)
 
-	return fmt.Sprintf("Alloc = %v MiB", stat.Alloc/1024/1024)
+	return fmt.Sprintf("alloc = %v MiB", stat.Alloc/1024/1024)
 }

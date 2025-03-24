@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"kwdb/app/errorpkg"
 	"net"
 	"time"
@@ -14,12 +13,12 @@ func goe(pac int) {
 	}
 }
 
-func send(message string) (string, error) {
+func send(message string) (*Reply, error) {
 
 	conn, err := net.Dial("tcp", cliConfig.connectionHost+":"+cliConfig.connectionPort)
 
 	if err != nil {
-		return "", errorpkg.ErrorTcpSetUpConnections
+		return nil, errorpkg.ErrorTcpSetUpConnections
 	}
 
 	defer conn.Close()
@@ -28,30 +27,24 @@ func send(message string) (string, error) {
 	err = conn.SetWriteDeadline(time.Now().Add(time.Second * 1))
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	// отправляем сообщение серверу
 	if n, err := conn.Write([]byte(":" + message)); n == 0 || err != nil {
-		return "", errorpkg.ErrorTcpSendMessage
+		return nil, err
 	}
 
 	// получем ответ
-
 	buff := make([]byte, 1024)
+
 	n, err := conn.Read(buff)
 
 	if err != nil {
-		return "", errorpkg.ErrorTcpReadAnswer
+		return nil, errorpkg.ErrorTcpReadAnswer
 	}
 
-	response := buff[:n]
+	res := NewReply(buff[:n])
 
-	res := parseReply(response)
-
-	if len(res.ResultErrors) > 0 {
-		return "", fmt.Errorf(res.ResultErrors)
-	}
-
-	return res.Result, nil
+	return res, nil
 }

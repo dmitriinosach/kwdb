@@ -9,14 +9,14 @@ const CommandLookUp = "LOOKUP"
 
 type LookUpCommand struct {
 	name       string
-	Args       *Arguments
+	Args       *arguments
 	isWritable bool
 }
 
 func NewLookUpCommand() *LookUpCommand {
 	return &LookUpCommand{
 		name:       CommandLookUp,
-		Args:       new(Arguments),
+		Args:       new(arguments),
 		isWritable: false,
 	}
 }
@@ -25,7 +25,7 @@ func (command *LookUpCommand) IsWritable(ctx context.Context) bool {
 	return command.isWritable
 }
 
-func (command *LookUpCommand) CheckArgs(ctx context.Context, args *Arguments) bool {
+func (command *LookUpCommand) CheckArgs(ctx context.Context, args *arguments) bool {
 	return true
 }
 
@@ -48,6 +48,6 @@ func (command *LookUpCommand) Name() string {
 	return command.name
 }
 
-func (command *LookUpCommand) SetArgs(ctx context.Context, args *Arguments) {
+func (command *LookUpCommand) SetArgs(ctx context.Context, args *arguments) {
 	command.Args = args
 }

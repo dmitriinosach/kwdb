@@ -2,6 +2,7 @@ package mapstd
 
 import (
 	"context"
+	"fmt"
 	"kwdb/app/storage/driver"
 	"kwdb/internal/helper"
 	"strconv"
@@ -15,11 +16,6 @@ type HashMapStandard struct {
 	driver     string
 }
 
-func (s *HashMapStandard) Has(ctx context.Context, key string) (bool, error) {
-
-	return true, nil
-}
-
 func NewHashMapStandard(partitionsCount int) *HashMapStandard {
 	stg := &HashMapStandard{
 		partitions: make([]partition, partitionsCount),
@@ -27,7 +23,9 @@ func NewHashMapStandard(partitionsCount int) *HashMapStandard {
 	}
 
 	for i := range stg.partitions {
-		stg.partitions[i].vault = make(map[string]*driver.Cell, 100)
+		stg.partitions[i] = partition{
+			vault: make(map[string]*driver.Cell),
+		}
 	}
 
 	return stg
@@ -44,7 +42,7 @@ func (s *HashMapStandard) Get(ctx context.Context, key string) (*driver.Cell, er
 	cell, ok := s.partitions[partitionIndex].get(key)
 
 	if !ok {
-		return nil, nil
+		return nil, fmt.Errorf("ключ не найден")
 	}
 
 	return cell, nil

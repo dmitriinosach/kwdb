@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"context"
 	"reflect"
 	"testing"
 )
@@ -9,7 +10,7 @@ import (
 
 func TestCommandSelector(t *testing.T) {
 
-	args := new(Arguments)
+	args := new(arguments)
 	args.CmdName = "SET"
 	args.Key = "1"
 	args.Value = "1"
@@ -72,7 +73,7 @@ func TestCommandSelector(t *testing.T) {
 func TestArgsParser_Key(t *testing.T) {
 
 	msg := "GET k=1"
-	args, err := NewArgsFromString(msg)
+	args, err := newArgsFromString(msg)
 
 	if err != nil {
 		t.Error(err)
@@ -83,7 +84,7 @@ func TestArgsParser_Key(t *testing.T) {
 	}
 
 	msg = "GET key=1"
-	args, err = NewArgsFromString(msg)
+	args, err = newArgsFromString(msg)
 
 	if err != nil {
 		t.Error(err)
@@ -97,7 +98,7 @@ func TestArgsParser_Key(t *testing.T) {
 func TestArgsParser_Value(t *testing.T) {
 
 	msg := "SET k=1 v=1"
-	args, err := NewArgsFromString(msg)
+	args, err := newArgsFromString(msg)
 
 	if err != nil {
 		t.Error(err)
@@ -108,7 +109,7 @@ func TestArgsParser_Value(t *testing.T) {
 	}
 
 	msg = "SET k=1 value=1"
-	args, err = NewArgsFromString(msg)
+	args, err = newArgsFromString(msg)
 
 	if err != nil {
 		t.Error(err)
@@ -122,7 +123,7 @@ func TestArgsParser_Value(t *testing.T) {
 func TestArgsParser_TTL(t *testing.T) {
 
 	msg := "SET k=1 v=1 ttl=3600"
-	args, err := NewArgsFromString(msg)
+	args, err := newArgsFromString(msg)
 
 	if err != nil {
 		t.Error(err)
@@ -136,7 +137,7 @@ func TestArgsParser_TTL(t *testing.T) {
 func TestArgsParser_CMD(t *testing.T) {
 
 	msg := "SET k=1 v=1 ttl=3600"
-	args, err := NewArgsFromString(msg)
+	args, err := newArgsFromString(msg)
 
 	if err != nil {
 		t.Error(err)
@@ -144,5 +145,74 @@ func TestArgsParser_CMD(t *testing.T) {
 
 	if args.CmdName != "SET" {
 		t.Errorf("Ошибка установки аргумента CmdName, передано name %v : получено %v", "SET", args.CmdName)
+	}
+}
+
+func TestGetCommand(t *testing.T) {
+
+	args := new(arguments)
+
+	args.CmdName = "SET"
+	args.Key = "1"
+	args.Value = "1"
+	args.TTL = 100
+
+	ctx := context.Background()
+	// TODO: как выбирать инкапсулированные методы / selectCommand
+	cmd := NewGetCommand()
+
+	result := cmd.CheckArgs(ctx, args)
+
+	if !result {
+		t.Errorf("Команда %s отвергла необходимые аргументы: %v.", args.CmdName, args)
+	}
+}
+
+func TestSetCommand(t *testing.T) {
+
+	args := new(arguments)
+
+	args.CmdName = "SET"
+	args.Key = "1"
+	args.Value = "1"
+	args.TTL = 100
+
+	ctx := context.Background()
+	cmd := NewSetCommand()
+	result := cmd.CheckArgs(ctx, args)
+
+	if !result {
+		t.Errorf("Команда %s отвергла необходимые аргументы: %v.", args.CmdName, args)
+	}
+}
+
+func TestDeleteCommand(t *testing.T) {
+
+	args := new(arguments)
+
+	args.CmdName = "DELETE"
+	args.Key = "1"
+
+	ctx := context.Background()
+	cmd := NewDeleteCommand()
+	result := cmd.CheckArgs(ctx, args)
+
+	if !result {
+		t.Errorf("Команда %s отвергла необходимые аргументы: %v.", args.CmdName, args)
+	}
+}
+
+func TestInfoCommand(t *testing.T) {
+
+	args := new(arguments)
+
+	args.CmdName = "INFO"
+
+	ctx := context.Background()
+	cmd := NewInfoCommand()
+	result := cmd.CheckArgs(ctx, args)
+
+	if !result {
+		t.Errorf("Команда %s отвергла необходимые аргументы: %v.", args.CmdName, args)
 	}
 }

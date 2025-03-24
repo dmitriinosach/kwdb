@@ -5,7 +5,7 @@ import "fmt"
 // TODO: Переделать на структуры ?
 var (
 	ErrEnvParameterMissed = "в настройках окружения не установленно: "
-	ErrEnvLoad            = "Ошибка инициализации env файла"
+	ErrEnvLoad            = "ошибка инициализации env файла"
 
 	ErrHashFunctionCompute       = fmt.Errorf("error hashing function")
 	ErrHashFunctionIndexOutRange = fmt.Errorf("partition index out of range")
@@ -21,4 +21,8 @@ var (
 	ErrorTcpSetUpConnections = fmt.Errorf("ошибка установки соединения с сервером")
 
 	ErrCmdKeyNotFound = fmt.Errorf("key not found")
+
+	ErrCmdNotFound   = fmt.Errorf("команда не найдена")
+	ErrCmdArguments  = fmt.Errorf("отсутствуют необходимые аргуметы")
+	ErrCmdLineParser = fmt.Errorf("ошибка разбора аргументов")
 )

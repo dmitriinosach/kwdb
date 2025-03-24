@@ -32,3 +32,7 @@ build-all-r:
 # нагрузочное тестирование k6
 http-k6:
 	cat script.js | docker run --rm -i grafana/k6 run -
+
+
+test-cmd:
+	go test .\app\commands

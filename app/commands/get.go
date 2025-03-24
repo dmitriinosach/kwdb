@@ -2,26 +2,26 @@ package commands
 
 import (
 	"context"
-	"github.com/pkg/errors"
+	"fmt"
 	"kwdb/app/storage"
 )
 
 const CommandGet = "GET"
 
 var (
-	GetCommandKeyNotFound = errors.New("ключ не установлен")
+	GetCommandKeyNotFound = fmt.Errorf("ключ не установлен")
 )
 
 type GetCommand struct {
 	name       string
-	Args       *Arguments
+	Args       *arguments
 	isWritable bool
 }
 
 func NewGetCommand() *GetCommand {
 	return &GetCommand{
 		name:       CommandGet,
-		Args:       new(Arguments),
+		Args:       new(arguments),
 		isWritable: false,
 	}
 }
@@ -30,11 +30,11 @@ func (c *GetCommand) IsWritable(ctx context.Context) bool {
 	return c.isWritable
 }
 
-func (c *GetCommand) SetArgs(ctx context.Context, args *Arguments) {
+func (c *GetCommand) SetArgs(ctx context.Context, args *arguments) {
 	c.Args = args
 }
 
-func (c *GetCommand) CheckArgs(ctx context.Context, args *Arguments) bool {
+func (c *GetCommand) CheckArgs(ctx context.Context, args *arguments) bool {
 	if args.Key == "" {
 		return false
 	}
@@ -54,16 +54,15 @@ func (c *GetCommand) echo() string {
 
 func (c *GetCommand) Execute(ctx context.Context) (string, error) {
 
-	ok, err := storage.Storage.Has(ctx, c.Args.Key)
-	if err != nil {
+	value, err := storage.Storage.Get(ctx, c.Args.Key)
+
+	if value == nil {
+		storage.Status.Metrics.Miss()
+
 		return "", err
 	}
 
-	if !ok {
-		return "", GetCommandKeyNotFound
-	}
-
-	value, _ := storage.Storage.Get(ctx, c.Args.Key)
+	storage.Status.Metrics.Hit()
 
 	return value.Value, nil
 }
