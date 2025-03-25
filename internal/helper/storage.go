@@ -3,8 +3,10 @@ package helper
 import (
 	"hash/fnv"
 	"kwdb/app/errorpkg"
+	"os"
 )
 
+// HashFunction хэщ функция строки в число по остатку на кол-во партиций
 func HashFunction(key string, partitions int) (int, error) {
 	h := fnv.New32a()
 	h.Write([]byte(key))
@@ -15,4 +17,13 @@ func HashFunction(key string, partitions int) (int, error) {
 	}
 
 	return number, nil
+}
+
+// GetUserHome Получаем домашний каталог пользователя
+func GetUserHome() string {
+	home := os.Getenv("HOME")
+	if home == "" {
+		home = os.Getenv("USERPROFILE") // для Windows
+	}
+	return home
 }
