@@ -2,27 +2,28 @@ package workers
 
 import (
 	"bufio"
-	"fmt"
+	"kwdb/internal/helper/file_system"
+	"kwdb/internal/helper/informer"
 	"log"
 	"os"
 )
 
+const backupPath = "./data/backup/wal1.txt"
+
+var backupFile *os.File
+
 // TODO: переделать, долен решать другую задачу
 func Write(text string) {
 
-	file, err := os.OpenFile("./data/backup/wal1.txt", os.O_APPEND, 066)
-
-	if err != nil {
-		fmt.Println("Unable to create file:", err)
-		os.Exit(1)
-	}
-	defer file.Close()
-
-	_, err = file.WriteString(text + "\n")
-	if err != nil {
-		return
+	if backupFile == nil {
+		backupFile, _ = file_system.ReadOrCreate(backupPath)
 	}
 
+	_, err := backupFile.WriteString(text + "\n")
+
+	if err != nil {
+		informer.InfChan <- "Ошибка записи wal"
+	}
 }
 
 func Backup(commandChan chan string) *bufio.Scanner {
