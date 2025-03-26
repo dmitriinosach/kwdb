@@ -88,12 +88,16 @@ func (s *HashMapStandard) Delete(ctx context.Context, key string) error {
 func (s *HashMapStandard) Info() string {
 
 	info := "Драйвер:" + s.driver + "\n"
+
 	info += "Инициировано секций: " + strconv.Itoa(len(s.partitions)) + " \n"
 
 	i := 0
+
 	for range s.partitions {
+		s.partitions[i].locker.RLock()
 		info += "Секция-" + strconv.Itoa(i) + ": элементов- " + strconv.Itoa(len(s.partitions[i].vault)) + "\n"
 		i++
+		s.partitions[i].locker.RUnlock()
 	}
 
 	return info

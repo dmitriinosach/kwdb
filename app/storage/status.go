@@ -21,6 +21,7 @@ type Metrics struct {
 	getHit  uint64
 	getMiss uint64
 	takes   uint64
+	size    uint64
 }
 
 func (m *Metrics) HitRate() string {
