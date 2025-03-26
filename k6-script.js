@@ -2,7 +2,7 @@ import http from 'k6/http';
 import { sleep, check } from 'k6';
 
 export const options = {
-  vus: 10,
+  vus: 20000,
   duration: '30s',
   cloud: {
     projectID: 3753077,
@@ -13,9 +13,9 @@ export const options = {
 
 export default function() {
 
-  let val = "hfouwhepori jfdsfjk as[dpifh [pkmfsda[pf kas]df k-20u-439jksdof sa['df sad]f [okasd]f -0idsa-f s0ak9df]- as0dkf= a-sdkf=as9 if2-1ok3ef,d psdfjp[sadjf"
+  let val = "Наше дело не так однозначно, как может показаться: сплочённость команды профессионалов прекрасно подходит для реализации как самодостаточных, так и внешне зависимых концептуальных решений. Равным образом, начало повседневной работы по формированию позиции представляет собой интересный эксперимент проверки прогресса профессионального сообщества. В своём стремлении повысить качество жизни, они забывают, что базовый вектор развития играет определяющее значение для глубокомысленных рассуждений."
   let vals = "12313t dcvs ga"
-  let res = http.get('http://188.242.160.102:713/?key='+getRandomInt(200000)+"&value="+vals);
+  let res = http.get('http://192.168.1.96:713/?key='+getRandomInt(200000)+'&value="'+encodeURIComponent(val)+'"');
 
   check(res, { "status is 200": (res) => res.status === 200 });
 

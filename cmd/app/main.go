@@ -3,19 +3,23 @@ package main
 import (
 	"kwdb/app"
 	"kwdb/app/workers/cleaner"
-	"kwdb/internal/helper"
+	"kwdb/internal/helper/flogger"
+	"kwdb/internal/helper/informer"
 )
 
 func main() {
 
 	//загрузка настроек
 	loadConfigs()
+
+	flogger.Init()
+	
 	//Консольный информатор
-	go helper.ConsoleInformer()
+	go informer.Informer()
 
-	helper.InfChan <- "Настройки загружены"
+	informer.InfChan <- "Настройки загружены"
 
-	helper.InfChan <- "Запуск..."
+	informer.InfChan <- "Запуск..."
 
 	//Создание хранилища
 	runStorage()

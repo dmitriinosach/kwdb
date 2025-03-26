@@ -2,6 +2,7 @@ package helper
 
 import (
 	"fmt"
+	"kwdb/internal/helper/informer"
 	"runtime"
 )
 
@@ -10,7 +11,7 @@ func printAlloc() {
 
 	runtime.ReadMemStats(&stat)
 
-	InfChan <- fmt.Sprintf("Alloc = %v MiB", stat.Alloc/1024/1024)
+	informer.InfChan <- fmt.Sprintf("Alloc = %v MiB", stat.Alloc/1024/1024)
 
 }
 

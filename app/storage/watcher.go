@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"kwdb/app/storage/mapstd"
+	"kwdb/app/storage/displacement"
 	"kwdb/internal/helper/informer"
 	"time"
 )
@@ -13,7 +13,7 @@ type workerSem struct {
 
 var sem workerSem
 
-func RunWatcher(policy *mapstd.Policy) {
+func RunWatcher(policy *displacement.Policy) {
 
 	sem = workerSem{make(chan struct{}, 1), time.Now()}
 
@@ -31,9 +31,9 @@ func RunWatcher(policy *mapstd.Policy) {
 	}
 }
 
-func worker(sem chan struct{}, p *mapstd.Policy) {
+func worker(sem chan struct{}, p *displacement.Policy) {
 	for range sem {
 		informer.InfChan <- "Запущена очистка памяти"
-		p.Cut()
+		//p.Cut()
 	}
 }

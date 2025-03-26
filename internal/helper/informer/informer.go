@@ -1,4 +1,4 @@
-package helper
+package informer
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 
 var InfChan = make(chan string, 1)
 
-func ConsoleInformer() {
+func Informer() {
 	for message := range InfChan {
 		handler := slog.NewJSONHandler(flogger.FileLogger{}, &slog.HandlerOptions{
 			AddSource: true,

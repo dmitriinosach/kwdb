@@ -4,8 +4,8 @@ import (
 	"context"
 	"kwdb/app"
 	"kwdb/app/commands"
-	"kwdb/internal/helper"
 	"kwdb/internal/helper/flogger"
+	"kwdb/internal/helper/informer"
 	"net"
 	"os"
 	"os/signal"
@@ -28,7 +28,7 @@ func Serve() {
 
 	defer listen.Close()
 
-	helper.InfChan <- "tcp://" + app.Config.Host + ":" + app.Config.Port + " ожидает подключений"
+	informer.InfChan <- "tcp://" + app.Config.Host + ":" + app.Config.Port + " ожидает подключений"
 
 	for {
 		select {

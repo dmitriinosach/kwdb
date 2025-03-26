@@ -3,43 +3,25 @@ package flogger
 import (
 	"fmt"
 	"kwdb/app"
+	"kwdb/internal/helper/file_system"
 	"os"
 	"time"
 )
 
 type FileLogger struct {
+	File *os.File
+}
+
+var logger *FileLogger
+
+var file *os.File
+
+func Init() {
+	getLogFile()
 }
 
 func (f FileLogger) Write(mes []byte) (n int, err error) {
-	y, m, d := time.Now().Date()
-	logFileDate := fmt.Sprintf("log-%d-%d-%d", d, m, y)
-
 	message := string(mes[:])
-
-	filePath := app.Config.LogPath + "/" + logFileDate + ".txt"
-
-	var file *os.File
-
-	// Check if file exists
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		// Create the file
-		file, err = os.Create(filePath)
-		if err != nil {
-			// TODO ошибка логирования
-			panic("ошибка создания файла логирования:" + err.Error())
-			return 0, nil
-		}
-	} else {
-		// Open the file in append mode
-		file, err = os.OpenFile(filePath, os.O_APPEND|os.O_WRONLY, 0644)
-		if err != nil {
-			// TODO ошибка логирования
-			fmt.Println("ошибка открытия файла логирования:", err)
-			return 0, err
-		}
-
-	}
-	defer file.Close()
 
 	_, err = file.WriteString(message)
 	if err != nil {
@@ -58,4 +40,12 @@ func Write(mes string, stream string) {
 	}
 
 	FileLogger{}.Write([]byte(mes))
+}
+
+func getLogFile() {
+	y, m, d := time.Now().Date()
+	logFileDate := fmt.Sprintf("log-%d-%d-%d", d, m, y)
+
+	filePath := app.Config.LogPath + "/" + logFileDate + ".txt"
+	file, _ = file_system.ReadOrCreate(filePath)
 }

@@ -30,7 +30,7 @@ func main() {
 	//locIp := helper.LocalIp()
 
 	// Регистрируем флаги и связываем их с полями структуры config
-	flag.StringVar(&cliConfig.connectionHost, "host", "localhost", "хост для подключения")
+	flag.StringVar(&cliConfig.connectionHost, "host", "192.168.1.96", "хост для подключения")
 	flag.StringVar(&cliConfig.connectionPort, "port", "712", "порт для подключения")
 
 	// Парсим аргументы командной строки

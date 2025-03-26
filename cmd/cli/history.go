@@ -26,7 +26,7 @@ func (h *history) Push(cmd string) {
 
 	h.arr[0] = cmd
 
-	h.save()
+	//h.save()
 }
 
 func (h *history) Prev() string {

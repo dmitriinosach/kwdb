@@ -5,7 +5,7 @@ import (
 	"kwdb/app/api/http"
 	"kwdb/app/api/tcp"
 	"kwdb/app/storage"
-	"kwdb/internal/helper"
+	"kwdb/internal/helper/informer"
 	"os"
 )
 
@@ -21,16 +21,16 @@ func loadConfigs() {
 
 // Создание хранилища
 func runStorage() {
-	helper.InfChan <- "Создание хранилища..."
+	informer.InfChan <- "Создание хранилища..."
 
 	err := storage.Init(app.Config.Driver, app.Config.Partitions)
 
 	if err != nil {
-		helper.InfChan <- "Ошибка инициализации хранилища:" + err.Error()
+		informer.InfChan <- "Ошибка инициализации хранилища:" + err.Error()
 		os.Exit(-1)
 	}
 
-	helper.InfChan <- "Хранилище инициализировано:\n" + storage.Storage.Info()
+	informer.InfChan <- "Хранилище инициализировано:\n" + storage.Storage.Info()
 }
 
 func runListeners() {

@@ -6,7 +6,7 @@ import (
 	"kwdb/app/storage/driver"
 	"kwdb/app/storage/driver/mapstd"
 	"kwdb/app/storage/driver/syncmap"
-	"kwdb/internal/helper"
+	"kwdb/internal/helper/informer"
 )
 
 func Run(partitions int) {
@@ -26,7 +26,7 @@ func Run(partitions int) {
 		fmt.Println("default")
 	}
 
-	helper.InfChan <- "Cleaner запущен"
+	informer.InfChan <- "Cleaner запущен"
 }
 
 func cleaner(vault map[string]*driver.Cell) {
