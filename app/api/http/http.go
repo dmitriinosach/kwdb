@@ -13,6 +13,7 @@ type httpHandler struct {
 }
 
 func Serve() {
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
 		ctx := context.Background()

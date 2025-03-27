@@ -97,14 +97,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.Type {
 		case tea.KeyEnter:
 			tea.ClearScreen()
-			msg := m.textInput.Value()
+			inpt := m.textInput.Value()
 			m.textInput.SetValue("")
-
-			cliHistory.Push(msg)
-
-			ans := handle(msg)
-
-			return m, tea.Println(ans)
+			if inpt != "" {
+				cliHistory.Push(inpt)
+				ans := handle(inpt)
+				return m, tea.Println(ans)
+			}
 		case tea.KeyEscape, tea.KeyCtrlC:
 			os.Exit(0)
 			return m, tea.Quit

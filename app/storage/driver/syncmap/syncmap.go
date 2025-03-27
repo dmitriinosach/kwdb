@@ -134,3 +134,9 @@ func (s *SyncMap) SetMemPolicy(policy displacement.Policy) bool {
 
 	return true
 }
+
+func (s *SyncMap) Cleaner(cc chan string) {
+	for key := range cc {
+		s.Delete(context.Background(), key)
+	}
+}

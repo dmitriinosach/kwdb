@@ -11,4 +11,5 @@ type Driver interface {
 	Info() string
 	GetVaultMap() map[string]*Cell
 	Truncate() bool
+	Cleaner(cc chan string)
 }

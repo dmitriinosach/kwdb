@@ -3,6 +3,7 @@ package mapstd
 import (
 	"context"
 	"fmt"
+	"kwdb/app/storage/displacement"
 	"kwdb/app/storage/driver"
 	"kwdb/internal/helper"
 	"strconv"
@@ -14,9 +15,10 @@ const DriverName = "hashmap"
 type HashMapStandard struct {
 	partitions []partition
 	driver     string
+	displacer  displacement.Policy
 }
 
-func NewHashMapStandard(partitionsCount int) *HashMapStandard {
+func NewHashMapStandard(partitionsCount int, policy displacement.Policy) *HashMapStandard {
 	stg := &HashMapStandard{
 		partitions: make([]partition, partitionsCount),
 		driver:     DriverName,
@@ -27,6 +29,8 @@ func NewHashMapStandard(partitionsCount int) *HashMapStandard {
 			vault: make(map[string]*driver.Cell),
 		}
 	}
+
+	stg.displacer = policy
 
 	return stg
 }
@@ -69,18 +73,18 @@ func (s *HashMapStandard) Set(ctx context.Context, key string, value string, ttl
 		return err
 	}
 
+	s.displacer.Use(key)
+	
 	return nil
 }
 
 func (s *HashMapStandard) Delete(ctx context.Context, key string) error {
 
-	rmin, rmax := 0, 9
+	partitionIndex, _ := helper.HashFunction(key, len(s.partitions))
 
-	for i := rmin; i < rmax; i++ {
-		s.partitions[i].locker.RLock()
-		delete(s.partitions[i].vault, key)
-		s.partitions[i].locker.RUnlock()
-	}
+	s.partitions[partitionIndex].locker.Lock()
+	delete(s.partitions[partitionIndex].vault, key)
+	s.partitions[partitionIndex].locker.Unlock()
 
 	return nil
 }
@@ -96,8 +100,8 @@ func (s *HashMapStandard) Info() string {
 	for range s.partitions {
 		s.partitions[i].locker.RLock()
 		info += "Секция-" + strconv.Itoa(i) + ": элементов- " + strconv.Itoa(len(s.partitions[i].vault)) + "\n"
-		i++
 		s.partitions[i].locker.RUnlock()
+		i++
 	}
 
 	return info
@@ -116,4 +120,14 @@ func (s *HashMapStandard) Truncate() bool {
 	}
 
 	return true
+}
+
+func (s *HashMapStandard) Cleaner(cc chan string) {
+
+	for {
+		select {
+		case key := <-cc:
+			s.Delete(context.Background(), key)
+		}
+	}
 }

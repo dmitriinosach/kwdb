@@ -26,13 +26,12 @@ func RunWatcher(policy Policy) {
 			sem.lastCheck = time.Now()
 		}
 
-		time.Sleep(10 * time.Minute)
+		time.Sleep(10 * time.Second)
 	}
 }
 
 func worker(sem chan struct{}, policy Policy) {
 	for range sem {
-		informer.InfChan <- "Запущена очистка памяти"
 		policy.Cut()
 	}
 }

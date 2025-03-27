@@ -3,7 +3,9 @@ package displacement
 import (
 	"kwdb/app"
 	"kwdb/app/storage/driver"
-	"runtime"
+	"kwdb/internal/helper"
+	"kwdb/internal/helper/informer"
+	"strconv"
 	"sync"
 )
 
@@ -44,13 +46,12 @@ func NewLRU(cchan chan string) *LRU {
 	}
 }
 
-func (l *LRU) Push(key string, cell *driver.Cell) {
+func (l *LRU) Push(key string) {
 	l.lock.Lock()
 
 	ni := item{
 		prev: l.head,
 		next: nil,
-		data: cell,
 		key:  key,
 	}
 
@@ -61,48 +62,56 @@ func (l *LRU) Push(key string, cell *driver.Cell) {
 }
 
 // TODO:может объединить с пушем ?
-func (l *LRU) Reuse(key string, cell *driver.Cell) {
+func (l *LRU) Use(key string) {
 
 	l.lock.Lock()
 
-	elem := l.list[key]
+	elem, ok := l.list[key]
 
-	excludeConcat(&elem)
-
-	delete(l.list, key)
+	if ok {
+		excludeConcat(&elem)
+		delete(l.list, key)
+	}
 
 	l.lock.Unlock()
 
-	l.Push(key, cell)
+	l.Push(key)
 }
 
 // Cut метод очистки базы до конфигурируемого лимита
 // Метод пишет в канал очистки ключи базы данных, которые необходимо удалить
 // подрезает конец списка
-// Если нет элементов , то no-op
+// Если нет элементов, то no-op
 func (l *LRU) Cut() {
 
-	var stat runtime.MemStats
+	memAlloc := helper.AllocMB()
 
-	runtime.ReadMemStats(&stat)
+	informer.InfChan <- "Запущена очистка"
 
-	memAlloc := stat.Alloc / 1024 / 1024
-
-	if len(l.list) > 0 {
-		for memAlloc > l.memLimit {
+	for memAlloc > l.memLimit {
+		l.lock.Lock()
+		if len(l.list) > 0 {
 			// TODO: найминг говна?
 			t := l.tail
-			l.tail = l.tail.next
+			if t != nil {
+				l.tail = l.tail.next
 
-			delete(l.list, t.key)
+				delete(l.list, t.key)
+				l.cleanerChan <- t.key
+			}
 
-			l.cleanerChan <- t.key
+		} else {
+			return
 		}
-
-		if l.tail != nil {
-			l.tail.prev = nil
-		}
+		l.lock.Unlock()
 	}
+
+	informer.InfChan <- strconv.FormatUint(memAlloc-helper.AllocMB(), 10) + " очищено"
+
+	if l.tail != nil {
+		l.tail.prev = nil
+	}
+
 }
 
 func excludeConcat(i *item) {

@@ -1,7 +1,6 @@
 package storage
 
 import (
-	"context"
 	"kwdb/app/errorpkg"
 	"kwdb/app/storage/displacement"
 	"kwdb/app/storage/driver"
@@ -14,19 +13,23 @@ import (
 var (
 	Storage     driver.Driver
 	once        sync.Once
-	CleanerChan chan string
+	Status      = new(status)
+	cleanerChan chan string
 )
 
-var Status = new(status)
+var Lru displacement.Policy
 
 func Init(driverName string, partitionsCount int) (err error) {
 	// TODO: флагами получить интерфес драйверов
 	//TODO лишнее
 	once.Do(func() {
+		
+		Lru = displacement.NewLRU(cleanerChan)
+
 		switch driverName {
 		case mapstd.DriverName:
 			//сделать не экспортируемым
-			Storage = mapstd.NewHashMapStandard(partitionsCount)
+			Storage = mapstd.NewHashMapStandard(partitionsCount, Lru)
 		case syncmap.DriverName:
 			Storage = syncmap.NewSyncMap(partitionsCount)
 		default:
@@ -37,17 +40,11 @@ func Init(driverName string, partitionsCount int) (err error) {
 		Status.Started = time.Now()
 		Status.DriverName = driverName
 
-		CleanerChan = make(chan string)
+		cleanerChan = make(chan string)
 
-		go displacement.RunWatcher(displacement.NewLRU(CleanerChan))
+		go displacement.RunWatcher(Lru)
 
-		// потом отрефачить получателя клинера
-		go func() {
-			ctx := context.Background()
-			for key := range CleanerChan {
-				Storage.Delete(ctx, key)
-			}
-		}()
+		go Storage.Cleaner(cleanerChan)
 	})
 
 	return
