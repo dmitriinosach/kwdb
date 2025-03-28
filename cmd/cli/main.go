@@ -52,21 +52,6 @@ func main() {
 	}
 }
 
-func handle(message string) string {
-	message = string(bytes.Trim([]byte(message), "\x00"))
-	result, errors := send(message)
-
-	if errors != nil {
-		return errors.Error()
-	}
-
-	if len(result.Errors) > 1 {
-		return result.Errors
-	}
-
-	return result.Result
-}
-
 func initialModel() model {
 	ti := textinput.New()
 	ti.Placeholder = ""

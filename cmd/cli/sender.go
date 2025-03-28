@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"kwdb/app/errorpkg"
 	"net"
 	"time"
@@ -11,6 +12,21 @@ func goe(pac int) {
 	for i := pac * 1000; i < (pac*1000)+1000; i++ {
 		//send("SET value=cacheafgljgfjkgfjklgfdsjkgdfkjlgdfsljkgfdsljkgfdljkfgdsljkgfdsljkgfdsljk" + strconv.Itoa(i) + " key=" + strconv.Itoa(i))
 	}
+}
+
+func handle(message string) string {
+	message = string(bytes.Trim([]byte(message), "\x00"))
+	result, errors := send(message)
+
+	if errors != nil {
+		return errors.Error()
+	}
+
+	if len(result.Errors) > 1 {
+		return result.Errors
+	}
+
+	return result.Result
 }
 
 func send(message string) (*Reply, error) {

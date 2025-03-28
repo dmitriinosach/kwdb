@@ -3,7 +3,7 @@ package main
 import (
 	"kwdb/app"
 	"kwdb/app/workers/cleaner"
-	"kwdb/internal/helper/flogger"
+	_ "kwdb/internal/helper/flogger"
 	"kwdb/internal/helper/informer"
 )
 
@@ -12,8 +12,6 @@ func main() {
 	//загрузка настроек
 	loadConfigs()
 
-	flogger.Init()
-	
 	//Консольный информатор
 	go informer.Informer()
 
@@ -29,4 +27,6 @@ func main() {
 
 	//Запуск слушателей
 	runListeners()
+
+	// TODO: shutdown signal// select { ctx.Done()}
 }

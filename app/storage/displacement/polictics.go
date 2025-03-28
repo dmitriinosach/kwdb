@@ -2,5 +2,5 @@ package displacement
 
 type Policy interface {
 	Cut()
-	Use(string string)
+	Push(string string)
 }

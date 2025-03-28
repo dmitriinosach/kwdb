@@ -17,6 +17,7 @@ var List = map[string]CommandInterface{
 
 	//Команды управления и дебага
 	CommandStatus: NewStatusCommand(),
+	CommandPing:   NewPingCommand(),
 }
 
 type CommandInterface interface {
@@ -56,7 +57,7 @@ func SetAndRun(ctx context.Context, message string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	
+
 	execute, err := cmd.Execute(ctx)
 	if err != nil {
 		return "", err

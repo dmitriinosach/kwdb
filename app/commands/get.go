@@ -2,15 +2,10 @@ package commands
 
 import (
 	"context"
-	"fmt"
 	"kwdb/app/storage"
 )
 
 const CommandGet = "GET"
-
-var (
-	GetCommandKeyNotFound = fmt.Errorf("ключ не установлен")
-)
 
 type GetCommand struct {
 	name       string
@@ -47,16 +42,11 @@ func (c *GetCommand) Name() string {
 	return c.name
 }
 
-func (c *GetCommand) echo() string {
-
-	return c.name
-}
-
 func (c *GetCommand) Execute(ctx context.Context) (string, error) {
 
-	value, err := storage.Storage.Get(ctx, c.Args.Key)
+	cell, err := storage.Storage.Get(ctx, c.Args.Key)
 
-	if value == nil {
+	if cell == nil {
 		storage.Status.Metrics.Miss()
 
 		return "", err
@@ -64,5 +54,5 @@ func (c *GetCommand) Execute(ctx context.Context) (string, error) {
 
 	storage.Status.Metrics.Hit()
 
-	return value.Value, nil
+	return cell.Value, nil
 }

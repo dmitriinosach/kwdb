@@ -2,17 +2,21 @@ package helper
 
 import (
 	"hash/fnv"
+	"kwdb/app"
 	"kwdb/app/errorpkg"
 	"os"
 )
 
 // HashFunction хэщ функция строки в число по остатку на кол-во партиций
-func HashFunction(key string, partitions int) (int, error) {
+func HashFunction(key string) (int, error) {
+
+	p := app.Config.Partitions
+
 	h := fnv.New32a()
 	h.Write([]byte(key))
-	number := int(h.Sum32()) % partitions
+	number := int(h.Sum32()) % p
 
-	if number > partitions {
+	if number > p {
 		return 0, errorpkg.ErrHashFunctionIndexOutRange
 	}
 

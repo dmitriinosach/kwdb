@@ -7,7 +7,6 @@ import (
 	"kwdb/app/storage/driver"
 	"kwdb/internal/helper"
 	"strconv"
-	"time"
 )
 
 const DriverName = "hashmap"
@@ -37,7 +36,7 @@ func NewHashMapStandard(partitionsCount int, policy displacement.Policy) *HashMa
 
 func (s *HashMapStandard) Get(ctx context.Context, key string) (*driver.Cell, error) {
 
-	partitionIndex, err := helper.HashFunction(key, len(s.partitions))
+	partitionIndex, err := helper.HashFunction(key)
 
 	if err != nil {
 		return nil, err
@@ -45,7 +44,7 @@ func (s *HashMapStandard) Get(ctx context.Context, key string) (*driver.Cell, er
 
 	cell, ok := s.partitions[partitionIndex].get(key)
 
-	if !ok {
+	if !ok || cell.IsExpired() {
 		return nil, fmt.Errorf("ключ не найден")
 	}
 
@@ -53,13 +52,10 @@ func (s *HashMapStandard) Get(ctx context.Context, key string) (*driver.Cell, er
 }
 
 func (s *HashMapStandard) Set(ctx context.Context, key string, value string, ttl int) error {
-	cell := &driver.Cell{
-		Value:   value,
-		TTL:     ttl,
-		AddDate: time.Now(),
-	}
 
-	partitionIndex, pErr := helper.HashFunction(key, len(s.partitions))
+	cell := driver.NewCell(value, ttl)
+
+	partitionIndex, pErr := helper.HashFunction(key)
 
 	if pErr != nil {
 		return pErr
@@ -73,14 +69,14 @@ func (s *HashMapStandard) Set(ctx context.Context, key string, value string, ttl
 		return err
 	}
 
-	s.displacer.Use(key)
-	
+	s.displacer.Push(key)
+
 	return nil
 }
 
 func (s *HashMapStandard) Delete(ctx context.Context, key string) error {
 
-	partitionIndex, _ := helper.HashFunction(key, len(s.partitions))
+	partitionIndex, _ := helper.HashFunction(key)
 
 	s.partitions[partitionIndex].locker.Lock()
 	delete(s.partitions[partitionIndex].vault, key)

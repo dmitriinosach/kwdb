@@ -12,9 +12,13 @@ import (
 type httpHandler struct {
 }
 
+// TODO: семафоры
+
 func Serve() {
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	// мидвалвары и семафор
+	handler := http.NewServeMux()
+	handler.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
 		ctx := context.Background()
 		cs := "SET key=" + r.URL.Query().Get("key") + " value=" + r.URL.Query().Get("value")
@@ -31,7 +35,7 @@ func Serve() {
 
 	informer.InfChan <- "http://" + app.Config.Host + ":" + app.Config.Port + " ожидает подключений"
 
-	err := http.ListenAndServe(app.Config.Host+":713", nil)
+	err := http.ListenAndServe(app.Config.Host+":713", handler)
 
 	if err != nil {
 		informer.InfChan <- "http://" + app.Config.Host + ":" + app.Config.Port + " прекратил работу: " + err.Error()

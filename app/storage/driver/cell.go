@@ -3,17 +3,17 @@ package driver
 import "time"
 
 type Cell struct {
-	TTL     int       // 8
-	AddDate time.Time // 24
-	Value   string    // n\8  переписать на байты?
-}
-
-type Cell_O struct {
-	Expired int64  // 8
+	expired int64  // 8
 	Value   string // n\8
 }
 
-type Cell_B struct {
-	Expired int64  // 8
-	Value   []byte // n\8
+func NewCell(v string, ttl int) *Cell {
+	return &Cell{
+		expired: time.Now().Add(time.Duration(ttl) * time.Second).Unix(),
+		Value:   v,
+	}
+}
+
+func (c *Cell) IsExpired() bool {
+	return time.Now().Unix() > c.expired
 }

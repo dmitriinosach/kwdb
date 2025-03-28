@@ -39,7 +39,9 @@ func Serve() {
 
 		conn, err := listen.Accept()
 		if err != nil {
-			flogger.Write(err.Error(), "")
+
+			flogger.Flogger.WriteString(err.Error())
+
 			continue
 		}
 
@@ -59,7 +61,7 @@ func tpcHandle(ctx context.Context, conn net.Conn) {
 		//TODO: всрато выглядит
 		reply(r, err, conn)
 
-		flogger.Write(err.Error(), "")
+		flogger.Flogger.WriteString(err.Error())
 
 		return
 	}
@@ -86,6 +88,6 @@ func reply(r string, e error, conn net.Conn) {
 	_, err := conn.Write([]byte(r))
 
 	if err != nil {
-		flogger.Write("Не удалось ответить серверу:"+err.Error(), "")
+		flogger.Flogger.WriteString("Не удалось ответить серверу:" + err.Error())
 	}
 }

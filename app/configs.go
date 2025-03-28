@@ -29,6 +29,7 @@ type ConfigEnv struct {
 	MemLimit uint64
 }
 
+// TODO : do.Once , перенести в возврат по иниту , viper
 var Config ConfigEnv
 
 // InitConfigs загрузка конфигураций приложения из env файла

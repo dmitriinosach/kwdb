@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"kwdb/app"
 	"kwdb/internal/helper/file_system"
+	"log/slog"
 	"os"
 	"time"
 )
@@ -12,18 +13,24 @@ type FileLogger struct {
 	File *os.File
 }
 
-var logger *FileLogger
+var Flogger *FileLogger
 
-var file *os.File
+func init() {
+	f, err := getLogFile()
 
-func Init() {
-	getLogFile()
+	if err != nil {
+		panic("Ошибка создания файла логирования:" + err.Error())
+	}
+
+	Flogger = &FileLogger{File: f}
+
+	fmt.Println("Файл логирования инициализирован")
 }
 
-func (f FileLogger) Write(mes []byte) (n int, err error) {
+func (f *FileLogger) Write(mes []byte) (n int, err error) {
 	message := string(mes[:])
 
-	_, err = file.WriteString(message)
+	_, err = Flogger.File.WriteString(message)
 	if err != nil {
 		// TODO ошибка логирования
 		fmt.Println("ошибка записи в файл логирования:", err)
@@ -33,19 +40,30 @@ func (f FileLogger) Write(mes []byte) (n int, err error) {
 	return 0, nil
 }
 
-func Write(mes string, stream string) {
-
-	if stream == "" {
-		stream = "log"
-	}
-
-	FileLogger{}.Write([]byte(mes))
+func (f *FileLogger) WriteString(mes string) {
+	f.Write([]byte(mes))
 }
 
-func getLogFile() {
+func (f *FileLogger) Log(m string) {
+	handler := slog.NewJSONHandler(Flogger.File, &slog.HandlerOptions{
+		AddSource: true,
+		Level:     slog.LevelInfo,
+	})
+
+	logger := slog.New(handler)
+	logger.Info(m)
+}
+
+func getLogFile() (file *os.File, err error) {
 	y, m, d := time.Now().Date()
 	logFileDate := fmt.Sprintf("log-%d-%d-%d", d, m, y)
 
 	filePath := app.Config.LogPath + "/" + logFileDate + ".txt"
-	file, _ = file_system.ReadOrCreate(filePath)
+
+	f, err := file_system.ReadOrCreate(filePath)
+
+	if err != nil {
+		return nil, err
+	}
+	return f, err
 }
