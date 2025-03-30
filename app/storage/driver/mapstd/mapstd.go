@@ -1,10 +1,9 @@
 package mapstd
 
 import (
-	"context"
 	"fmt"
+	"kwdb/app/storage/cell"
 	"kwdb/app/storage/displacement"
-	"kwdb/app/storage/driver"
 	"kwdb/internal/helper"
 	"strconv"
 )
@@ -25,7 +24,7 @@ func NewHashMapStandard(partitionsCount int, policy displacement.Policy) *HashMa
 
 	for i := range stg.partitions {
 		stg.partitions[i] = partition{
-			vault: make(map[string]*driver.Cell),
+			vault: make(map[string]*cell.Cell),
 		}
 	}
 
@@ -34,7 +33,7 @@ func NewHashMapStandard(partitionsCount int, policy displacement.Policy) *HashMa
 	return stg
 }
 
-func (s *HashMapStandard) Get(ctx context.Context, key string) (*driver.Cell, error) {
+func (s *HashMapStandard) Get(key string) (*cell.Cell, error) {
 
 	partitionIndex, err := helper.HashFunction(key)
 
@@ -42,18 +41,18 @@ func (s *HashMapStandard) Get(ctx context.Context, key string) (*driver.Cell, er
 		return nil, err
 	}
 
-	cell, ok := s.partitions[partitionIndex].get(key)
-
-	if !ok || cell.IsExpired() {
+	c, ok := s.partitions[partitionIndex].get(key)
+	fmt.Printf("%v", c)
+	if !ok || c.IsExpired() {
 		return nil, fmt.Errorf("ключ не найден")
 	}
 
-	return cell, nil
+	return c, nil
 }
 
-func (s *HashMapStandard) Set(ctx context.Context, key string, value string, ttl int) error {
+func (s *HashMapStandard) Set(key string, value string, ttl int) error {
 
-	cell := driver.NewCell(value, ttl)
+	cell := cell.NewCell(value, ttl)
 
 	partitionIndex, pErr := helper.HashFunction(key)
 
@@ -74,7 +73,7 @@ func (s *HashMapStandard) Set(ctx context.Context, key string, value string, ttl
 	return nil
 }
 
-func (s *HashMapStandard) Delete(ctx context.Context, key string) error {
+func (s *HashMapStandard) Delete(key string) error {
 
 	partitionIndex, _ := helper.HashFunction(key)
 
@@ -103,7 +102,7 @@ func (s *HashMapStandard) Info() string {
 	return info
 }
 
-func (s *HashMapStandard) GetVaultMap() map[string]*driver.Cell {
+func (s *HashMapStandard) GetVaultMap() map[string]*cell.Cell {
 	return s.partitions[0].vault
 }
 
@@ -123,7 +122,7 @@ func (s *HashMapStandard) Cleaner(cc chan string) {
 	for {
 		select {
 		case key := <-cc:
-			s.Delete(context.Background(), key)
+			s.Delete(key)
 		}
 	}
 }

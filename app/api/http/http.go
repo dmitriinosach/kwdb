@@ -14,16 +14,15 @@ type httpHandler struct {
 
 // TODO: семафоры
 
-func Serve() {
+func Serve(ctx context.Context) {
 
 	// мидвалвары и семафор
 	handler := http.NewServeMux()
 	handler.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
-		ctx := context.Background()
 		cs := "SET key=" + r.URL.Query().Get("key") + " value=" + r.URL.Query().Get("value")
 
-		res, err := commands.SetAndRun(ctx, cs)
+		res, err := commands.SetAndRun(cs)
 
 		if err != nil {
 			fmt.Fprintf(w, err.Error())
@@ -33,13 +32,22 @@ func Serve() {
 		fmt.Fprintf(w, res)
 	})
 
-	informer.InfChan <- "http://" + app.Config.Host + ":" + app.Config.Port + " ожидает подключений"
-
-	err := http.ListenAndServe(app.Config.Host+":713", handler)
-
-	if err != nil {
-		informer.InfChan <- "http://" + app.Config.Host + ":" + app.Config.Port + " прекратил работу: " + err.Error()
-		return
+	srv := &http.Server{
+		Addr:    app.Config.Host + ":713",
+		Handler: handler,
 	}
 
+	go func() {
+		<-ctx.Done()
+		if err := srv.Shutdown(ctx); err != nil {
+			fmt.Println("http server Shutdown err:" + err.Error())
+		}
+		fmt.Println("http server Shutdown")
+	}()
+
+	informer.InfChan <- "http://" + app.Config.Host + ":" + app.Config.Port + " ожидает подключений"
+
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		informer.InfChan <- "http://" + app.Config.Host + ":" + app.Config.Port + " прекратил работу: " + err.Error()
+	}
 }

@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"context"
 	"kwdb/app/storage"
 )
 
@@ -21,21 +20,21 @@ func NewSetCommand() *SetCommand {
 	}
 }
 
-func (c *SetCommand) IsWritable(ctx context.Context) bool {
+func (c *SetCommand) IsWritable() bool {
 	return c.isWritable
 }
 
-func (c *SetCommand) CheckArgs(ctx context.Context, args *arguments) bool {
-	if args.Key == "" || args.Value == "" {
+func (c *SetCommand) CheckArgs() bool {
+	if c.Args.Key == "" || c.Args.Value == "" {
 		return false
 	}
 
 	return true
 }
 
-func (c *SetCommand) Execute(ctx context.Context) (string, error) {
+func (c *SetCommand) Execute() (string, error) {
 
-	err := storage.Storage.Set(ctx, c.Args.Key, c.Args.Value, c.Args.TTL)
+	err := storage.Storage.Set(c.Args.Key, c.Args.Value, c.Args.TTL)
 	if err != nil {
 		return "", err
 	}
@@ -47,6 +46,6 @@ func (c *SetCommand) Name() string {
 	return c.name
 }
 
-func (c *SetCommand) SetArgs(ctx context.Context, args *arguments) {
+func (c *SetCommand) SetArgs(args *arguments) {
 	c.Args = args
 }

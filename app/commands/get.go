@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"context"
+	"fmt"
 	"kwdb/app/storage"
 )
 
@@ -21,16 +21,16 @@ func NewGetCommand() *GetCommand {
 	}
 }
 
-func (c *GetCommand) IsWritable(ctx context.Context) bool {
+func (c *GetCommand) IsWritable() bool {
 	return c.isWritable
 }
 
-func (c *GetCommand) SetArgs(ctx context.Context, args *arguments) {
+func (c *GetCommand) SetArgs(args *arguments) {
 	c.Args = args
 }
 
-func (c *GetCommand) CheckArgs(ctx context.Context, args *arguments) bool {
-	if args.Key == "" {
+func (c *GetCommand) CheckArgs() bool {
+	if c.Args.Key == "" {
 		return false
 	}
 
@@ -42,10 +42,10 @@ func (c *GetCommand) Name() string {
 	return c.name
 }
 
-func (c *GetCommand) Execute(ctx context.Context) (string, error) {
+func (c *GetCommand) Execute() (string, error) {
 
-	cell, err := storage.Storage.Get(ctx, c.Args.Key)
-
+	cell, err := storage.Storage.Get(c.Args.Key)
+	fmt.Printf("%v", cell)
 	if cell == nil {
 		storage.Status.Metrics.Miss()
 

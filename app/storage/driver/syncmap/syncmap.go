@@ -2,8 +2,8 @@ package syncmap
 
 import (
 	"context"
+	"kwdb/app/storage/cell"
 	"kwdb/app/storage/displacement"
-	"kwdb/app/storage/driver"
 	"kwdb/internal/helper"
 	"sync"
 )
@@ -31,7 +31,7 @@ type partition struct {
 	vault sync.Map
 }
 
-func (p *partition) Get(key string) (*driver.Cell, bool) {
+func (p *partition) Get(key string) (*cell.Cell, bool) {
 
 	cell, ok := p.Get(key)
 
@@ -42,13 +42,13 @@ func (p *partition) Get(key string) (*driver.Cell, bool) {
 	return cell, true
 }
 
-func (p *partition) Set(key string, cell *driver.Cell) error {
+func (p *partition) Set(key string, cell *cell.Cell) error {
 	p.vault.Store(key, cell)
 
 	return nil
 }
 
-func (s *SyncMap) Get(ctx context.Context, key string) (*driver.Cell, error) {
+func (s *SyncMap) Get(key string) (*cell.Cell, error) {
 
 	partitionIndex, pErr := helper.HashFunction(key)
 
@@ -65,8 +65,8 @@ func (s *SyncMap) Get(ctx context.Context, key string) (*driver.Cell, error) {
 	return cell, nil
 }
 
-func (s *SyncMap) Set(ctx context.Context, key string, value string, ttl int) error {
-	cell := driver.NewCell(key, ttl)
+func (s *SyncMap) Set(key string, value string, ttl int) error {
+	cell := cell.NewCell(key, ttl)
 
 	partitionIndex, pErr := helper.HashFunction(key)
 
@@ -83,7 +83,7 @@ func (s *SyncMap) Set(ctx context.Context, key string, value string, ttl int) er
 	return nil
 }
 
-func (s *SyncMap) Delete(ctx context.Context, key string) error {
+func (s *SyncMap) Delete(key string) error {
 
 	rmin, rmax := 0, 9
 
@@ -106,8 +106,8 @@ func (s *SyncMap) Info() string {
 	return info
 }
 
-func (s *SyncMap) GetVaultMap() map[string]*driver.Cell {
-	return make(map[string]*driver.Cell)
+func (s *SyncMap) GetVaultMap() map[string]*cell.Cell {
+	return make(map[string]*cell.Cell)
 }
 
 func (s *SyncMap) Truncate() bool {
@@ -132,6 +132,6 @@ func (s *SyncMap) SetMemPolicy(policy displacement.Policy) bool {
 
 func (s *SyncMap) Cleaner(cc chan string) {
 	for key := range cc {
-		s.Delete(context.Background(), key)
+		s.Delete(key)
 	}
 }

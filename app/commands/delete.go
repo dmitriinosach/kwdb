@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"context"
 	"kwdb/app/storage"
 )
 
@@ -21,17 +20,17 @@ func NewDeleteCommand() *DeleteCommand {
 	}
 }
 
-func (c *DeleteCommand) CheckArgs(ctx context.Context, args *arguments) bool {
-	if args.Key == "" {
+func (c *DeleteCommand) CheckArgs() bool {
+	if c.Args.Key == "" {
 		return false
 	}
 
 	return true
 }
 
-func (c *DeleteCommand) Execute(ctx context.Context) (string, error) {
+func (c *DeleteCommand) Execute() (string, error) {
 
-	err := storage.Storage.Delete(ctx, c.Args.Key)
+	err := storage.Storage.Delete(c.Args.Key)
 	if err != nil {
 		return "", err
 	}
@@ -43,9 +42,9 @@ func (c *DeleteCommand) Name() string {
 	return c.name
 }
 
-func (c *DeleteCommand) SetArgs(ctx context.Context, args *arguments) {
+func (c *DeleteCommand) SetArgs(args *arguments) {
 	c.Args = args
 }
-func (c *DeleteCommand) IsWritable(ctx context.Context) bool {
+func (c *DeleteCommand) IsWritable() bool {
 	return c.isWritable
 }

@@ -8,25 +8,20 @@ import (
 	"kwdb/internal/helper/informer"
 	"net"
 	"os"
-	"os/signal"
 	"strconv"
 )
 
-func Serve() {
+func Serve(ctx context.Context) {
 
 	addr := net.JoinHostPort(app.Config.Host, app.Config.Port)
 
 	listen, err := net.Listen("tcp", addr)
-
-	ctx := context.Background()
-
-	signal.NotifyContext(ctx, os.Interrupt)
+	defer listen.Close()
 
 	if err != nil {
+
 		os.Exit(1)
 	}
-
-	defer listen.Close()
 
 	informer.InfChan <- "tcp://" + app.Config.Host + ":" + app.Config.Port + " ожидает подключений"
 
@@ -45,21 +40,21 @@ func Serve() {
 			continue
 		}
 
-		go tpcHandle(ctx, conn)
+		go handle(conn)
 	}
 }
 
-func tpcHandle(ctx context.Context, conn net.Conn) {
+func handle(conn net.Conn) {
 
-	var result string
+	defer conn.Close()
+
 	buffer := make([]byte, 1024)
 
 	bufferLength, err := conn.Read(buffer)
 
 	if err != nil {
-		r := ""
-		//TODO: всрато выглядит
-		reply(r, err, conn)
+
+		reply("", err, conn)
 
 		flogger.Flogger.WriteString(err.Error())
 
@@ -69,11 +64,9 @@ func tpcHandle(ctx context.Context, conn net.Conn) {
 	message := string(buffer[1:bufferLength])
 
 	//TODO:избавится от msg и парсера, перейти на структуру и байты
-	result, err = commands.SetAndRun(ctx, message)
+	result, err := commands.SetAndRun(message)
 
 	reply(result, err, conn)
-
-	conn.Close()
 }
 
 // TODO: нужна или нет передача по ссылке &r

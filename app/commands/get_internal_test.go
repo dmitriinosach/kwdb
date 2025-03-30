@@ -161,7 +161,7 @@ func TestGetCommand(t *testing.T) {
 	// TODO: как выбирать инкапсулированные методы / selectCommand
 	cmd := NewGetCommand()
 
-	result := cmd.CheckArgs(ctx, args)
+	result := cmd.CheckArgs()
 
 	if !result {
 		t.Errorf("Команда %s отвергла необходимые аргументы: %v.", args.CmdName, args)
@@ -179,7 +179,7 @@ func TestSetCommand(t *testing.T) {
 
 	ctx := context.Background()
 	cmd := NewSetCommand()
-	result := cmd.CheckArgs(ctx, args)
+	result := cmd.CheckArgs()
 
 	if !result {
 		t.Errorf("Команда %s отвергла необходимые аргументы: %v.", args.CmdName, args)
@@ -195,7 +195,7 @@ func TestDeleteCommand(t *testing.T) {
 
 	ctx := context.Background()
 	cmd := NewDeleteCommand()
-	result := cmd.CheckArgs(ctx, args)
+	result := cmd.CheckArgs()
 
 	if !result {
 		t.Errorf("Команда %s отвергла необходимые аргументы: %v.", args.CmdName, args)
@@ -210,7 +210,7 @@ func TestInfoCommand(t *testing.T) {
 
 	ctx := context.Background()
 	cmd := NewInfoCommand()
-	result := cmd.CheckArgs(ctx, args)
+	result := cmd.CheckArgs()
 
 	if !result {
 		t.Errorf("Команда %s отвергла необходимые аргументы: %v.", args.CmdName, args)

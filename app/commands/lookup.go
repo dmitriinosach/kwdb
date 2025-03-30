@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"context"
 	"kwdb/app/storage"
 )
 
@@ -21,15 +20,15 @@ func NewLookUpCommand() *LookUpCommand {
 	}
 }
 
-func (command *LookUpCommand) IsWritable(ctx context.Context) bool {
+func (command *LookUpCommand) IsWritable() bool {
 	return command.isWritable
 }
 
-func (command *LookUpCommand) CheckArgs(ctx context.Context, args *arguments) bool {
+func (command *LookUpCommand) CheckArgs() bool {
 	return true
 }
 
-func (command *LookUpCommand) Execute(ctx context.Context) (string, error) {
+func (command *LookUpCommand) Execute() (string, error) {
 
 	reply := ""
 
@@ -48,6 +47,6 @@ func (command *LookUpCommand) Name() string {
 	return command.name
 }
 
-func (command *LookUpCommand) SetArgs(ctx context.Context, args *arguments) {
+func (command *LookUpCommand) SetArgs(args *arguments) {
 	command.Args = args
 }

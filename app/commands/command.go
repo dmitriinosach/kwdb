@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"context"
 	"kwdb/app/errorpkg"
 	"kwdb/app/workers"
 )
@@ -22,13 +21,13 @@ var List = map[string]CommandInterface{
 
 type CommandInterface interface {
 	Name() string
-	Execute(ctx context.Context) (string, error)
-	CheckArgs(ctx context.Context, args *arguments) bool
-	SetArgs(ctx context.Context, args *arguments)
-	IsWritable(ctx context.Context) bool
+	Execute() (string, error)
+	CheckArgs() bool
+	SetArgs(args *arguments)
+	IsWritable() bool
 }
 
-func setupCommand(ctx context.Context, message string) (CommandInterface, error) {
+func setupCommand(message string) (CommandInterface, error) {
 
 	args, err := newArgsFromString(message)
 
@@ -42,28 +41,28 @@ func setupCommand(ctx context.Context, message string) (CommandInterface, error)
 		return nil, errorpkg.ErrCmdNotFound
 	}
 
-	if !cmd.CheckArgs(ctx, args) {
+	if !cmd.CheckArgs() {
 		return nil, errorpkg.ErrCmdArguments
 	}
 
-	cmd.SetArgs(ctx, args)
+	cmd.SetArgs(args)
 
 	return cmd, nil
 }
 
-func SetAndRun(ctx context.Context, message string) (string, error) {
-	cmd, err := setupCommand(ctx, message)
+func SetAndRun(message string) (string, error) {
+	cmd, err := setupCommand(message)
 
 	if err != nil {
 		return "", err
 	}
 
-	execute, err := cmd.Execute(ctx)
+	execute, err := cmd.Execute()
 	if err != nil {
 		return "", err
 	}
 
-	if cmd.IsWritable(ctx) {
+	if cmd.IsWritable() {
 		go workers.Write(message)
 	}
 

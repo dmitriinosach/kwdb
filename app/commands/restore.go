@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"context"
 	"fmt"
 	"kwdb/app/workers"
 )
@@ -21,11 +20,11 @@ func NewRestoreCommand() *RestoreCommand {
 		isWritable: false,
 	}
 }
-func (c *RestoreCommand) CheckArgs(ctx context.Context, args *arguments) bool {
+func (c *RestoreCommand) CheckArgs() bool {
 	return true
 }
 
-func (c *RestoreCommand) Execute(ctx context.Context) (string, error) {
+func (c *RestoreCommand) Execute() (string, error) {
 
 	ch := make(chan string)
 
@@ -41,7 +40,7 @@ func (c *RestoreCommand) Execute(ctx context.Context) (string, error) {
 			break // exit break loop
 
 		} else {
-			_, err := SetAndRun(ctx, commandString)
+			_, err := SetAndRun(commandString)
 
 			if err != nil {
 				return "", err
@@ -56,10 +55,10 @@ func (c *RestoreCommand) Name() string {
 	return c.name
 }
 
-func (c *RestoreCommand) SetArgs(ctx context.Context, args *arguments) {
+func (c *RestoreCommand) SetArgs(args *arguments) {
 	c.Args = args
 }
 
-func (c *RestoreCommand) IsWritable(ctx context.Context) bool {
+func (c *RestoreCommand) IsWritable() bool {
 	return c.isWritable
 }

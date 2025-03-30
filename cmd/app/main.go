@@ -1,32 +1,47 @@
 package main
 
 import (
-	"kwdb/app"
-	"kwdb/app/workers/cleaner"
+	"context"
+	"fmt"
 	_ "kwdb/internal/helper/flogger"
 	"kwdb/internal/helper/informer"
+	"os"
+	"os/signal"
+	"sync"
+	"syscall"
 )
 
 func main() {
 
+	wg := &sync.WaitGroup{}
+	wg.Add(1)
+	ctx, shutDown := context.WithCancel(context.Background())
+
+	go informer.Informer(ctx)
+
 	//загрузка настроек
 	loadConfigs()
 
-	//Консольный информатор
-	go informer.Informer()
-
-	informer.InfChan <- "Настройки загружены"
-
-	informer.InfChan <- "Запуск..."
-
 	//Создание хранилища
-	runStorage()
-
-	//задача чистильщика
-	go cleaner.Run(app.Config.Partitions)
+	runStorage(ctx)
 
 	//Запуск слушателей
-	runListeners()
+	runListeners(ctx)
 
-	// TODO: shutdown signal// select { ctx.Done()}
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
+	// Создаем горутину для обработки сигналов
+	go func() {
+
+		sig := <-sigs
+
+		if sig == syscall.SIGTERM || sig == syscall.SIGINT {
+			shutDown()
+			fmt.Println("Shutting Down")
+		}
+		wg.Done()
+	}()
+
+	wg.Wait()
 }

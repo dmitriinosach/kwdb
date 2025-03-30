@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"kwdb/app"
 	"kwdb/app/api/http"
 	"kwdb/app/api/tcp"
@@ -17,10 +18,12 @@ func loadConfigs() {
 	if err != nil {
 		panic("Ошибка загрузки настроек:" + err.Error())
 	}
+
+	informer.InfChan <- "Настройки загружены"
 }
 
 // Создание хранилища
-func runStorage() {
+func runStorage(ctx context.Context) {
 	informer.InfChan <- "Создание хранилища..."
 
 	err := storage.Init(app.Config.Driver, app.Config.Partitions)
@@ -33,8 +36,8 @@ func runStorage() {
 	informer.InfChan <- "Хранилище инициализировано:\n" + storage.Storage.Info()
 }
 
-func runListeners() {
-	go http.Serve()
+func runListeners(ctx context.Context) {
+	go http.Serve(ctx)
 
-	tcp.Serve()
+	go tcp.Serve(ctx)
 }

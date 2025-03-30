@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"context"
 	"fmt"
 	"kwdb/app/storage"
 	"kwdb/internal/helper"
@@ -26,15 +25,15 @@ func NewStatusCommand() *StatusCommand {
 	}
 }
 
-func (c *StatusCommand) IsWritable(ctx context.Context) bool {
+func (c *StatusCommand) IsWritable() bool {
 	return c.isWritable
 }
 
-func (c *StatusCommand) SetArgs(ctx context.Context, args *arguments) {
+func (c *StatusCommand) SetArgs(args *arguments) {
 	c.Args = args
 }
 
-func (c *StatusCommand) CheckArgs(ctx context.Context, args *arguments) bool {
+func (c *StatusCommand) CheckArgs() bool {
 	return true
 }
 
@@ -43,7 +42,7 @@ func (c *StatusCommand) Name() string {
 	return c.name
 }
 
-func (c *StatusCommand) Execute(ctx context.Context) (string, error) {
+func (c *StatusCommand) Execute() (string, error) {
 
 	// ваш код
 	duration := storage.Status.Uptime()
