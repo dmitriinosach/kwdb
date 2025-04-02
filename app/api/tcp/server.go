@@ -26,21 +26,23 @@ func Serve(ctx context.Context) {
 
 	informer.InfChan <- "tcp://" + app.Config.Host + ":" + app.Config.Port + " ожидает подключений"
 
-	for {
-		select {
-		case <-ctx.Done():
-			return
-		default:
+	go func(ctx context.Context) {
+		for {
+			select {
+			case <-ctx.Done():
+				fmt.Println("tcp shutdown:" + addr)
+				listen.Close()
+				return
+			}
 		}
+	}(ctx)
 
+	for {
 		conn, err := listen.Accept()
 		if err != nil {
-
 			flogger.Flogger.WriteString(err.Error())
-
 			continue
 		}
-
 		go handle(conn)
 	}
 }

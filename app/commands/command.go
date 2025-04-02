@@ -17,6 +17,7 @@ var List = map[string]CommandInterface{
 	//Команды управления и дебага
 	CommandStatus: NewStatusCommand(),
 	CommandPing:   NewPingCommand(),
+	CommandFlush:  NewFlushCommand(),
 }
 
 type CommandInterface interface {
