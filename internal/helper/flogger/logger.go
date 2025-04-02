@@ -15,7 +15,8 @@ type FileLogger struct {
 
 var Flogger *FileLogger
 
-func init() {
+func Init() {
+
 	f, err := getLogFile()
 
 	if err != nil {
@@ -58,6 +59,7 @@ func getLogFile() (file *os.File, err error) {
 	y, m, d := time.Now().Date()
 	logFileDate := fmt.Sprintf("log-%d-%d-%d", d, m, y)
 
+	fmt.Printf(app.Config.LogPath)
 	filePath := app.Config.LogPath + "/" + logFileDate + ".txt"
 
 	f, err := file_system.ReadOrCreate(filePath)

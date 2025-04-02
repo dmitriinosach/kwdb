@@ -45,7 +45,7 @@ func Serve(ctx context.Context) {
 		fmt.Println("http server Shutdown")
 	}()
 
-	informer.InfChan <- "http://" + app.Config.Host + ":" + app.Config.Port + " ожидает подключений"
+	informer.InfChan <- "http://" + app.Config.HttpHost + ":" + app.Config.HttpPort + " ожидает подключений"
 
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		informer.InfChan <- "http://" + app.Config.Host + ":" + app.Config.Port + " прекратил работу: " + err.Error()

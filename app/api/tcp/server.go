@@ -2,6 +2,7 @@ package tcp
 
 import (
 	"context"
+	"fmt"
 	"kwdb/app"
 	"kwdb/app/commands"
 	"kwdb/internal/helper/flogger"
@@ -16,12 +17,12 @@ func Serve(ctx context.Context) {
 	addr := net.JoinHostPort(app.Config.Host, app.Config.Port)
 
 	listen, err := net.Listen("tcp", addr)
-	defer listen.Close()
-
 	if err != nil {
-
+		fmt.Println(err)
 		os.Exit(1)
 	}
+
+	defer listen.Close()
 
 	informer.InfChan <- "tcp://" + app.Config.Host + ":" + app.Config.Port + " ожидает подключений"
 

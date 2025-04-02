@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	_ "kwdb/internal/helper/flogger"
+	"kwdb/internal/helper/flogger"
 	"kwdb/internal/helper/informer"
 	"os"
 	"os/signal"
@@ -16,11 +16,13 @@ func main() {
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	ctx, shutDown := context.WithCancel(context.Background())
+	loadConfigs()
+
+	flogger.Init()
 
 	go informer.Informer(ctx)
 
 	//загрузка настроек
-	loadConfigs()
 
 	//Создание хранилища
 	runStorage(ctx)
