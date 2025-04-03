@@ -2,8 +2,8 @@ package workers
 
 import (
 	"bufio"
+	"kwdb/app"
 	"kwdb/internal/helper/file_system"
-	"kwdb/internal/helper/informer"
 	"log"
 	"os"
 )
@@ -22,7 +22,7 @@ func Write(text string) {
 	_, err := backupFile.WriteString(text + "\n")
 
 	if err != nil {
-		informer.InfChan <- "Ошибка записи wal"
+		app.InfChan <- "Ошибка записи wal"
 	}
 }
 

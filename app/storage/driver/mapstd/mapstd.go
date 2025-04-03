@@ -5,7 +5,9 @@ import (
 	"kwdb/app/storage/cell"
 	"kwdb/app/storage/displacement"
 	"kwdb/internal/helper"
+	"kwdb/internal/helper/file_system"
 	"strconv"
+	"sync"
 )
 
 const DriverName = "hashmap"
@@ -14,6 +16,27 @@ type HashMapStandard struct {
 	partitions []partition
 	driver     string
 	displacer  displacement.Policy
+	flushMutex sync.Mutex
+}
+
+func (s *HashMapStandard) Flush() error {
+	s.flushMutex.Lock()
+	defer s.flushMutex.Unlock()
+
+	backupFile, _ := file_system.ReadOrCreate("data/backup/flush.txt")
+
+	for i := 0; i < len(s.partitions); i++ {
+		for k, c := range s.partitions[i].vault {
+			_, err := backupFile.WriteString(k + ":" + c.Value + "\n")
+			if err != nil {
+				fmt.Println("error writing to backup file" + err.Error())
+			}
+		}
+	}
+
+	backupFile.Close()
+
+	return nil
 }
 
 func NewHashMapStandard(partitionsCount int, policy displacement.Policy) *HashMapStandard {
@@ -42,7 +65,7 @@ func (s *HashMapStandard) Get(key string) (*cell.Cell, error) {
 	}
 
 	c, ok := s.partitions[partitionIndex].get(key)
-	fmt.Printf("%v", c)
+
 	if !ok || c.IsExpired() {
 		return nil, fmt.Errorf("ключ не найден")
 	}
@@ -52,7 +75,7 @@ func (s *HashMapStandard) Get(key string) (*cell.Cell, error) {
 
 func (s *HashMapStandard) Set(key string, value string, ttl int) error {
 
-	cell := cell.NewCell(value, ttl)
+	c := cell.NewCell(value, ttl)
 
 	partitionIndex, pErr := helper.HashFunction(key)
 
@@ -62,7 +85,7 @@ func (s *HashMapStandard) Set(key string, value string, ttl int) error {
 
 	p := &s.partitions[partitionIndex]
 
-	err := (*p).set(key, cell)
+	err := (*p).set(key, c)
 
 	if err != nil {
 		return err

@@ -6,7 +6,6 @@ import (
 	"kwdb/app"
 	"kwdb/app/commands"
 	"kwdb/internal/helper/flogger"
-	"kwdb/internal/helper/informer"
 	"net"
 	"os"
 	"strconv"
@@ -22,28 +21,24 @@ func Serve(ctx context.Context) {
 		os.Exit(1)
 	}
 
+	app.WithTcp(&listen)
+
 	defer listen.Close()
 
-	informer.InfChan <- "tcp://" + app.Config.Get("Host").(string) + ":" + app.Config.Port + " ожидает подключений"
-
-	go func(ctx context.Context) {
-		for {
-			select {
-			case <-ctx.Done():
-				fmt.Println("tcp shutdown:" + addr)
-				listen.Close()
-				return
-			}
-		}
-	}(ctx)
+	app.InfChan <- "tcp://" + app.Config.Get("Host").(string) + ":" + app.Config.Port + " ожидает подключений"
 
 	for {
-		conn, err := listen.Accept()
-		if err != nil {
-			flogger.Flogger.WriteString(err.Error())
-			continue
+		select {
+		case <-ctx.Done():
+			return
+		default:
+			conn, err := listen.Accept()
+			if err != nil {
+				flogger.Flogger.WriteString(err.Error())
+				continue
+			}
+			go handle(conn)
 		}
-		go handle(conn)
 	}
 }
 

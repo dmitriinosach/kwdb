@@ -1,5 +1,9 @@
 package commands
 
+import (
+	"kwdb/app/storage"
+)
+
 const CommandFlush = "flush"
 
 type FlushCommand struct {
@@ -11,7 +15,6 @@ type FlushCommand struct {
 func NewFlushCommand() *FlushCommand {
 	return &FlushCommand{
 		name:       CommandStatus,
-		Args:       new(arguments),
 		isWritable: false,
 	}
 }
@@ -35,5 +38,7 @@ func (c *FlushCommand) Name() string {
 
 func (c *FlushCommand) Execute() (string, error) {
 
-	return "1", nil
+	storage.Storage.Flush()
+
+	return "flush", nil
 }

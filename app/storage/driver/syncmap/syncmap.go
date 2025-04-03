@@ -16,6 +16,10 @@ type SyncMap struct {
 	displacer  displacement.Policy
 }
 
+func (s *SyncMap) Flush() error {
+	return nil
+}
+
 func (s *SyncMap) Has(ctx context.Context, key string) (bool, error) {
 	return true, nil
 }

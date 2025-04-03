@@ -7,9 +7,10 @@ import (
 	"kwdb/app/api/tcp"
 	"kwdb/app/storage"
 	cprntr "kwdb/internal/helper/color_printer"
-	"kwdb/internal/helper/informer"
 	"os"
 )
+
+var Channels map[string]chan string
 
 // загрузка настроек
 func loadConfigs() {
@@ -18,7 +19,8 @@ func loadConfigs() {
 	if err != nil {
 		panic("Ошибка загрузки настроек:" + err.Error())
 	}
-	informer.InfChan <- cprntr.Green + "Настройки загружены" + cprntr.Reset
+
+	app.InfChan <- cprntr.Green + "Настройки загружены" + cprntr.Reset
 }
 
 // Создание хранилища
@@ -26,11 +28,11 @@ func runStorage(ctx context.Context) {
 	err := storage.Init(app.Config.Driver, app.Config.Partitions)
 
 	if err != nil {
-		informer.InfChan <- "Ошибка инициализации хранилища:" + err.Error()
+		app.InfChan <- "Ошибка инициализации хранилища:" + err.Error()
 		os.Exit(-1)
 	}
 
-	informer.InfChan <- cprntr.Green + "Хранилище инициализировано\n" + cprntr.Reset
+	app.InfChan <- cprntr.Green + "Хранилище инициализировано\n" + cprntr.Reset
 }
 
 func runListeners(ctx context.Context) {

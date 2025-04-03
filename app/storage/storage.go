@@ -26,6 +26,7 @@ type Driver interface {
 	GetVaultMap() map[string]*cell.Cell
 	Truncate() bool
 	Cleaner(cc chan string)
+	Flush() error
 }
 
 func Init(driverName string, partitionsCount int) (err error) {

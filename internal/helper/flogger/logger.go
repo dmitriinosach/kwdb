@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"kwdb/app"
 	cprntr "kwdb/internal/helper/color_printer"
+	"kwdb/internal/helper/common"
 	"kwdb/internal/helper/file_system"
 	"log/slog"
 	"os"
@@ -26,7 +27,7 @@ func Init() {
 
 	Flogger = &FileLogger{File: f}
 
-	cprntr.PrintGreen("Логирование запущено")
+	cprntr.PrintGreen(common.GetPrefixNow() + "Логирование запущено")
 }
 
 func (f *FileLogger) Write(mes []byte) (n int, err error) {

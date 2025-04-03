@@ -3,8 +3,8 @@ package http
 import (
 	"context"
 	"fmt"
+	"kwdb/app"
 	"kwdb/app/commands"
-	"kwdb/internal/helper/informer"
 	"net/http"
 )
 
@@ -36,17 +36,11 @@ func Serve(ctx context.Context) {
 		Handler: handler,
 	}
 
-	go func() {
-		<-ctx.Done()
-		if err := Server.server.Shutdown(ctx); err != nil {
-			fmt.Println("http server Shutdown err:" + err.Error())
-		}
-		fmt.Println("http server Shutdown")
-	}()
+	app.WithHttp(Server.server)
 
-	informer.InfChan <- "http://" + Server.config.soc + " ожидает подключений"
+	app.InfChan <- "http://" + Server.config.soc + " ожидает подключений"
 
 	if err := Server.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		informer.InfChan <- "http://" + Server.config.soc + " прекратил работу: " + err.Error()
+		app.InfChan <- "http://" + Server.config.soc + " прекратил работу: " + err.Error()
 	}
 }

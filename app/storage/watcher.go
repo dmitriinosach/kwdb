@@ -1,8 +1,8 @@
 package storage
 
 import (
+	"kwdb/app"
 	"kwdb/app/storage/displacement"
-	"kwdb/internal/helper/informer"
 	"time"
 )
 
@@ -19,7 +19,7 @@ func RunWatcher(policy *displacement.Policy) {
 
 	go worker(sem.ch, policy)
 
-	informer.InfChan <- "Запущен watcher вытеснения"
+	app.InfChan <- "Запущен watcher вытеснения"
 
 	for {
 		if time.Now().After(sem.lastCheck) {
@@ -33,7 +33,7 @@ func RunWatcher(policy *displacement.Policy) {
 
 func worker(sem chan struct{}, p *displacement.Policy) {
 	for range sem {
-		informer.InfChan <- "Запущена очистка памяти"
+		app.InfChan <- "Запущена очистка памяти"
 		//p.Cut()
 	}
 }

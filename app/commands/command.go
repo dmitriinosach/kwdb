@@ -42,11 +42,11 @@ func setupCommand(message string) (CommandInterface, error) {
 		return nil, errorpkg.ErrCmdNotFound
 	}
 
+	cmd.SetArgs(args)
+
 	if !cmd.CheckArgs() {
 		return nil, errorpkg.ErrCmdArguments
 	}
-
-	cmd.SetArgs(args)
 
 	return cmd, nil
 }

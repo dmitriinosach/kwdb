@@ -1,7 +1,7 @@
 package displacement
 
 import (
-	"kwdb/internal/helper/informer"
+	"kwdb/app"
 	"time"
 )
 
@@ -18,7 +18,7 @@ func RunWatcher(policy Policy) {
 
 	go worker(sem.ch, policy)
 
-	informer.InfChan <- "Запущен watcher вытеснения"
+	app.InfChan <- "Запущен watcher вытеснения"
 
 	for {
 		if time.Now().After(sem.lastCheck) {
