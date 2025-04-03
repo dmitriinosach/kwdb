@@ -20,7 +20,7 @@ func main() {
 
 	flogger.Init()
 
-	go informer.Informer(ctx)
+	go informer.Run(ctx)
 
 	//загрузка настроек
 

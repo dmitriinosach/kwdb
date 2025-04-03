@@ -22,7 +22,7 @@ type ConfigEnv struct {
 	HttpHost string
 
 	// HttpPort порт базы данных
-	HttpPort string
+	HttpPort int
 
 	// Driver строковое имя драйвера напр. hashmap
 	Driver string
@@ -35,6 +35,11 @@ type ConfigEnv struct {
 
 	// MemLimit лимит памяти хранилища
 	MemLimit uint64
+}
+
+func (env *ConfigEnv) Get(key string) interface{} {
+	v := reflect.ValueOf(env).Elem()
+	return v.FieldByName(key).Interface()
 }
 
 var Config = &ConfigEnv{}

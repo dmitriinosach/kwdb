@@ -1,27 +1,39 @@
 package http
 
-import "net/http"
+import (
+	"kwdb/app"
+	"net/http"
+	"strconv"
+)
 
-type Config struct {
-	Host string
-	Port string
+type cnf struct {
+	host string
+	port int
+	soc  string
 }
 
-type Server struct {
-	Config  *Config
-	Handler http.Handler
+type srv struct {
+	config  *cnf
+	handler http.Handler
+	server  *http.Server
 	routes  map[string]http.Handler
 }
 
-func NewServer(config *Config) *Server {
-	return &Server{
-		Config:  config,
-		Handler: http.DefaultServeMux,
+func NewServer() *srv {
+	s := &srv{
+		config: &cnf{
+			host: app.Config.Get("HttpHost").(string),
+			port: app.Config.Get("HttpPort").(int),
+			soc:  app.Config.Get("HttpHost").(string) + ":" + strconv.Itoa(app.Config.Get("HttpPort").(int)),
+		},
+		handler: http.DefaultServeMux,
 		routes:  make(map[string]http.Handler),
 	}
+
+	return s
 }
 
-func (s *Server) Run(w http.ResponseWriter, r *http.Request) {
+func (s *srv) Run(w http.ResponseWriter, r *http.Request) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("<h1>База данных</h1"))
 	})

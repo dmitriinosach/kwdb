@@ -24,7 +24,7 @@ func Serve(ctx context.Context) {
 
 	defer listen.Close()
 
-	informer.InfChan <- "tcp://" + app.Config.Host + ":" + app.Config.Port + " ожидает подключений"
+	informer.InfChan <- "tcp://" + app.Config.Get("Host").(string) + ":" + app.Config.Port + " ожидает подключений"
 
 	go func(ctx context.Context) {
 		for {

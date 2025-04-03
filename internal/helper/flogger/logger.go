@@ -3,6 +3,7 @@ package flogger
 import (
 	"fmt"
 	"kwdb/app"
+	cprntr "kwdb/internal/helper/color_printer"
 	"kwdb/internal/helper/file_system"
 	"log/slog"
 	"os"
@@ -25,7 +26,7 @@ func Init() {
 
 	Flogger = &FileLogger{File: f}
 
-	fmt.Println("Файл логирования инициализирован")
+	cprntr.PrintGreen("Логирование запущено")
 }
 
 func (f *FileLogger) Write(mes []byte) (n int, err error) {
@@ -59,7 +60,6 @@ func getLogFile() (file *os.File, err error) {
 	y, m, d := time.Now().Date()
 	logFileDate := fmt.Sprintf("log-%d-%d-%d", d, m, y)
 
-	fmt.Printf(app.Config.LogPath)
 	filePath := app.Config.LogPath + "/" + logFileDate + ".txt"
 
 	f, err := file_system.ReadOrCreate(filePath)
