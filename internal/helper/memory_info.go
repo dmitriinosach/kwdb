@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"kwdb/app"
 	"runtime"
+	"strconv"
 )
 
 func printAlloc() {
@@ -17,10 +18,11 @@ func printAlloc() {
 
 func MemStatInfo() string {
 	var stat runtime.MemStats
-
 	runtime.ReadMemStats(&stat)
 
-	return fmt.Sprintf("alloc = %v MiB", stat.Alloc/1024/1024)
+	i := "Heap:" + strconv.Itoa(int(stat.HeapAlloc/1024/1024)) + " MB\n"
+	i += "Stack:" + strconv.Itoa(int(stat.StackInuse/1024/1024)) + " MB\n"
+	return i
 }
 
 func AllocMB() uint64 {

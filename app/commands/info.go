@@ -21,7 +21,7 @@ func NewInfoCommand() *InfoCommand {
 }
 
 func (c *InfoCommand) IsWritable() bool {
-	return c.isWritable
+	return false
 }
 
 func (c *InfoCommand) SetArgs(args *arguments) {

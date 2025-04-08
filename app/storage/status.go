@@ -1,15 +1,20 @@
-// Файл содержит структуру со статусом базы
+// Package storage
+// Status реализует структуру с метриками системы и хранилища
 package storage
 
 import (
 	"strconv"
+	"sync/atomic"
 	"time"
 )
 
 type status struct {
 	Started    time.Time
 	DriverName string
+	Restoring  atomic.Bool
 
+	// Metrics смысловое отделение типа в структуру
+	//для наполнения методами и отделение системы метрик от общего статуса
 	Metrics
 }
 

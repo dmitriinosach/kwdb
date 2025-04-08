@@ -1,8 +1,9 @@
 package commands
 
 import (
+	"kwdb/app/backup"
 	"kwdb/app/errorpkg"
-	"kwdb/app/workers"
+	"kwdb/app/storage"
 )
 
 var List = map[string]CommandInterface{
@@ -15,9 +16,10 @@ var List = map[string]CommandInterface{
 	CommandLookUp:  NewLookUpCommand(),
 
 	//Команды управления и дебага
-	CommandStatus: NewStatusCommand(),
-	CommandPing:   NewPingCommand(),
-	CommandFlush:  NewFlushCommand(),
+	CommandStatus:   NewStatusCommand(),
+	CommandPing:     NewPingCommand(),
+	CommandFlush:    NewFlushCommand(),
+	CommandTruncate: NewTruncateCommand(),
 }
 
 type CommandInterface interface {
@@ -63,8 +65,8 @@ func SetAndRun(message string) (string, error) {
 		return "", err
 	}
 
-	if cmd.IsWritable() {
-		go workers.Write(message)
+	if cmd.IsWritable() && !storage.Status.Restoring.Load() {
+		go backup.Write(message)
 	}
 
 	return execute, nil

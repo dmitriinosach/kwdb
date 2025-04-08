@@ -1,8 +1,11 @@
 package commands
 
 import (
+	"context"
 	"fmt"
-	"kwdb/app/workers"
+	"kwdb/app/backup"
+	"kwdb/internal/helper/flogger"
+	"time"
 )
 
 const CommandRestore = "RESTORE"
@@ -26,29 +29,47 @@ func (c *RestoreCommand) CheckArgs() bool {
 
 func (c *RestoreCommand) Execute() (string, error) {
 
-	ch := make(chan string)
+	ctx := context.Background()
+	rc, res := backup.Backup(ctx)
 
-	go workers.Backup(ch)
-	for {
-		commandString, ok := <-ch
-		if ok == false {
-			if commandString == "" {
-				fmt.Println("Done")
-			} else {
-				fmt.Println(commandString, ok, "<-- loop broke!")
+	r := 0
+
+	go func() {
+		tl := time.NewTimer(3 * time.Second)
+		defer tl.Stop()
+
+		for {
+			select {
+			case msg, ok := <-rc:
+				if ok == false {
+					break
+				}
+				_, _ = SetAndRun(msg)
+				r++
+				continue
+			case <-tl.C:
+				flogger.Flogger.WriteString("закрыто по таймауту")
+				return
 			}
-			break // exit break loop
 
-		} else {
-			_, err := SetAndRun(commandString)
-
-			if err != nil {
-				return "", err
-			}
+			break
 		}
-	}
 
-	return "", nil
+		select {
+		case code := <-res:
+			fmt.Printf("code - %v", code)
+			switch code {
+			case backup.BACKUP_END_CTX:
+				flogger.Flogger.WriteString("закрыто по контексту")
+			case backup.BACKUP_END_TIME:
+				flogger.Flogger.WriteString("закрыто по таймауту")
+			}
+		default:
+			break
+		}
+	}()
+
+	return "запущено восстановление...", nil
 }
 
 func (c *RestoreCommand) Name() string {
