@@ -10,8 +10,7 @@ import (
 type LRU struct {
 	list map[string]*node
 
-	head *node
-	tail *node
+	head, tail *node
 
 	lock sync.RWMutex
 

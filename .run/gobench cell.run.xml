@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="gobench cell" type="GoTestRunConfiguration" factoryName="Go Test">
+    <module name="kwdb" />
+    <working_directory value="$PROJECT_DIR$/app/storage/cell" />
+    <root_directory value="$PROJECT_DIR$" />
+    <kind value="PACKAGE" />
+    <package value="kwdb/app/storage/cell" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$" />
+    <framework value="gobench" />
+    <method v="2" />
+  </configuration>
+</component>

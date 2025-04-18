@@ -6,6 +6,8 @@ import (
 	"kwdb/app"
 	"kwdb/app/commands"
 	"net/http"
+	"net/http/pprof"
+	_ "net/http/pprof"
 )
 
 var Server *srv
@@ -29,6 +31,17 @@ func Serve(ctx context.Context) {
 
 		fmt.Fprintf(w, res)
 	})
+
+	handler.HandleFunc("/debug/pprof/", pprof.Index)
+	handler.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+	handler.HandleFunc("/debug/pprof/profile", pprof.Profile)
+	handler.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+	handler.HandleFunc("/debug/pprof/trace", pprof.Trace)
+	handler.Handle("/debug/pprof/block", pprof.Handler("block"))
+	handler.Handle("/debug/pprof/heap", pprof.Handler("heap"))
+	handler.Handle("/debug/pprof/mutex", pprof.Handler("mutex"))
+	handler.Handle("/debug/pprof/threadcreate", pprof.Handler("threadcreate"))
+	handler.Handle("/debug/pprof/goroutine", pprof.Handler("goroutine"))
 
 	Server.handler = handler
 	Server.server = &http.Server{

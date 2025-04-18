@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"context"
 	"reflect"
 	"testing"
 )
@@ -157,7 +156,6 @@ func TestGetCommand(t *testing.T) {
 	args.Value = "1"
 	args.TTL = 100
 
-	ctx := context.Background()
 	// TODO: как выбирать инкапсулированные методы / selectCommand
 	cmd := NewGetCommand()
 
@@ -177,7 +175,6 @@ func TestSetCommand(t *testing.T) {
 	args.Value = "1"
 	args.TTL = 100
 
-	ctx := context.Background()
 	cmd := NewSetCommand()
 	result := cmd.CheckArgs()
 
@@ -193,7 +190,6 @@ func TestDeleteCommand(t *testing.T) {
 	args.CmdName = "DELETE"
 	args.Key = "1"
 
-	ctx := context.Background()
 	cmd := NewDeleteCommand()
 	result := cmd.CheckArgs()
 
@@ -208,7 +204,6 @@ func TestInfoCommand(t *testing.T) {
 
 	args.CmdName = "INFO"
 
-	ctx := context.Background()
 	cmd := NewInfoCommand()
 	result := cmd.CheckArgs()
 
