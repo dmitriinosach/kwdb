@@ -28,14 +28,14 @@ func (c *DeleteCommand) CheckArgs() bool {
 	return true
 }
 
-func (c *DeleteCommand) Execute() (string, error) {
+func (c *DeleteCommand) Execute() ([]byte, error) {
 
 	err := storage.Storage.Delete(c.Args.Key)
 	if err != nil {
-		return "", err
+		return []byte{}, err
 	}
 
-	return "", nil
+	return []byte{}, nil
 }
 
 func (c *DeleteCommand) Name() string {

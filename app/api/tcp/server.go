@@ -1,14 +1,15 @@
 package tcp
 
 import (
+	"bytes"
 	"context"
+	"encoding/binary"
 	"fmt"
 	"kwdb/app"
 	"kwdb/app/commands"
 	"kwdb/internal/helper/flogger"
 	"net"
 	"os"
-	"strconv"
 )
 
 func Serve(ctx context.Context) {
@@ -52,7 +53,7 @@ func handle(conn net.Conn) {
 
 	if err != nil {
 
-		reply("", err, conn)
+		reply([]byte{}, err, conn)
 
 		flogger.Flogger.WriteString(err.Error())
 
@@ -68,15 +69,18 @@ func handle(conn net.Conn) {
 }
 
 // TODO: нужна или нет передача по ссылке &r
-func reply(r string, e error, conn net.Conn) {
+func reply(r []byte, e error, conn net.Conn) {
 
-	r = strconv.Itoa(len(r)) + ":" + r
-
+	buf := bytes.NewBuffer([]byte{})
+	bl := make([]byte, 4)
+	binary.BigEndian.PutUint32(bl[:], uint32(len(r)))
+	buf.Write(bl)
+	buf.Write(r)
 	if e != nil {
-		r += (e).Error()
+		buf.Write([]byte((e).Error()))
 	}
-
-	_, err := conn.Write([]byte(r))
+	
+	_, err := conn.Write(buf.Bytes())
 
 	if err != nil {
 		flogger.Flogger.WriteString("Не удалось ответить серверу:" + err.Error())

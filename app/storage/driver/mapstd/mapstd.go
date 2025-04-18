@@ -27,7 +27,7 @@ func (s *HashMapStandard) Flush() error {
 
 	for i := 0; i < len(s.partitions); i++ {
 		for k, c := range s.partitions[i].vault {
-			_, err := backupFile.WriteString(k + ":" + c.Value + "\n")
+			_, err := backupFile.WriteString(k + ":" + string(c.Value) + "\n")
 			if err != nil {
 				fmt.Println("error writing to backup file" + err.Error())
 			}
@@ -73,7 +73,7 @@ func (s *HashMapStandard) Get(key string) (*cell.Cell, error) {
 	return c, nil
 }
 
-func (s *HashMapStandard) Set(key string, value string, ttl int) error {
+func (s *HashMapStandard) Set(key string, value []byte, ttl int) error {
 
 	c := cell.NewCell(value, ttl)
 
@@ -107,7 +107,7 @@ func (s *HashMapStandard) Delete(key string) error {
 	return nil
 }
 
-func (s *HashMapStandard) Info() string {
+func (s *HashMapStandard) Info() []byte {
 
 	info := "Драйвер:" + s.driver + "\n"
 
@@ -122,7 +122,7 @@ func (s *HashMapStandard) Info() string {
 		i++
 	}
 
-	return info
+	return []byte(info)
 }
 
 func (s *HashMapStandard) GetVaultMap() map[string]*cell.Cell {

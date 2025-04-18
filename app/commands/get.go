@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"fmt"
 	"kwdb/app/storage"
 )
 
@@ -42,14 +41,12 @@ func (c *GetCommand) Name() string {
 	return c.name
 }
 
-func (c *GetCommand) Execute() (string, error) {
-
+func (c *GetCommand) Execute() ([]byte, error) {
 	cell, err := storage.Storage.Get(c.Args.Key)
-	fmt.Printf("%v", cell)
 	if cell == nil {
 		storage.Status.Metrics.Miss()
 
-		return "", err
+		return []byte{}, err
 	}
 
 	storage.Status.Metrics.Hit()

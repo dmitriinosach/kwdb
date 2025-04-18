@@ -29,6 +29,6 @@ func (c *PingCommand) Name() string {
 	return c.name
 }
 
-func (c *PingCommand) Execute() (string, error) {
-	return "pong", nil
+func (c *PingCommand) Execute() ([]byte, error) {
+	return []byte("pong"), nil
 }

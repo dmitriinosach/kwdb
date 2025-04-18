@@ -29,7 +29,7 @@ func Serve(ctx context.Context) {
 			return
 		}
 
-		fmt.Fprintf(w, res)
+		fmt.Fprintf(w, string(res))
 	})
 
 	handler.HandleFunc("/debug/pprof/", pprof.Index)

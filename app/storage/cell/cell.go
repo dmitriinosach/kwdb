@@ -3,31 +3,16 @@ package cell
 import "time"
 
 type Cell struct {
-	expired int64  // 8
-	Value   string // n\8
+	expired int64 // 8
+	Value   []byte
 }
 
-type Cell_O struct {
-	expired int64  // 8
-	Value   []byte // n\8
-}
-
-func NewCell_o(v []byte, ttl int) *Cell_O {
-	c := &Cell_O{
+func NewCell(v []byte, ttl int) *Cell {
+	c := &Cell{
 		Value: make([]byte, len(v)),
 	}
 
-	if ttl > 0 {
-		c.expired = time.Now().Add(time.Duration(ttl) * time.Second).Unix()
-	}
-
-	return c
-}
-
-func NewCell(v string, ttl int) *Cell {
-	c := &Cell{
-		Value: v,
-	}
+	c.Value = v
 
 	if ttl > 0 {
 		c.expired = time.Now().Add(time.Duration(ttl) * time.Second).Unix()
@@ -41,7 +26,7 @@ func (c *Cell) IsExpired() bool {
 }
 
 // Refill перезаполняет ячейку
-func (c *Cell) Refill(v string, ttl int) {
+func (c *Cell) Refill(v []byte, ttl int) {
 	c.Value = v
 
 	if ttl > 0 {

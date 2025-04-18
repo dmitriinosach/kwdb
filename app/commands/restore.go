@@ -27,7 +27,7 @@ func (c *RestoreCommand) CheckArgs() bool {
 	return true
 }
 
-func (c *RestoreCommand) Execute() (string, error) {
+func (c *RestoreCommand) Execute() ([]byte, error) {
 
 	ctx := context.Background()
 	rc, res := backup.Backup(ctx)
@@ -69,7 +69,7 @@ func (c *RestoreCommand) Execute() (string, error) {
 		}
 	}()
 
-	return "запущено восстановление...", nil
+	return []byte("запущено восстановление..."), nil
 }
 
 func (c *RestoreCommand) Name() string {

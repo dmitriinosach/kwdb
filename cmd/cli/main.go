@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
 	"github.com/charmbracelet/bubbles/textinput"
@@ -9,6 +8,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"sync"
 )
 
 type (
@@ -45,11 +45,19 @@ func main() {
 		fmt.Println(err)
 	}
 
-	p := tea.NewProgram(initialModel())
+	wg := sync.WaitGroup{}
+	wg.Add(1)
 
-	if _, err := p.Run(); err != nil {
-		log.Fatal(err)
-	}
+	go func() {
+		defer wg.Done()
+
+		p := tea.NewProgram(initialModel())
+		if _, err := p.Run(); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	wg.Wait()
 }
 
 func initialModel() model {

@@ -36,9 +36,9 @@ func (c *FlushCommand) Name() string {
 	return c.name
 }
 
-func (c *FlushCommand) Execute() (string, error) {
+func (c *FlushCommand) Execute() ([]byte, error) {
 
 	storage.Storage.Flush()
 
-	return "flush", nil
+	return []byte{}, nil
 }

@@ -20,9 +20,9 @@ var (
 
 type Driver interface {
 	Get(key string) (*cell.Cell, error)
-	Set(key string, value string, ttl int) error
+	Set(key string, value []byte, ttl int) error
 	Delete(key string) error
-	Info() string
+	Info() []byte
 	GetVaultMap() map[string]*cell.Cell
 	Truncate() bool
 	Cleaner(cc chan string)

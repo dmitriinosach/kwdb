@@ -6,6 +6,7 @@ import (
 	"kwdb/internal/helper"
 	"runtime"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -42,19 +43,21 @@ func (c *StatusCommand) Name() string {
 	return c.name
 }
 
-func (c *StatusCommand) Execute() (string, error) {
+func (c *StatusCommand) Execute() ([]byte, error) {
 
-	// ваш код
 	duration := storage.Status.Uptime()
 	minutes := (duration % time.Hour) / time.Minute
 	seconds := (duration % time.Minute) / time.Second
 
-	status := "coroutines:" + strconv.Itoa(runtime.NumGoroutine()) + "\n"
-	status += "cores:" + strconv.Itoa(runtime.NumCPU()) + " \n"
-	status += "driver:" + storage.Status.DriverName + " \n"
-	status += "hitrate:" + storage.Status.HitRate() + " \n"
-	status += "lifetime: " + fmt.Sprintf("%dч. %dм. %dс.\n", int(duration.Hours()), minutes, seconds)
-	status += "" + helper.MemStatInfo() + "\n"
+	sb := strings.Builder{}
+	sb.WriteString("coroutines:" + strconv.Itoa(runtime.NumGoroutine()) + "\n")
+	sb.WriteString("cores:" + strconv.Itoa(runtime.NumCPU()) + " \n")
+	sb.WriteString("driver:" + storage.Status.DriverName + " \n")
+	sb.WriteString("hitrate:" + storage.Status.HitRate() + " \n")
+	sb.WriteString("lifetime: " + fmt.Sprintf("%dч. %dм. %dс.\n", int(duration.Hours()), minutes, seconds))
+	sb.WriteString("" + helper.MemStatInfo() + "\n")
 
-	return status, nil
+	status := sb.String()
+
+	return []byte(status), nil
 }

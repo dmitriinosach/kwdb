@@ -2,6 +2,7 @@ package commands
 
 import (
 	"kwdb/app/storage"
+	"strings"
 )
 
 const CommandLookUp = "LOOKUP"
@@ -28,19 +29,22 @@ func (command *LookUpCommand) CheckArgs() bool {
 	return true
 }
 
-func (command *LookUpCommand) Execute() (string, error) {
+func (command *LookUpCommand) Execute() ([]byte, error) {
 
-	reply := ""
+	reply := strings.Builder{}
 
 	for k, v := range storage.Storage.GetVaultMap() {
 		if len(v.Value) > 10 {
-			reply += k + ":" + v.Value[:7] + "..."
+			reply.WriteString(k + ":")
+			reply.Write(v.Value[:7])
+			reply.WriteString("...")
 		} else {
-			reply += k + ":" + v.Value
+			reply.WriteString(k + ":")
+			reply.Write(v.Value)
 		}
 	}
 
-	return reply, nil
+	return []byte(reply.String()), nil
 }
 
 func (command *LookUpCommand) Name() string {

@@ -25,21 +25,20 @@ func (c *SetCommand) IsWritable() bool {
 }
 
 func (c *SetCommand) CheckArgs() bool {
-	if c.Args.Key == "" || c.Args.Value == "" {
+	if c.Args.Key == "" || c.Args.Value == nil {
 		return false
 	}
 
 	return true
 }
 
-func (c *SetCommand) Execute() (string, error) {
-
+func (c *SetCommand) Execute() ([]byte, error) {
 	err := storage.Storage.Set(c.Args.Key, c.Args.Value, c.Args.TTL)
 	if err != nil {
-		return "", err
+		return []byte{}, err
 	}
 
-	return "OK", nil
+	return []byte{}, nil
 }
 
 func (c *SetCommand) Name() string {

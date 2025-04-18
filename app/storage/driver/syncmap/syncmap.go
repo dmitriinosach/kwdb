@@ -37,13 +37,13 @@ type partition struct {
 
 func (p *partition) Get(key string) (*cell.Cell, bool) {
 
-	cell, ok := p.Get(key)
+	c, ok := p.Get(key)
 
 	if !ok {
 		return nil, false
 	}
 
-	return cell, true
+	return c, true
 }
 
 func (p *partition) Set(key string, cell *cell.Cell) error {
@@ -60,17 +60,17 @@ func (s *SyncMap) Get(key string) (*cell.Cell, error) {
 		return nil, pErr
 	}
 
-	cell, ok := s.partitions[partitionIndex].Get(key)
+	get, ok := s.partitions[partitionIndex].Get(key)
 
 	if !ok {
 		return nil, nil
 	}
 
-	return cell, nil
+	return get, nil
 }
 
-func (s *SyncMap) Set(key string, value string, ttl int) error {
-	cell := cell.NewCell(key, ttl)
+func (s *SyncMap) Set(key string, value []byte, ttl int) error {
+	c := cell.NewCell(value, ttl)
 
 	partitionIndex, pErr := helper.HashFunction(key)
 
@@ -78,7 +78,7 @@ func (s *SyncMap) Set(key string, value string, ttl int) error {
 		return pErr
 	}
 
-	err := s.partitions[partitionIndex].Set(key, cell)
+	err := s.partitions[partitionIndex].Set(key, c)
 
 	if err != nil {
 		return err
@@ -98,7 +98,7 @@ func (s *SyncMap) Delete(key string) error {
 	return nil
 }
 
-func (s *SyncMap) Info() string {
+func (s *SyncMap) Info() []byte {
 	info := "driver:" + s.driver + "\n"
 	info += "Length: \n"
 
@@ -107,7 +107,7 @@ func (s *SyncMap) Info() string {
 		//info += "partition-" + strconv.Itoa(i) + ": " + strconv.Itoa(len(s.partitions[i].vault)) + "\n"
 	}
 
-	return info
+	return []byte(info)
 }
 
 func (s *SyncMap) GetVaultMap() map[string]*cell.Cell {

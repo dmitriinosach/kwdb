@@ -1,14 +1,14 @@
 package main
 
 import (
-	"regexp"
-	"strconv"
+	"encoding/binary"
 )
 
 type Reply struct {
 	Result string
 	Errors string
-	Raw    []byte
+
+	Raw []byte
 }
 
 func NewReply(raw []byte) *Reply {
@@ -21,17 +21,15 @@ func NewReply(raw []byte) *Reply {
 	return r
 }
 
-// разбираем ответ приложения по формату {int длинна ответа}:{ответ}:{ошибки}
+// parse разбираем ответ приложения по формату {uint32 длинна ответа}:{ответ}:{ошибки}
 func (r *Reply) parse() {
-	bodyLenFind := regexp.MustCompile(`^\d+:`)
+	mySlice := r.Raw[0:4]
 
-	matches := bodyLenFind.FindAllString(string(r.Raw), -1)
+	l := int(binary.BigEndian.Uint32(mySlice))
 
-	bodyStart := len(matches[0])
-	bodyLen, _ := strconv.Atoi(matches[0][0 : bodyStart-1])
-	bodyEnd := bodyStart + bodyLen
+	bodyEnd := len(r.Raw) - l
 
-	r.Result = string(r.Raw)[bodyStart:bodyEnd]
+	r.Result = string(r.Raw[4 : bodyEnd+1])
 
-	r.Errors = string(r.Raw)[bodyEnd:]
+	r.Errors = string(r.Raw[bodyEnd:])
 }

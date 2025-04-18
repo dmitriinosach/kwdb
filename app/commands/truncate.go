@@ -21,10 +21,10 @@ func (c *TruncateCommand) CheckArgs() bool {
 	return true
 }
 
-func (c *TruncateCommand) Execute() (string, error) {
+func (c *TruncateCommand) Execute() ([]byte, error) {
 	storage.Storage.Truncate()
 
-	return "ok", nil
+	return []byte{}, nil
 }
 
 func (c *TruncateCommand) Name() string {

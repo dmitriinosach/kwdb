@@ -19,7 +19,7 @@ type arguments struct {
 
 	//аргументы команды
 	Key   string
-	Value string
+	Value []byte
 	TTL   int
 }
 
@@ -27,6 +27,7 @@ func newArgsFromString(s string) (*arguments, error) {
 
 	args := new(arguments)
 
+	//TODO:сплиты вынести в клиент
 	parsedLine, err := shlex.Split(s)
 
 	if err != nil {
@@ -46,7 +47,7 @@ func newArgsFromString(s string) (*arguments, error) {
 			case "key", "k":
 				args.Key = split[1]
 			case "value", "v":
-				args.Value = split[1]
+				args.Value = []byte(split[1])
 			case "ttl", "t":
 				ttl, ok := strconv.Atoi(split[1])
 				if ok != nil {

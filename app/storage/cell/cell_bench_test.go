@@ -8,7 +8,6 @@ import (
 )
 
 var storage map[string]*Cell
-var storage_O map[string]*Cell_O
 var randoms [1_000_000]string
 var ss string
 var sb []byte
@@ -32,21 +31,7 @@ func BenchmarkCellMem(b *testing.B) {
 	//b.Log("s-" + helper.MemStatInfo())
 
 	for i := 0; i < 10000; i++ {
-		storage[strconv.Itoa(i)] = NewCell(ss, 86400)
-	}
-
-	//b.Log("e-" + helper.MemStatInfo())
-	storage = nil
-}
-
-func BenchmarkCellMem_O(b *testing.B) {
-
-	storage_O = make(map[string]*Cell_O)
-
-	//b.Log("s-" + helper.MemStatInfo())
-
-	for i := 0; i < 10000; i++ {
-		storage_O[strconv.Itoa(i)] = NewCell_o(sb, 86400)
+		storage[strconv.Itoa(i)] = NewCell(sb, 86400)
 	}
 
 	//b.Log("e-" + helper.MemStatInfo())

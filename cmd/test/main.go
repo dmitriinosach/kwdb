@@ -1,46 +1,33 @@
 package main
 
 import (
+	"bytes"
+	"encoding/binary"
 	"fmt"
-	"time"
 )
 
 // просто для теста
 func main() {
 
-	render(doubler(writer()))
-}
+	s := []byte("hello world sdf qwer fg ;iajsdh fpoashdfpoiahsdofwe r wr йц")
+	l := uint32(len(s))
+	fmt.Println(l)
+	var bl = make([]byte, 4)
+	buf := bytes.NewBuffer([]byte{})
+	// Little-endian порядок байтов
+	binary.BigEndian.PutUint32(bl[:], l)
+	fmt.Println(bl)
+	buf.Write(bl)
+	buf.Write(s)
 
-func render(r chan int) {
-	for v := range r {
-		fmt.Println(v)
-	}
-}
+	fmt.Println(buf.String())
+	fmt.Println(buf.Bytes())
 
-func doubler(c chan int) chan int {
+	res := buf.Bytes()
+	var mySlice = res[0:4]
+	fmt.Printf("mySlice:%v\n", mySlice)
+	lr := binary.BigEndian.Uint32(mySlice)
 
-	var d = make(chan int)
+	fmt.Println(lr)
 
-	go func(c chan int, d chan int) {
-		for v := range c {
-			d <- v * 2
-			time.Sleep(time.Millisecond * 500)
-		}
-		close(d)
-	}(c, d)
-
-	return d
-
-}
-
-func writer() chan int {
-	var c = make(chan int)
-	go func(c chan int) {
-		for v := range 10 {
-			c <- v
-		}
-		close(c)
-	}(c)
-
-	return c
 }

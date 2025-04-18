@@ -24,7 +24,7 @@ var List = map[string]CommandInterface{
 
 type CommandInterface interface {
 	Name() string
-	Execute() (string, error)
+	Execute() ([]byte, error)
 	CheckArgs() bool
 	SetArgs(args *arguments)
 	IsWritable() bool
@@ -53,16 +53,16 @@ func setupCommand(message string) (CommandInterface, error) {
 	return cmd, nil
 }
 
-func SetAndRun(message string) (string, error) {
+func SetAndRun(message string) ([]byte, error) {
 	cmd, err := setupCommand(message)
 
 	if err != nil {
-		return "", err
+		return []byte{}, err
 	}
 
 	execute, err := cmd.Execute()
 	if err != nil {
-		return "", err
+		return []byte{}, err
 	}
 
 	if cmd.IsWritable() && !storage.Status.Restoring.Load() {

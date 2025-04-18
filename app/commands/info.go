@@ -37,6 +37,6 @@ func (c *InfoCommand) Name() string {
 	return c.name
 }
 
-func (c *InfoCommand) Execute() (string, error) {
+func (c *InfoCommand) Execute() ([]byte, error) {
 	return storage.Storage.Info(), nil
 }
