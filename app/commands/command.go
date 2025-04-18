@@ -30,9 +30,9 @@ type CommandInterface interface {
 	IsWritable() bool
 }
 
-func setupCommand(message string) (CommandInterface, error) {
+func setupCommand(message []byte) (CommandInterface, error) {
 
-	args, err := newArgsFromString(message)
+	args, err := newArgsFromString(string(message))
 
 	if err != nil {
 		return nil, errorpkg.ErrCmdLineParser
@@ -53,7 +53,7 @@ func setupCommand(message string) (CommandInterface, error) {
 	return cmd, nil
 }
 
-func SetAndRun(message string) ([]byte, error) {
+func SetAndRun(message []byte) ([]byte, error) {
 	cmd, err := setupCommand(message)
 
 	if err != nil {

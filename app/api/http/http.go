@@ -22,7 +22,7 @@ func Serve(ctx context.Context) {
 
 		cs := "SET key=" + r.URL.Query().Get("key") + " value=" + r.URL.Query().Get("value")
 
-		res, err := commands.SetAndRun(cs)
+		res, err := commands.SetAndRun([]byte(cs))
 
 		if err != nil {
 			fmt.Fprintf(w, err.Error())

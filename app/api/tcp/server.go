@@ -10,7 +10,10 @@ import (
 	"kwdb/internal/helper/flogger"
 	"net"
 	"os"
+	"runtime"
 )
+
+var sem = make(chan interface{}, runtime.NumCPU())
 
 func Serve(ctx context.Context) {
 
@@ -32,13 +35,14 @@ func Serve(ctx context.Context) {
 		select {
 		case <-ctx.Done():
 			return
-		default:
+		case sem <- 1:
 			conn, err := listen.Accept()
 			if err != nil {
 				flogger.Flogger.WriteString(err.Error())
 				continue
 			}
 			go handle(conn)
+		default:
 		}
 	}
 }
@@ -60,12 +64,11 @@ func handle(conn net.Conn) {
 		return
 	}
 
-	message := string(buffer[1:bufferLength])
-
-	//TODO:избавится от msg и парсера, перейти на структуру и байты
-	result, err := commands.SetAndRun(message)
+	result, err := commands.SetAndRun(buffer[1:bufferLength])
 
 	reply(result, err, conn)
+
+	<-sem
 }
 
 // TODO: нужна или нет передача по ссылке &r
@@ -79,7 +82,7 @@ func reply(r []byte, e error, conn net.Conn) {
 	if e != nil {
 		buf.Write([]byte((e).Error()))
 	}
-	
+
 	_, err := conn.Write(buf.Bytes())
 
 	if err != nil {

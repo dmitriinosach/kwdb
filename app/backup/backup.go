@@ -19,13 +19,14 @@ const BACKUP_END_TIME = 2
 var backupFile *os.File
 
 // TODO: переделать, долен решать другую задачу
-func Write(text string) {
+func Write(text []byte) {
 
 	if backupFile == nil {
 		backupFile, _ = file_system.ReadOrCreate(backupPath)
 	}
 
-	_, err := backupFile.WriteString(text + "\n")
+	_, err := backupFile.Write(text)
+	_, err = backupFile.Write([]byte{0x0A})
 
 	if err != nil {
 		app.InfChan <- "Ошибка записи wal"
