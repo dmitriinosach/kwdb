@@ -22,7 +22,7 @@ func RunWatcher(policy Policy) {
 
 	for {
 		if time.Now().After(sem.lastCheck) {
-			sem.ch <- struct{}{}
+			//sem.ch <- struct{}{}
 			sem.lastCheck = time.Now()
 		}
 

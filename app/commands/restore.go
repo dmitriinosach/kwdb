@@ -16,7 +16,7 @@ type RestoreCommand struct {
 	isWritable bool
 }
 
-func NewRestoreCommand() *RestoreCommand {
+func NewRestoreCommand() CommandInterface {
 	return &RestoreCommand{
 		name:       CommandRestore,
 		Args:       new(arguments),
@@ -44,7 +44,7 @@ func (c *RestoreCommand) Execute() ([]byte, error) {
 				if ok == false {
 					break
 				}
-				_, _ = SetAndRun(msg)
+				_, _ = SetAndRun([]byte(msg))
 				r++
 				continue
 			case <-tl.C:

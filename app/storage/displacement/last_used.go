@@ -3,7 +3,6 @@ package displacement
 import (
 	"kwdb/app"
 	"kwdb/internal/helper"
-	"strconv"
 	"sync"
 )
 
@@ -77,10 +76,10 @@ func (l *LRU) Cut() {
 	memAlloc := helper.AllocMB()
 
 	for memAlloc > l.memLimit {
-		app.InfChan <- "Запущена очистка"
+		//app.InfChan <- "Запущена очистка"
 		l.lock.Lock()
 		if len(l.list) > 0 {
-			// TODO: найминг говна?
+
 			t := l.tail
 			if t != nil {
 				l.tail = l.tail.next
@@ -93,7 +92,7 @@ func (l *LRU) Cut() {
 			return
 		}
 		l.lock.Unlock()
-		app.InfChan <- strconv.FormatUint(memAlloc-helper.AllocMB(), 10) + " очищено"
+		//app.InfChan <- strconv.FormatUint(memAlloc-helper.AllocMB(), 10) + " очищено"
 	}
 
 	if l.tail != nil {

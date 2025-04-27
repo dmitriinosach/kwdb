@@ -12,15 +12,15 @@ type cnf struct {
 	soc  string
 }
 
-type srv struct {
+type Srv struct {
 	config  *cnf
 	handler http.Handler
 	server  *http.Server
 	routes  map[string]http.Handler
 }
 
-func NewServer() *srv {
-	s := &srv{
+func NewServer() *Srv {
+	s := &Srv{
 		config: &cnf{
 			host: app.Config.Get("HttpHost").(string),
 			port: app.Config.Get("HttpPort").(int),
@@ -33,7 +33,7 @@ func NewServer() *srv {
 	return s
 }
 
-func (s *srv) Run(w http.ResponseWriter, r *http.Request) {
+func (s *Srv) Run(w http.ResponseWriter, r *http.Request) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("<h1>База данных</h1"))
 	})

@@ -6,7 +6,7 @@ type PingCommand struct {
 	name string
 }
 
-func NewPingCommand() *PingCommand {
+func NewPingCommand() CommandInterface {
 	return &PingCommand{
 		name: CommandPing,
 	}

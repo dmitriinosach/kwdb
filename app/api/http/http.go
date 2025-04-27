@@ -10,7 +10,7 @@ import (
 	_ "net/http/pprof"
 )
 
-var Server *srv
+var Server *Srv
 
 // TODO: семафоры
 
@@ -52,6 +52,12 @@ func Serve(ctx context.Context) {
 	app.WithHttp(Server.server)
 
 	app.InfChan <- "http://" + Server.config.soc + " ожидает подключений"
+
+	go func() {
+		if err := Server.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			app.InfChan <- "http://" + Server.config.soc + " прекратил работу: " + err.Error()
+		}
+	}()
 
 	if err := Server.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		app.InfChan <- "http://" + Server.config.soc + " прекратил работу: " + err.Error()

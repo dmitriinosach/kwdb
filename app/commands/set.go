@@ -12,7 +12,7 @@ type SetCommand struct {
 	isWritable bool
 }
 
-func NewSetCommand() *SetCommand {
+func NewSetCommand() CommandInterface {
 	return &SetCommand{
 		name:       CommandSet,
 		Args:       new(arguments),

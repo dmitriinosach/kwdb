@@ -12,7 +12,7 @@ type DeleteCommand struct {
 	isWritable bool
 }
 
-func NewDeleteCommand() *DeleteCommand {
+func NewDeleteCommand() CommandInterface {
 	return &DeleteCommand{
 		name:       CommandDelete,
 		Args:       new(arguments),

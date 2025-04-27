@@ -18,7 +18,7 @@ type StatusCommand struct {
 	isWritable bool
 }
 
-func NewStatusCommand() *StatusCommand {
+func NewStatusCommand() CommandInterface {
 	return &StatusCommand{
 		name:       CommandStatus,
 		Args:       new(arguments),

@@ -47,7 +47,8 @@ func NewHashMapStandard(partitionsCount int, policy displacement.Policy) *HashMa
 
 	for i := range stg.partitions {
 		stg.partitions[i] = partition{
-			vault: make(map[string]*cell.Cell),
+			vault:  make(map[string]*cell.Cell),
+			locker: sync.RWMutex{},
 		}
 	}
 

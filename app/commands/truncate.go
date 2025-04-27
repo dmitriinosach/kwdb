@@ -10,7 +10,7 @@ type TruncateCommand struct {
 	isWritable bool
 }
 
-func NewTruncateCommand() *TruncateCommand {
+func NewTruncateCommand() CommandInterface {
 	return &TruncateCommand{
 		name:       CommandTruncate,
 		Args:       new(arguments),

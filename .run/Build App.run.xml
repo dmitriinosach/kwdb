@@ -2,7 +2,6 @@
   <configuration default="false" name="Build App" type="GoApplicationRunConfiguration" factoryName="Go Application">
     <module name="kwdb" />
     <working_directory value="$PROJECT_DIR$" />
-    <go_parameters value="--race" />
     <kind value="DIRECTORY" />
     <package value="kwdb" />
     <directory value="$PROJECT_DIR$/cmd/app" />

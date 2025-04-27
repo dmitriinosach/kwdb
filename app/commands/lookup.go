@@ -13,7 +13,7 @@ type LookUpCommand struct {
 	isWritable bool
 }
 
-func NewLookUpCommand() *LookUpCommand {
+func NewLookUpCommand() CommandInterface {
 	return &LookUpCommand{
 		name:       CommandLookUp,
 		Args:       new(arguments),

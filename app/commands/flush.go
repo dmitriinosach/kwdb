@@ -12,7 +12,7 @@ type FlushCommand struct {
 	isWritable bool
 }
 
-func NewFlushCommand() *FlushCommand {
+func NewFlushCommand() CommandInterface {
 	return &FlushCommand{
 		name:       CommandStatus,
 		isWritable: false,

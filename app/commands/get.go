@@ -12,7 +12,7 @@ type GetCommand struct {
 	isWritable bool
 }
 
-func NewGetCommand() *GetCommand {
+func NewGetCommand() CommandInterface {
 	return &GetCommand{
 		name:       CommandGet,
 		Args:       new(arguments),

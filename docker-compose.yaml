@@ -1,0 +1,19 @@
+version: '3'
+
+
+services:
+  grafana:
+    image: grafana/grafana-oss:9.4.3
+    ports :
+      - "13000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/ect/prometheus.yml
+    ports:
+      - "19090:9090"
+
+volumes:
+  grafana-data:

@@ -12,7 +12,7 @@ type InfoCommand struct {
 	isWritable bool
 }
 
-func NewInfoCommand() *InfoCommand {
+func NewInfoCommand() CommandInterface {
 	return &InfoCommand{
 		name:       CommandInfo,
 		Args:       new(arguments),

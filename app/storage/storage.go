@@ -14,7 +14,7 @@ var (
 	Storage     Driver
 	once        sync.Once
 	Status      = new(status)
-	cleanerChan chan string
+	cleanerChan = make(chan string)
 	Lru         displacement.Policy
 )
 
@@ -49,8 +49,6 @@ func Init(driverName string, partitionsCount int) (err error) {
 
 		Status.Started = time.Now()
 		Status.DriverName = driverName
-
-		cleanerChan = make(chan string)
 
 		go displacement.RunWatcher(Lru)
 

@@ -6,20 +6,20 @@ import (
 	"kwdb/app/storage"
 )
 
-var List = map[string]CommandInterface{
+var List = map[string]func() CommandInterface{
 	// Команды работы с базой данных
-	CommandGet:     NewGetCommand(),
-	CommandSet:     NewSetCommand(),
-	CommandDelete:  NewDeleteCommand(),
-	CommandInfo:    NewInfoCommand(),
-	CommandRestore: NewRestoreCommand(),
-	CommandLookUp:  NewLookUpCommand(),
+	CommandGet:     NewGetCommand,
+	CommandSet:     NewSetCommand,
+	CommandDelete:  NewDeleteCommand,
+	CommandInfo:    NewInfoCommand,
+	CommandRestore: NewRestoreCommand,
+	CommandLookUp:  NewLookUpCommand,
 
 	//Команды управления и дебага
-	CommandStatus:   NewStatusCommand(),
-	CommandPing:     NewPingCommand(),
-	CommandFlush:    NewFlushCommand(),
-	CommandTruncate: NewTruncateCommand(),
+	CommandStatus:   NewStatusCommand,
+	CommandPing:     NewPingCommand,
+	CommandFlush:    NewFlushCommand,
+	CommandTruncate: NewTruncateCommand,
 }
 
 type CommandInterface interface {
@@ -38,9 +38,11 @@ func setupCommand(message []byte) (CommandInterface, error) {
 		return nil, errorpkg.ErrCmdLineParser
 	}
 
-	cmd := selectCommand(args)
+	var cmd CommandInterface
 
-	if cmd == nil {
+	if List[args.CmdName] != nil {
+		cmd = List[args.CmdName]()
+	} else {
 		return nil, errorpkg.ErrCmdNotFound
 	}
 
@@ -70,12 +72,4 @@ func SetAndRun(message []byte) ([]byte, error) {
 	}
 
 	return execute, nil
-}
-
-func selectCommand(args *arguments) CommandInterface {
-	if List[args.CmdName] == nil {
-		return nil
-	}
-
-	return List[args.CmdName]
 }
