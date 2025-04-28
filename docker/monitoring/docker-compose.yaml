@@ -1,7 +1,8 @@
-version: '3'
 
 
+name: "kwdb-monitoring"
 services:
+
   grafana:
     image: grafana/grafana-oss:9.4.3
     ports :
@@ -11,7 +12,7 @@ services:
   prometheus:
     image: prom/prometheus:latest
     volumes:
-      - ./prometheus.yml:/ect/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "19090:9090"
 

@@ -36,14 +36,10 @@ func main() {
 	// Парсим аргументы командной строки
 	flag.Parse()
 
-	status, err := send("status")
+	status := handle("status")
 
-	if err == nil {
-		fmt.Println("подключено к " + net.JoinHostPort(cliConfig.connectionHost, cliConfig.connectionPort))
-		fmt.Println(status.Result)
-	} else {
-		fmt.Println(err)
-	}
+	fmt.Println("подключено к " + net.JoinHostPort(cliConfig.connectionHost, cliConfig.connectionPort))
+	fmt.Println(status)
 
 	wg := sync.WaitGroup{}
 	wg.Add(1)

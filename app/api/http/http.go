@@ -3,11 +3,14 @@ package http
 import (
 	"context"
 	"fmt"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"kwdb/app"
 	"kwdb/app/commands"
+	"kwdb/app/storage"
 	"net/http"
 	"net/http/pprof"
 	_ "net/http/pprof"
+	"time"
 )
 
 var Server *Srv
@@ -18,8 +21,12 @@ func Serve(ctx context.Context) {
 	Server = NewServer()
 	// мидвалвары и семафор
 	handler := http.NewServeMux()
-	handler.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
+	handler.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		defer func() {
+			storage.ObserveRequest(time.Since(start), 200)
+		}()
 		cs := "SET key=" + r.URL.Query().Get("key") + " value=" + r.URL.Query().Get("value")
 
 		res, err := commands.SetAndRun([]byte(cs))
@@ -30,6 +37,7 @@ func Serve(ctx context.Context) {
 		}
 
 		fmt.Fprintf(w, string(res))
+
 	})
 
 	handler.HandleFunc("/debug/pprof/", pprof.Index)
@@ -54,12 +62,21 @@ func Serve(ctx context.Context) {
 	app.InfChan <- "http://" + Server.config.soc + " ожидает подключений"
 
 	go func() {
+
 		if err := Server.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			app.InfChan <- "http://" + Server.config.soc + " прекратил работу: " + err.Error()
 		}
 	}()
 
-	if err := Server.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		app.InfChan <- "http://" + Server.config.soc + " прекратил работу: " + err.Error()
-	}
+	go func() {
+		mux := http.NewServeMux()
+		mux.Handle("/metrics", promhttp.Handler())
+
+		app.InfChan <- " http://192.168.1.96:8082 prom запущен"
+		err := http.ListenAndServe("192.168.1.96:8082", mux)
+		app.InfChan <- "http://192.168.1.96:8082 prom закрыт"
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+	}()
 }

@@ -1,6 +1,4 @@
 
-
-
 default: build-all
 # билд консоли
 build-cli:
@@ -29,12 +27,17 @@ build-all:
 build-all-r:
 	go build ./cmd/cli ./cmd/app -race
 
-# нагрузочное тестирование k6
-http-k6:
-	cat ./k6-script.js | docker run --rm -i grafana/k6 run -
-
 test-cmd:
 	go test .\app\commands
 
 pprof:
 	go tool pprof
+
+# docker
+# билд мониторинга - графана + прометеус
+d-mon:
+	docker-compose -f=./docker/monitoring/docker-compose.yaml up -d
+
+#запуск скрпита k6
+d-k6:
+	cat ./k6-script.js | docker run --rm -i grafana/k6 run -
