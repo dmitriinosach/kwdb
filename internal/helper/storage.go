@@ -13,7 +13,10 @@ func HashFunction(key string) (int, error) {
 	p := app.Config.Partitions
 
 	h := fnv.New32a()
-	h.Write([]byte(key))
+	_, err := h.Write([]byte(key))
+	if err != nil {
+		return 0, err
+	}
 	number := int(h.Sum32()) % p
 
 	if number > p {

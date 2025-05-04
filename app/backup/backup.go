@@ -3,18 +3,20 @@ package backup
 import (
 	"bufio"
 	"context"
-	"kwdb/app"
 	"kwdb/app/storage"
 	"kwdb/internal/helper/file_system"
+	"kwdb/internal/helper/informer"
 	"log"
 	"os"
 	"time"
 )
 
-const backupPath = "./data/backup/wal1.txt"
+const (
+	backupPath = "./data/backup/wal1.txt"
 
-const BACKUP_END_CTX = 1
-const BACKUP_END_TIME = 2
+	BackupEndCtx = iota
+	BackupEndTime
+)
 
 var backupFile *os.File
 
@@ -29,7 +31,7 @@ func Write(text []byte) {
 	_, err = backupFile.Write([]byte{0x0A})
 
 	if err != nil {
-		app.InfChan <- "Ошибка записи wal"
+		informer.PrintCli("Ошибка записи бэкапа")
 	}
 }
 
@@ -60,7 +62,7 @@ func Backup(ctx context.Context) (<-chan string, chan int) {
 		for scanner.Scan() {
 			select {
 			case <-ctx.Done():
-				res <- BACKUP_END_CTX
+				res <- BackupEndCtx
 				return
 			default:
 			}
@@ -70,7 +72,7 @@ func Backup(ctx context.Context) (<-chan string, chan int) {
 				case rc <- scanner.Text():
 					break
 				case <-tl.C:
-					res <- BACKUP_END_TIME
+					res <- BackupEndTime
 					return
 				default:
 					continue

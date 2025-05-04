@@ -60,11 +60,8 @@ func (f *FileLogger) Log(m string) {
 func getLogFile() (file *os.File, err error) {
 	y, m, d := time.Now().Date()
 	logFileDate := fmt.Sprintf("log-%d-%d-%d", d, m, y)
-
 	filePath := app.Config.LogPath + "/" + logFileDate + ".txt"
-
 	f, err := file_system.ReadOrCreate(filePath)
-
 	if err != nil {
 		return nil, err
 	}

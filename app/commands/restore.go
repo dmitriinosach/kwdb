@@ -59,9 +59,9 @@ func (c *RestoreCommand) Execute() ([]byte, error) {
 		case code := <-res:
 			fmt.Printf("code - %v", code)
 			switch code {
-			case backup.BACKUP_END_CTX:
+			case backup.BackupEndCtx:
 				flogger.Flogger.WriteString("закрыто по контексту")
-			case backup.BACKUP_END_TIME:
+			case backup.BackupEndTime:
 				flogger.Flogger.WriteString("закрыто по таймауту")
 			}
 		default:
