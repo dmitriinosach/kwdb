@@ -1,18 +1,14 @@
 package storage
 
 import (
-	"kwdb/app/errorpkg"
 	"kwdb/app/storage/cell"
 	"kwdb/app/storage/displacement"
-	"kwdb/app/storage/driver/mapstd"
-	"kwdb/app/storage/driver/syncmap"
-	"sync"
+	"kwdb/app/storage/driver"
 	"time"
 )
 
 var (
 	Storage     Driver
-	once        sync.Once
 	Status      = new(status)
 	cleanerChan = make(chan string)
 	Lru         displacement.Policy
@@ -23,7 +19,6 @@ type Driver interface {
 	Set(key string, value []byte, ttl int) error
 	Delete(key string) error
 	Info() []byte
-	GetVaultMap() map[string]*cell.Cell
 	Truncate() bool
 	Cleaner(cc chan string)
 	Flush() error
@@ -32,28 +27,22 @@ type Driver interface {
 func Init(driverName string, partitionsCount int) (err error) {
 	// TODO: флагами получить интерфес драйверов
 	//TODO лишнее
-	once.Do(func() {
 
-		Lru = displacement.NewLRU(cleanerChan)
+	mapType := "std"
+	Lru = displacement.NewLRU(cleanerChan)
 
-		switch driverName {
-		case mapstd.DriverName:
-			//сделать не экспортируемым
-			Storage = mapstd.NewHashMapStandard(partitionsCount, Lru)
-		case syncmap.DriverName:
-			Storage = syncmap.NewSyncMap(partitionsCount)
-		default:
-			err = errorpkg.ErrUnknownDriver
-			return
-		}
+	Storage = driver.NewHashMapStandard(
+		partitionsCount,
+		Lru,
+		mapType,
+	)
 
-		Status.Started = time.Now()
-		Status.DriverName = driverName
+	Status.Started = time.Now()
+	Status.DriverName = driverName
 
-		go displacement.RunWatcher(Lru)
+	go displacement.RunWatcher(Lru)
 
-		go Storage.Cleaner(cleanerChan)
-	})
+	go Storage.Cleaner(cleanerChan)
 
 	return
 }

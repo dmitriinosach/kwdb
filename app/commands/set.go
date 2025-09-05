@@ -28,7 +28,6 @@ func (c *SetCommand) CheckArgs() bool {
 	if c.Args.Key == "" || c.Args.Value == nil {
 		return false
 	}
-
 	return true
 }
 
@@ -38,7 +37,7 @@ func (c *SetCommand) Execute() ([]byte, error) {
 		return []byte{}, err
 	}
 
-	return []byte{}, nil
+	return []byte("ok"), nil
 }
 
 func (c *SetCommand) Name() string {

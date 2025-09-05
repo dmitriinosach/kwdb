@@ -1,0 +1,39 @@
+name: "kwdb-monitoring"
+services:
+
+  grafana:
+    image: grafana/grafana-oss:9.4.3
+    ports:
+      - "13000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "19090:9090"
+
+  db-postgres:
+    image: postgres
+    restart: always
+    # set shared memory limit when using docker compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+      POSTGRES_PASSWORD: example
+    volumes:
+      #базу вынес на диск
+      - D:\Posgress\PG_DATA:/var/lib/postgresql/data
+      # тестовая база PG, больше для обучения
+      - D:\Posgress\demo-big-20170815.sql:/home/demo-big-20170815.sql
+    ports:
+      - 5432:5432
+
+volumes:
+  grafana-data:

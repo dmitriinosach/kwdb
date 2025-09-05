@@ -8,6 +8,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"runtime"
 	"sync"
 )
 
@@ -26,6 +27,7 @@ var cliConfig struct {
 var cliHistory = new(history)
 
 func main() {
+	runtime.GOMAXPROCS(1)
 	// локальный IP
 	//locIp := helper.LocalIp()
 

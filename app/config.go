@@ -10,6 +10,8 @@ import (
 	"sync"
 )
 
+var Config = &ConfigEnv{}
+
 // ConfigEnv структура для хранения конфигурации приложения
 type ConfigEnv struct {
 	// Host ip\domain базы
@@ -41,8 +43,6 @@ func (env *ConfigEnv) Get(key string) interface{} {
 	v := reflect.ValueOf(env).Elem()
 	return v.FieldByName(key).Interface()
 }
-
-var Config = &ConfigEnv{}
 
 // InitConfigs загрузка конфигураций приложения из env файла
 func InitConfigs() error {

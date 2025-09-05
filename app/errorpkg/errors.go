@@ -2,8 +2,6 @@ package errorpkg
 
 import "fmt"
 
-// TODO: Переделать на структуры ?
-
 var (
 	ErrEnvParameterMissed = "в настройках окружения не установленно: "
 	ErrEnvLoad            = "ошибка инициализации env файла"

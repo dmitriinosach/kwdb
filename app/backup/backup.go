@@ -5,6 +5,7 @@ import (
 	"context"
 	"kwdb/app/storage"
 	"kwdb/internal/helper/file_system"
+	"kwdb/internal/helper/flogger"
 	"kwdb/internal/helper/informer"
 	"log"
 	"os"
@@ -20,7 +21,7 @@ const (
 
 var backupFile *os.File
 
-// TODO: переделать, долен решать другую задачу
+// Write TODO: переделать
 func Write(text []byte) {
 
 	if backupFile == nil {
@@ -32,6 +33,7 @@ func Write(text []byte) {
 
 	if err != nil {
 		informer.PrintCli("Ошибка записи бэкапа")
+		flogger.Flogger.WriteString("Ошибка записи бэкапа:" + err.Error())
 	}
 }
 
@@ -42,7 +44,7 @@ func Backup(ctx context.Context) (<-chan string, chan int) {
 	}
 
 	rc := make(chan string)
-	res := make(chan int, 1)
+	res := make(chan int)
 	tl := time.NewTimer(time.Second * 3)
 
 	// TODO: переписать на ротацию журнала
@@ -50,10 +52,17 @@ func Backup(ctx context.Context) (<-chan string, chan int) {
 
 	go func() {
 		defer func() {
-			defer close(rc)
-			defer close(res)
-			defer tl.Stop()
-			defer file.Close()
+			defer func() {
+				close(rc)
+				close(res)
+				tl.Stop()
+
+				err := file.Close()
+				if err != nil {
+					flogger.Flogger.WriteString("не удалось закрыть файл бэкапа:" + err.Error())
+				}
+			}()
+
 			storage.Status.Restoring.Store(false)
 		}()
 

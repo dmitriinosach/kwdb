@@ -3,7 +3,7 @@
 package commands
 
 import (
-	"fmt"
+	"errors"
 	"github.com/google/shlex"
 	"kwdb/app/errorpkg"
 	"strconv"
@@ -25,9 +25,8 @@ type arguments struct {
 
 func newArgsFromString(s string) (*arguments, error) {
 
-	args := new(arguments)
+	args := &arguments{}
 
-	//TODO:сплиты вынести в клиент
 	parsedLine, err := shlex.Split(s)
 
 	if err != nil {
@@ -36,7 +35,7 @@ func newArgsFromString(s string) (*arguments, error) {
 
 	for number, tag := range parsedLine {
 		if number == 0 {
-			_, nameError := withCmdName(args, tag)
+			nameError := args.setCmdName(tag)
 			if nameError != nil {
 				return nil, nameError
 			}
@@ -63,14 +62,14 @@ func newArgsFromString(s string) (*arguments, error) {
 	return args, nil
 }
 
-func withCmdName(args *arguments, tag string) (*arguments, error) {
+func (a *arguments) setCmdName(tag string) error {
 	cmdMaxLen := 10
 
 	if len(tag) > cmdMaxLen {
-		return nil, fmt.Errorf("name too long")
+		return errors.New("")
 	}
 
-	args.CmdName = tag
+	a.CmdName = tag
 
-	return args, nil
+	return nil
 }

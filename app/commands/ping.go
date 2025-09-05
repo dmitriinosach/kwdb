@@ -16,7 +16,7 @@ func (c *PingCommand) IsWritable() bool {
 	return false
 }
 
-func (c *PingCommand) SetArgs(args *arguments) {
+func (c *PingCommand) SetArgs(_ *arguments) {
 	return
 }
 
@@ -25,7 +25,6 @@ func (c *PingCommand) CheckArgs() bool {
 }
 
 func (c *PingCommand) Name() string {
-
 	return c.name
 }
 
